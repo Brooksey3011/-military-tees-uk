@@ -1,0 +1,27 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#3182ce"/>
+  
+  <!-- T-shirt outline -->
+  <path d="M120 140 L120 120 Q120 100 140 100 L160 100 L160 80 Q160 60 180 60 L220 60 Q240 60 240 80 L240 100 L260 100 Q280 100 280 120 L280 140 L300 140 L300 160 L280 160 L280 350 Q280 370 260 370 L140 370 Q120 370 120 350 L120 160 L100 160 L100 140 L120 140 Z" fill="#2c5282" stroke="#4299e1" stroke-width="2"/>
+  
+  <!-- RAF Roundel -->
+  <circle cx="200" cy="200" r="40" fill="#e53e3e"/>
+  <circle cx="200" cy="200" r="30" fill="white"/>
+  <circle cx="200" cy="200" r="20" fill="#3182ce"/>
+  
+  <!-- RAF Wings -->
+  <path d="M160 220 Q180 210 200 220 Q180 230 160 220" fill="#f7fafc"/>
+  <path d="M200 220 Q220 210 240 220 Q220 230 200 220" fill="#f7fafc"/>
+  
+  <!-- Crown -->
+  <path d="M190 160 L200 150 L210 160 L205 165 L195 165 Z" fill="#d69e2e"/>
+  
+  <!-- Aircraft silhouette -->
+  <path d="M180 180 L220 180 L210 185 L190 185 Z" fill="#f7fafc"/>
+  <path d="M200 175 L200 185" stroke="#f7fafc" stroke-width="2"/>
+  
+  <!-- Text -->
+  <text x="200" y="270" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#f7fafc">ROYAL AIR FORCE</text>
+  <text x="200" y="290" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#bee3f8">FIGHTER PILOT</text>
+</svg>

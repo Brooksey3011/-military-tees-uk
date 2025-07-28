@@ -1,0 +1,215 @@
+"use client"
+
+import * as React from "react"
+import Link from "next/link"
+import { Facebook, Instagram, Mail, MapPin } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+
+const footerLinks = {
+  "Military Tees": [
+    { title: "Download App", href: "/download-app" },
+    { title: "Media Kit", href: "/media-kit" },
+    { title: "Reviews", href: "/reviews" },
+    { title: "Careers", href: "/careers" },
+  ],
+  "Support": [
+    { title: "FAQ", href: "/faq" },
+    { title: "Delivery Options", href: "/delivery" },
+    { title: "Track Order", href: "/track-order" },
+    { title: "Size Guide", href: "/size-guide" },
+    { title: "Contact Us", href: "/contact" },
+  ],
+  "Policies": [
+    { title: "Terms & Conditions", href: "/terms" },
+    { title: "Returns & Refunds", href: "/returns" },
+    { title: "Privacy Policy", href: "/privacy" },
+    { title: "Shipping Policy", href: "/shipping" },
+    { title: "Cookie Policy", href: "/cookies" },
+  ],
+  "Categories": [
+    { title: "Armoury", href: "/categories/armoury" },
+    { title: "Mess Hall", href: "/categories/mess-hall" },
+    { title: "NAAFI", href: "/categories/naafi" },
+    { title: "The Ranges", href: "/categories/ranges" },
+  ]
+}
+
+const socialLinks = [
+  { icon: Facebook, href: "https://facebook.com/militaryteesuk", label: "Facebook" },
+  { icon: Instagram, href: "https://instagram.com/militaryteesuk", label: "Instagram" },
+]
+
+export function Footer() {
+  const [email, setEmail] = React.useState("")
+  const [isSubscribing, setIsSubscribing] = React.useState(false)
+  const [subscriptionStatus, setSubscriptionStatus] = React.useState<"idle" | "success" | "error">("idle")
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!email) return
+
+    setIsSubscribing(true)
+    
+    try {
+      // Simulate API call - this will be replaced with actual newsletter service integration
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      console.log("Newsletter subscription:", email)
+      setSubscriptionStatus("success")
+      setEmail("")
+      
+      // Reset success message after 3 seconds
+      setTimeout(() => setSubscriptionStatus("idle"), 3000)
+    } catch (error) {
+      console.error("Newsletter subscription failed:", error)
+      setSubscriptionStatus("error")
+      setTimeout(() => setSubscriptionStatus("idle"), 3000)
+    } finally {
+      setIsSubscribing(false)
+    }
+  }
+
+  return (
+    <footer className="bg-muted mt-auto">
+      <div className="container mx-auto px-4 py-12">
+        {/* Main Footer Content */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <Link href="/" className="flex items-center space-x-3 mb-4">
+              <img 
+                src="/logowhite.png" 
+                alt="Military Tees UK Logo" 
+                className="h-12 w-auto" 
+              />
+              <div>
+                <div className="text-xl font-display font-semibold tracking-wider">Military Tees UK</div>
+                <div className="text-xs text-muted-foreground font-display tracking-wide uppercase">Est. 2025</div>
+              </div>
+            </Link>
+            <p className="text-muted-foreground mb-6 max-w-md">
+              <strong>MISSION:</strong> Provide high quality military-themed apparel with outstanding customer service. 
+              Inspired by the barracks, built for quality.
+            </p>
+            
+            {/* Contact Info */}
+            <div className="space-y-2 text-sm text-muted-foreground">
+              <div className="flex items-center space-x-2">
+                <Mail className="h-4 w-4" />
+                <a href="mailto:info@militarytees.co.uk" className="hover:text-foreground transition-colors">
+                  info@militarytees.co.uk
+                </a>
+              </div>
+              <div className="flex items-center space-x-2">
+                <MapPin className="h-4 w-4" />
+                <span>United Kingdom</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Links Sections */}
+          {Object.entries(footerLinks).map(([category, links]) => (
+            <div key={category}>
+              <h4 className="font-semibold text-foreground mb-4">{category}</h4>
+              <ul className="space-y-2">
+                {links.map((link) => (
+                  <li key={link.title}>
+                    <Link 
+                      href={link.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {link.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+
+        {/* Newsletter Section */}
+        <div className="mt-12 pt-8 border-t border-border">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+            <div className="flex-1 max-w-md">
+              <h4 className="font-semibold text-foreground mb-2">Join Our Newsletter</h4>
+              <p className="text-sm text-muted-foreground mb-4">
+                Get updates on new products, exclusive offers, and military gear insights.
+              </p>
+              
+              {subscriptionStatus === "success" && (
+                <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded text-green-800 text-sm">
+                  ✅ Successfully subscribed! Welcome to the ranks.
+                </div>
+              )}
+              
+              {subscriptionStatus === "error" && (
+                <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-800 text-sm">
+                  ❌ Subscription failed. Please try again.
+                </div>
+              )}
+              
+              <form onSubmit={handleNewsletterSubmit} className="flex space-x-2">
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="flex-1 rounded-none border-2"
+                  disabled={isSubscribing}
+                  required
+                />
+                <Button 
+                  type="submit"
+                  className="rounded-none font-display font-bold tracking-wide uppercase"
+                  disabled={isSubscribing}
+                >
+                  {isSubscribing ? "Subscribing..." : "Subscribe"}
+                </Button>
+              </form>
+            </div>
+
+            {/* Social Links */}
+            <div className="flex items-center space-x-4">
+              <span className="text-sm font-medium text-foreground">Follow Us:</span>
+              {socialLinks.map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2 rounded-md bg-background hover:bg-accent transition-colors"
+                  aria-label={social.label}
+                >
+                  <social.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom Bar */}
+        <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-muted-foreground">
+            © {new Date().getFullYear()} Military Tees UK. All rights reserved.
+          </div>
+          
+          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+            <span>Proudly British</span>
+            <div className="w-px h-4 bg-border" />
+            <span>Quality Guaranteed</span>
+            <div className="w-px h-4 bg-border" />
+            <span>Fast Delivery</span>
+          </div>
+        </div>
+
+        {/* Military Themed Motto */}
+        <div className="mt-6 text-center">
+          <p className="text-xs text-muted-foreground italic">
+            "Per Aspera Ad Astra" - Through Adversity to the Stars
+          </p>
+        </div>
+      </div>
+    </footer>
+  )
+}

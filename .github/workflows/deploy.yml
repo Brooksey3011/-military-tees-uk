@@ -1,0 +1,144 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ main ]
+  workflow_run:
+    workflows: ["Tests"]
+    types: [completed]
+    branches: [ main ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' || github.event_name == 'push' }}
+    
+    environment:
+      name: production
+      url: https://militarytees.co.uk
+      
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run pre-deployment tests
+      run: |
+        npm run lint
+        npm run type-check
+        npm run test:ci
+      env:
+        NODE_ENV: production
+        
+    - name: Build application
+      run: npm run build
+      env:
+        NODE_ENV: production
+        NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.PROD_SUPABASE_URL }}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.PROD_SUPABASE_ANON_KEY }}
+        NEXT_PUBLIC_APP_URL: https://militarytees.co.uk
+        
+    - name: Run database migrations
+      run: npm run db:migrate
+      env:
+        DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_KEY }}
+        
+    - name: Deploy to Hostinger
+      uses: easingthemes/ssh-deploy@main
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.HOSTINGER_SSH_KEY }}
+        REMOTE_HOST: ${{ secrets.HOSTINGER_HOST }}
+        REMOTE_USER: ${{ secrets.HOSTINGER_USER }}
+        SOURCE: "./"
+        TARGET: "/home/militarytees/public_html/"
+        EXCLUDE: "/node_modules/, /.git/, /.github/, /tests/, /.env.example"
+        
+    - name: Install production dependencies on server
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOSTINGER_HOST }}
+        username: ${{ secrets.HOSTINGER_USER }}
+        key: ${{ secrets.HOSTINGER_SSH_KEY }}
+        script: |
+          cd /home/militarytees/public_html/
+          npm ci --only=production
+          npm run build
+          pm2 restart military-tees-uk || pm2 start npm --name "military-tees-uk" -- start
+          
+    - name: Update environment variables
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOSTINGER_HOST }}
+        username: ${{ secrets.HOSTINGER_USER }}
+        key: ${{ secrets.HOSTINGER_SSH_KEY }}
+        script: |
+          cd /home/militarytees/public_html/
+          cat > .env.production.local << EOF
+          NODE_ENV=production
+          NEXT_PUBLIC_SUPABASE_URL=${{ secrets.PROD_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY=${{ secrets.PROD_SUPABASE_ANON_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY=${{ secrets.PROD_SUPABASE_SERVICE_KEY }}
+          NEXT_PUBLIC_APP_URL=https://militarytees.co.uk
+          NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}
+          STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}
+          STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}
+          EOF
+          
+    - name: Warm up application
+      run: |
+        sleep 30
+        curl -f https://militarytees.co.uk || exit 1
+        curl -f https://militarytees.co.uk/products || exit 1
+        curl -f https://militarytees.co.uk/api/health || exit 1
+        
+    - name: Run post-deployment smoke tests
+      run: npm run test:smoke:prod
+      env:
+        TEST_URL: https://militarytees.co.uk
+        
+    - name: Update sitemap and search engines
+      uses: appleboy/ssh-action@v0.1.5
+      with:
+        host: ${{ secrets.HOSTINGER_HOST }}
+        username: ${{ secrets.HOSTINGER_USER }}
+        key: ${{ secrets.HOSTINGER_SSH_KEY }}
+        script: |
+          cd /home/militarytees/public_html/
+          # Generate fresh sitemap
+          curl -X POST https://militarytees.co.uk/api/generate-sitemap
+          # Ping search engines
+          curl "https://www.google.com/ping?sitemap=https://militarytees.co.uk/sitemap.xml"
+          curl "https://www.bing.com/ping?sitemap=https://militarytees.co.uk/sitemap.xml"
+          
+    - name: Notify deployment success
+      uses: 8398a7/action-slack@v3
+      if: success()
+      with:
+        status: success
+        text: '🚀 Military Tees UK deployed successfully to production!'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Notify deployment failure
+      uses: 8398a7/action-slack@v3
+      if: failure()
+      with:
+        status: failure
+        text: '❌ Military Tees UK deployment failed - check GitHub Actions'
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+        
+    - name: Create deployment record
+      uses: chrnorm/deployment-action@v2
+      with:
+        token: ${{ github.token }}
+        environment-url: https://militarytees.co.uk
+        environment: production
+        state: success

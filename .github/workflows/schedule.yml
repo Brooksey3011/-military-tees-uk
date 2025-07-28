@@ -1,0 +1,334 @@
+name: Scheduled Tasks
+
+on:
+  schedule:
+    # Run daily health checks at 6 AM UTC
+    - cron: '0 6 * * *'
+    # Run weekly security scans on Sundays at 2 AM UTC
+    - cron: '0 2 * * 0'
+    # Run monthly dependency updates on 1st of month at 3 AM UTC
+    - cron: '0 3 1 * *'
+  workflow_dispatch:
+    inputs:
+      task_type:
+        description: 'Type of scheduled task to run'
+        required: true
+        default: 'health-check'
+        type: choice
+        options:
+        - health-check
+        - security-scan
+        - dependency-update
+        - performance-test
+        - backup
+
+jobs:
+  health-check:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 6 * * *' || github.event.inputs.task_type == 'health-check'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Health check - Production site
+      run: |
+        echo "Checking production site health..."
+        
+        # Main site
+        curl -f -s -o /dev/null -w "%{http_code}" https://militarytees.co.uk || exit 1
+        
+        # API endpoints
+        curl -f -s -o /dev/null -w "%{http_code}" https://militarytees.co.uk/api/health || exit 1
+        curl -f -s -o /dev/null -w "%{http_code}" https://militarytees.co.uk/api/products || exit 1
+        
+        # Critical pages
+        curl -f -s -o /dev/null -w "%{http_code}" https://militarytees.co.uk/products || exit 1
+        curl -f -s -o /dev/null -w "%{http_code}" https://militarytees.co.uk/custom || exit 1
+        
+        echo "All health checks passed ✅"
+        
+    - name: Database connectivity check
+      run: npm run test:db:connection
+      env:
+        DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        
+    - name: Check SSL certificate
+      run: |
+        echo "Checking SSL certificate expiry..."
+        ssl_info=$(echo | openssl s_client -servername militarytees.co.uk -connect militarytees.co.uk:443 2>/dev/null | openssl x509 -noout -dates)
+        echo "$ssl_info"
+        
+        # Check if certificate expires in next 30 days
+        expiry_date=$(echo "$ssl_info" | grep notAfter | cut -d= -f2)
+        expiry_epoch=$(date -d "$expiry_date" +%s)
+        current_epoch=$(date +%s)
+        days_until_expiry=$(( (expiry_epoch - current_epoch) / 86400 ))
+        
+        if [ $days_until_expiry -lt 30 ]; then
+          echo "⚠️ SSL certificate expires in $days_until_expiry days!"
+          exit 1
+        else
+          echo "SSL certificate is valid for $days_until_expiry more days ✅"
+        fi
+        
+    - name: Performance check
+      run: |
+        echo "Running basic performance checks..."
+        
+        # Check response time
+        response_time=$(curl -o /dev/null -s -w '%{time_total}' https://militarytees.co.uk)
+        
+        if (( $(echo "$response_time > 3.0" | bc -l) )); then
+          echo "⚠️ Site response time is slow: ${response_time}s"
+          exit 1
+        else
+          echo "Site response time is good: ${response_time}s ✅"
+        fi
+        
+    - name: Notify health check results
+      uses: 8398a7/action-slack@v3
+      if: always()
+      with:
+        status: ${{ job.status }}
+        text: |
+          Daily health check for Military Tees UK:
+          - Site status: ${{ job.status == 'success' && '✅ Healthy' || '❌ Issues detected' }}
+          - Time: $(date)
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  security-scan:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 2 * * 0' || github.event.inputs.task_type == 'security-scan'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run npm audit
+      run: |
+        echo "Running npm security audit..."
+        npm audit --audit-level moderate || echo "Found vulnerabilities, continuing..."
+        npm audit --json > audit-results.json || true
+        
+    - name: Check for high/critical vulnerabilities
+      run: |
+        high_critical=$(jq '.metadata.vulnerabilities.high + .metadata.vulnerabilities.critical' audit-results.json)
+        
+        if [ "$high_critical" -gt 0 ]; then
+          echo "⚠️ Found $high_critical high/critical vulnerabilities"
+          jq '.vulnerabilities' audit-results.json
+          exit 1
+        else
+          echo "No high/critical vulnerabilities found ✅"
+        fi
+        
+    - name: Snyk security scan
+      uses: snyk/actions/node@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        args: --severity-threshold=high --json > snyk-results.json
+      continue-on-error: true
+      
+    - name: OWASP ZAP security scan
+      run: |
+        docker run -v $(pwd):/zap/wrk/:rw -t owasp/zap2docker-weekly zap-baseline.py \
+          -t https://militarytees.co.uk \
+          -J zap-report.json \
+          -r zap-report.html
+      continue-on-error: true
+      
+    - name: Upload security reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: security-reports
+        path: |
+          audit-results.json
+          snyk-results.json
+          zap-report.json
+          zap-report.html
+          
+    - name: Notify security scan results
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: |
+          Weekly security scan completed for Military Tees UK
+          Status: ${{ job.status == 'success' && '✅ No critical issues' || '⚠️ Issues found - check reports' }}
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  dependency-update:
+    runs-on: ubuntu-latest
+    if: github.event.schedule == '0 3 1 * *' || github.event.inputs.task_type == 'dependency-update'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Check for outdated packages
+      run: |
+        echo "Checking for outdated packages..."
+        npm outdated --json > outdated.json || true
+        
+        if [ -s outdated.json ]; then
+          echo "Found outdated packages:"
+          cat outdated.json | jq .
+        else
+          echo "All packages are up to date ✅"
+        fi
+        
+    - name: Update patch and minor versions
+      run: |
+        echo "Updating patch and minor versions..."
+        npm update
+        
+    - name: Run tests after updates
+      run: |
+        npm run test:ci
+        npm run lint
+        npm run type-check
+        
+    - name: Create pull request for updates
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies'
+        title: 'Monthly Dependency Updates'
+        body: |
+          Automated dependency updates for the month.
+          
+          Changes:
+          - Updated patch and minor versions
+          - All tests passing
+          - Ready for review
+          
+          Please review and merge after testing.
+        branch: dependency-updates
+        delete-branch: true
+
+  performance-test:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.task_type == 'performance-test'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Run Lighthouse CI
+      run: |
+        npm install -g @lhci/cli
+        lhci autorun --collect.url=https://militarytees.co.uk
+      env:
+        LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
+        
+    - name: Load test with Artillery
+      run: |
+        npm install -g artillery
+        
+        cat > load-test.yml << EOF
+        config:
+          target: 'https://militarytees.co.uk'
+          phases:
+            - duration: 60
+              arrivalRate: 5
+        scenarios:
+          - name: "Browse products"
+            flow:
+              - get:
+                  url: "/"
+              - get:
+                  url: "/products"
+              - get:
+                  url: "/custom"
+        EOF
+        
+        artillery run load-test.yml --output report.json
+        artillery report report.json
+        
+    - name: Upload performance reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-reports
+        path: |
+          .lighthouseci/
+          report.json
+
+  backup:
+    runs-on: ubuntu-latest
+    if: github.event.inputs.task_type == 'backup'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Create database backup
+      run: |
+        echo "Creating database backup..."
+        npm run db:backup
+      env:
+        DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
+        BACKUP_STORAGE_KEY: ${{ secrets.BACKUP_STORAGE_KEY }}
+        
+    - name: Backup uploaded files
+      run: |
+        echo "Backing up uploaded files..."
+        npm run storage:backup
+      env:
+        SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.PROD_SUPABASE_SERVICE_KEY }}
+        BACKUP_STORAGE_KEY: ${{ secrets.BACKUP_STORAGE_KEY }}
+        
+    - name: Notify backup completion
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        text: |
+          Backup completed for Military Tees UK
+          - Database: ${{ job.status == 'success' && '✅' || '❌' }}
+          - Files: ${{ job.status == 'success' && '✅' || '❌' }}
+          - Time: $(date)
+        webhook_url: ${{ secrets.SLACK_WEBHOOK_URL }}

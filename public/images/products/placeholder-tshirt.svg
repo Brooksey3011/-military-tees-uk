@@ -1,0 +1,15 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#f8f9fa"/>
+  
+  <!-- T-shirt outline -->
+  <path d="M120 120L120 80C120 75 125 70 130 70L170 70L170 60C170 50 180 40 200 40C220 40 230 50 230 60L230 70L270 70C275 70 280 75 280 80L280 120L320 120L320 140L320 360C320 370 310 380 300 380L100 380C90 380 80 370 80 360L80 140L80 120L120 120Z" fill="#e9ecef" stroke="#6c757d" stroke-width="2"/>
+  
+  <!-- Military-style design -->
+  <circle cx="200" cy="200" r="40" fill="#495057" opacity="0.3"/>
+  <text x="200" y="205" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="16" font-weight="bold">MILITARY</text>
+  <text x="200" y="225" text-anchor="middle" fill="#495057" font-family="Arial, sans-serif" font-size="12">TEES UK</text>
+  
+  <!-- Size indicator -->
+  <text x="200" y="330" text-anchor="middle" fill="#6c757d" font-family="Arial, sans-serif" font-size="14">SAMPLE PRODUCT</text>
+</svg>

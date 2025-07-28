@@ -1,0 +1,27 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="400" height="400" fill="#2d3748"/>
+  
+  <!-- T-shirt outline -->
+  <path d="M120 140 L120 120 Q120 100 140 100 L160 100 L160 80 Q160 60 180 60 L220 60 Q240 60 240 80 L240 100 L260 100 Q280 100 280 120 L280 140 L300 140 L300 160 L280 160 L280 350 Q280 370 260 370 L140 370 Q120 370 120 350 L120 160 L100 160 L100 140 L120 140 Z" fill="#1a202c" stroke="#4a5568" stroke-width="2"/>
+  
+  <!-- SAS Winged Dagger -->
+  <path d="M200 180 L190 200 L210 200 Z" fill="#e2e8f0"/>
+  
+  <!-- Dagger blade -->
+  <rect x="198" y="160" width="4" height="40" fill="#e2e8f0"/>
+  
+  <!-- Wings -->
+  <path d="M170 195 Q185 185 200 195 Q185 205 170 195" fill="#e2e8f0"/>
+  <path d="M200 195 Q215 185 230 195 Q215 205 200 195" fill="#e2e8f0"/>
+  
+  <!-- Scroll -->
+  <rect x="175" y="210" width="50" height="15" rx="2" fill="#e2e8f0"/>
+  
+  <!-- Text on design -->
+  <text x="200" y="220" font-family="Arial, sans-serif" font-size="8" font-weight="bold" text-anchor="middle" fill="#1a202c">WHO DARES WINS</text>
+  
+  <!-- Bottom text -->
+  <text x="200" y="270" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#e2e8f0">SAS REGIMENT</text>
+  <text x="200" y="290" font-family="Arial, sans-serif" font-size="12" text-anchor="middle" fill="#888">ELITE FORCES</text>
+</svg>
