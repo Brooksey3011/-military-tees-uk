@@ -174,7 +174,7 @@ export default function SalePage() {
         </section>
 
         {/* Launch Special Banner */}
-        <section className="py-8 bg-primary text-primary-foreground">
+        <section className="py-8 bg-red-600 text-white">
           <div className="container mx-auto px-4">
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
@@ -186,7 +186,7 @@ export default function SalePage() {
               <h3 className="text-2xl font-display font-bold mb-2">
                 Welcome to Military Tees UK
               </h3>
-              <p className="text-primary-foreground/90 mb-4">
+              <p className="text-white/90 mb-4">
                 Celebrating our launch with special pricing on selected items
               </p>
               <Button 
@@ -219,7 +219,7 @@ export default function SalePage() {
                     <input 
                       type="email" 
                       placeholder="Enter your email address"
-                      className="flex-1 px-4 py-3 border-2 border-border rounded-none focus:outline-none focus:border-primary"
+                      className="flex-1 px-4 py-3 border-2 border-border rounded-none focus:outline-none focus:border-red-600"
                     />
                     <Button 
                       className="rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700"

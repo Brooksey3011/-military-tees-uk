@@ -206,12 +206,6 @@ export function Footer() {
           </div>
         </div>
 
-        {/* Military Themed Motto */}
-        <div className="mt-6 text-center">
-          <p className="text-xs text-muted-foreground italic">
-            "Per Aspera Ad Astra" - Through Adversity to the Stars
-          </p>
-        </div>
       </div>
     </footer>
   )

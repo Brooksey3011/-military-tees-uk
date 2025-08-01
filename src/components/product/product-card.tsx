@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn, formatPrice } from "@/lib/utils"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
 import { ProductVariant } from "./variant-selector"
+import { useWishlistActions } from "@/store/wishlist"
 
 interface Product {
   id: string
@@ -46,6 +47,9 @@ export function ProductCard({
   const [selectedVariant, setSelectedVariant] = React.useState<ProductVariant | null>(
     product.variants?.find(v => (v.stockQuantity || v.stock_quantity) > 0) || product.variants?.[0] || null
   )
+  
+  const { addItem, removeItem, isInWishlist } = useWishlistActions()
+  const isInWishlistState = isInWishlist(product.id)
 
   const averageRating = product.rating || 0
   const stockQuantity = selectedVariant ? (selectedVariant.stockQuantity || selectedVariant.stock_quantity || 0) : 0
@@ -86,6 +90,23 @@ export function ProductCard({
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
+    
+    if (isInWishlistState) {
+      removeItem(product.id)
+    } else {
+      addItem({
+        productId: product.id,
+        name: product.name,
+        slug: product.slug,
+        price: product.price,
+        image: product.main_image_url || '/api/placeholder/300/400',
+        category: product.category_id,
+        inStock: selectedVariant ? (selectedVariant.stockQuantity || selectedVariant.stock_quantity || 0) > 0 : true,
+        sizes: product.variants?.map(v => v.size || 'One Size') || ['One Size']
+      })
+    }
+    
+    // Still call the optional callback for backward compatibility
     onToggleFavorite?.(product.id)
   }
 
@@ -150,7 +171,7 @@ export function ProductCard({
                     : "bg-black/70 hover:bg-black/90 text-white"
                 )}
               >
-                <Heart className={cn("w-4 h-4", isFavorite && "fill-current")} />
+                <Heart className={cn("w-4 h-4", isInWishlistState && "fill-current text-red-600")} />
               </button>
             </motion.div>
 

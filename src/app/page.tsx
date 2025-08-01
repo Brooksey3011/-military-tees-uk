@@ -142,19 +142,18 @@ export default function Home() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+        <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-display font-bold mb-4">
+            <h2 className="text-3xl font-display font-bold mb-4 text-foreground">
               Ready to Join the Ranks?
             </h2>
-            <p className="text-xl opacity-90 mb-8">
+            <p className="text-xl text-muted-foreground mb-8">
               Browse our collection of premium military-themed apparel
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                variant="secondary" 
                 size="lg"
-                className="bg-background text-foreground hover:bg-background/90 font-bold uppercase tracking-wide"
+                className="font-bold uppercase tracking-wide"
                 asChild
               >
                 <Link href="/categories">
@@ -162,9 +161,9 @@ export default function Home() {
                 </Link>
               </Button>
               <Button 
-                variant="secondary" 
+                variant="outline"
                 size="lg"
-                className="bg-background text-foreground hover:bg-background/90 font-bold uppercase tracking-wide"
+                className="border-2 font-bold uppercase tracking-wide"
                 asChild
               >
                 <Link href="/custom">

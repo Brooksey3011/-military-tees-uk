@@ -9,6 +9,7 @@ import { ProductImageGallery } from "./product-image-gallery"
 import { SizeSelector } from "./size-selector"
 import { ColorSelector } from "./color-selector"
 import { cn } from "@/lib/utils"
+import { useWishlistActions } from "@/store/wishlist"
 
 interface ProductVariant {
   id: string
@@ -55,6 +56,9 @@ export function QuickViewModal({
   const [selectedColor, setSelectedColor] = React.useState("")
   const [quantity, setQuantity] = React.useState(1)
   const [isAddingToCart, setIsAddingToCart] = React.useState(false)
+  
+  const { addItem, removeItem, isInWishlist } = useWishlistActions()
+  const isInWishlistState = isInWishlist(product.id)
 
   // Reset selections when product changes
   React.useEffect(() => {
@@ -201,9 +205,25 @@ export function QuickViewModal({
                   size="sm"
                   variant="ghost"
                   className="rounded-none p-2"
-                  onClick={() => console.log("Add to wishlist")}
+                  onClick={() => {
+                    if (isInWishlistState) {
+                      removeItem(product.id)
+                    } else {
+                      addItem({
+                        productId: product.id,
+                        name: product.name,
+                        slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
+                        price: product.price,
+                        originalPrice: product.originalPrice,
+                        image: product.images[0] || '/api/placeholder/300/400',
+                        category: product.category,
+                        inStock: product.variants?.some(v => v.stock > 0) ?? true,
+                        sizes: product.variants?.map(v => v.size) || ['One Size']
+                      })
+                    }
+                  }}
                 >
-                  <Heart className="h-4 w-4" />
+                  <Heart className={cn("h-4 w-4", isInWishlistState && "fill-current text-red-600")} />
                 </Button>
                 <Button
                   size="sm"

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CartIconSafe } from "@/components/cart/cart-icon-safe"
 import { AdvancedSearchBar } from "@/components/search/advanced-search-bar"
 import { cn } from "@/lib/utils"
+import { useWishlistCount } from "@/store/wishlist"
 
 interface NavItem {
   title: string
@@ -116,6 +117,18 @@ const navigation: NavItem[] = [
     description: "Our story and mission"
   }
 ]
+
+function WishlistBadge() {
+  const wishlistCount = useWishlistCount()
+  
+  if (wishlistCount === 0) return null
+  
+  return (
+    <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">
+      {wishlistCount > 9 ? '9+' : wishlistCount}
+    </span>
+  )
+}
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false)
@@ -312,9 +325,10 @@ export function Navbar() {
             </Button>
 
             {/* Favorites */}
-            <Button variant="ghost" size="icon" className="hidden sm:flex" asChild>
+            <Button variant="ghost" size="icon" className="hidden sm:flex relative" asChild>
               <Link href="/account/wishlist">
                 <Heart className="h-4 w-4" />
+                <WishlistBadge />
                 <span className="sr-only">Favorites</span>
               </Link>
             </Button>
