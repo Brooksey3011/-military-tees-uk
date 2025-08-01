@@ -66,13 +66,12 @@ export default function SalePage() {
         <section className="bg-gradient-to-b from-red-600/10 to-background py-20 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-6">
-              <div className="bg-red-600/10 p-4 border-2 border-red-600 mr-4">
-                <img 
-                  src="/logowhite.png" 
-                  alt="Military Tees UK Logo" 
-                  className="h-12 w-12 object-contain brightness-0 invert"
-                />
-              </div>
+              <img 
+                src="/logowhite.png" 
+                alt="Military Tees UK Logo" 
+                className="h-12 w-12 object-contain mr-4"
+                style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
+              />
               <div className="text-left">
                 <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
                   Sale

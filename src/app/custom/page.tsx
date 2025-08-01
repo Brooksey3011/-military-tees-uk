@@ -87,13 +87,12 @@ export default function CustomOrdersPage() {
       <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-20">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
-            <div className="bg-primary/10 p-4 border-2 border-primary mr-4">
-              <img 
-                src="/logowhite.png" 
-                alt="Military Tees UK Logo" 
-                className="h-12 w-12 object-contain"
-              />
-            </div>
+            <img 
+              src="/logowhite.png" 
+              alt="Military Tees UK Logo" 
+              className="h-12 w-12 object-contain mr-4"
+              style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
+            />
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
                 Custom Orders
