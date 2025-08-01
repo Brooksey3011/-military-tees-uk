@@ -58,7 +58,7 @@ export function QuickViewModal({
   const [isAddingToCart, setIsAddingToCart] = React.useState(false)
   
   const { addItem, removeItem, isInWishlist } = useWishlistActions()
-  const isInWishlistState = isInWishlist(product.id)
+  const isInWishlistState = product ? isInWishlist(product.id) : false
 
   // Reset selections when product changes
   React.useEffect(() => {
@@ -149,13 +149,13 @@ export function QuickViewModal({
     }
   }
 
-  const discountPercentage = product.originalPrice 
+  const discountPercentage = product?.originalPrice 
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : 0
 
   return (
     <AnimatePresence>
-      {isOpen && (
+      {isOpen && product && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
@@ -206,6 +206,8 @@ export function QuickViewModal({
                   variant="ghost"
                   className="rounded-none p-2"
                   onClick={() => {
+                    if (!product) return
+                    
                     if (isInWishlistState) {
                       removeItem(product.id)
                     } else {
