@@ -3,14 +3,16 @@ import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { PromotionalBanner } from "@/components/ui/promotional-banner"
-import { ReviewShowcase } from "@/components/reviews/review-showcase"
+import { PromoBanner } from "@/components/ui/promo-banner"
 import { PaymentOptions } from "@/components/ui/payment-options"
-import { Shield, Star, Truck, Award, Users, Check } from "lucide-react"
+import { Truck, Award, Users, Check } from "lucide-react"
 
 export default function Home() {
   return (
     <Layout>
+      {/* Promotional Banner */}
+      <PromoBanner />
+      
       <div className="min-h-screen">
 
         {/* Hero Section */}
@@ -20,7 +22,7 @@ export default function Home() {
             <img 
               src="/logowhite.png" 
               alt="Military Tees UK Background Logo" 
-              className="w-[500px] h-auto md:w-[700px] lg:w-[800px] opacity-15 object-contain select-none"
+              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] opacity-12 object-contain select-none"
             />
           </div>
           

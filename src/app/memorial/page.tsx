@@ -77,12 +77,12 @@ export default function MemorialPage() {
           <div className="h-full w-full bg-[url('/icons/poppy-pattern.svg')] bg-repeat bg-center"></div>
         </div>
         
-        <div className="relative container mx-auto px-4 py-20 text-center">
-          <div className="flex items-center justify-center mb-6">
+        <div className="relative container mx-auto px-4 py-24 text-center">
+          <div className="flex items-center justify-center mb-8">
             <img 
               src="/logowhite.png" 
               alt="Military Tees UK Logo" 
-              className="h-12 w-12 object-contain mr-4"
+              className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
               style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
             />
             <div className="text-left">
@@ -95,13 +95,13 @@ export default function MemorialPage() {
             </div>
           </div>
           
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8 leading-relaxed">
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-10 leading-relaxed">
             We remember those who made the ultimate sacrifice in service to their country. 
             These designs serve as lasting tributes to fallen heroes, ensuring their memory 
             and sacrifice are never forgotten.
           </p>
           
-          <div className="flex justify-center items-center gap-8 text-center">
+          <div className="flex justify-center items-center gap-12 text-center mt-8">
             <div>
               <div className="text-2xl font-bold text-primary">Memorial</div>
               <div className="text-sm text-muted-foreground">Designs</div>

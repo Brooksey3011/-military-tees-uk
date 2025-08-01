@@ -62,13 +62,13 @@ export default function VeteransPage() {
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-muted/20 to-background py-20 border-b-2 border-border">
+        <section className="bg-gradient-to-b from-muted/20 to-background py-24 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center justify-center mb-8">
               <img 
                 src="/logowhite.png" 
                 alt="Military Tees UK Logo" 
-                className="h-12 w-12 object-contain mr-4"
+                className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
                 style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
               />
               <div className="text-left">
@@ -81,14 +81,14 @@ export default function VeteransPage() {
               </div>
             </div>
             
-            <div className="max-w-3xl mx-auto mb-8">
+            <div className="max-w-3xl mx-auto mb-10">
               <p className="text-lg text-muted-foreground leading-relaxed">
                 Honour your service with our premium veteran collection. Designed by veterans, for veterans - 
                 celebrating the courage, dedication, and sacrifice of those who served our nation.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
                 <Link href="/products?category=veterans">
                   Shop Veterans Collection

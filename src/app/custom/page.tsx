@@ -84,13 +84,13 @@ export default function CustomOrdersPage() {
     <Layout>
       <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-20">
+      <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-24">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center mb-6">
+          <div className="flex items-center justify-center mb-8">
             <img 
               src="/logowhite.png" 
               alt="Military Tees UK Logo" 
-              className="h-12 w-12 object-contain mr-4"
+              className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
               style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
             />
             <div className="text-left">
@@ -103,7 +103,7 @@ export default function CustomOrdersPage() {
             </div>
           </div>
           
-          <div className="max-w-3xl mx-auto mb-8">
+          <div className="max-w-3xl mx-auto mb-10">
             <p className="text-lg text-muted-foreground leading-relaxed">
               Create something truly unique with our custom military apparel service. 
               From unit designs to personal commemoratives, we bring your military-themed 
@@ -111,7 +111,7 @@ export default function CustomOrdersPage() {
             </p>
           </div>
           
-          <div className="flex justify-center items-center gap-8 text-center">
+          <div className="flex justify-center items-center gap-12 text-center mt-8">
             <div>
               <div className="text-2xl font-bold text-primary">500+</div>
               <div className="text-sm text-muted-foreground">Custom Designs</div>

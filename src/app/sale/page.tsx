@@ -7,117 +7,117 @@ import { Layout } from "@/components/layout/layout"
 import { Tag, Clock, Star, TrendingDown, Percent, Gift } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Sale - Military Tees UK",
-  description: "Discounted military apparel and special offers - premium military-themed clothing at reduced prices.",
+  title: "Launch Deals - Military Tees UK",
+  description: "Startup launch deals and special offers - premium military-themed clothing with exclusive pricing for early customers.",
   keywords: [
-    "military sale",
-    "military apparel discount",
-    "army tees sale",
-    "military clothing offers",
-    "discounted military gear",
-    "sale military shirts"
+    "military launch deals",
+    "startup offers",
+    "military apparel deals",
+    "launch pricing",
+    "early bird discount",
+    "military tees deals"
   ]
 }
 
 export default function SalePage() {
-  const saleCategories = [
+  const dealCategories = [
     {
-      title: "Clearance Items",
-      description: "Up to 50% off selected designs",
-      icon: <TrendingDown className="h-8 w-8" />,
-      href: "/products?category=clearance",
-      discount: "Up to 50% off"
-    },
-    {
-      title: "Seasonal Sale",
-      description: "Limited time seasonal offers",
-      icon: <Clock className="h-8 w-8" />,
-      href: "/products?category=seasonal-sale",
-      discount: "30% off"
-    },
-    {
-      title: "Bundle Deals",
-      description: "Buy more, save more offers",
-      icon: <Gift className="h-8 w-8" />,
-      href: "/products?category=bundles",
-      discount: "Buy 2 Get 1 Free"
-    },
-    {
-      title: "Last Chance",
-      description: "Final reductions before they're gone",
+      title: "Launch Special",
+      description: "Exclusive pricing for early supporters",
       icon: <Star className="h-8 w-8" />,
-      href: "/products?category=last-chance",
-      discount: "Up to 60% off"
+      href: "/products?category=launch-special",
+      discount: "15% off"
+    },
+    {
+      title: "First Order Discount",
+      description: "Welcome offer for new customers",
+      icon: <Gift className="h-8 w-8" />,
+      href: "/products?category=first-order",
+      discount: "10% off + Free Shipping"
+    },
+    {
+      title: "Bulk Orders",
+      description: "Perfect for units and groups",
+      icon: <TrendingDown className="h-8 w-8" />,
+      href: "/custom",
+      discount: "Volume Pricing Available"
+    },
+    {
+      title: "Early Bird Deals",
+      description: "Limited time startup pricing",
+      icon: <Clock className="h-8 w-8" />,
+      href: "/products?category=early-bird",
+      discount: "Special Pricing"
     }
   ]
 
-  const saleHighlights = [
-    "Up to 60% off selected military tees",
-    "Buy 2 Get 1 Free on featured designs",
-    "Free UK shipping on orders over £30",
-    "Military discount still applies",
-    "Limited time offers - while stocks last"
+  const dealHighlights = [
+    "15% off launch special pricing",
+    "Free shipping on first orders",
+    "Free UK delivery over £50",
+    "10% military discount available",
+    "Volume pricing for bulk orders"
   ]
 
   return (
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-red-600/10 to-background py-20 border-b-2 border-border">
+        <section className="bg-gradient-to-b from-primary/10 to-background py-24 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-6">
+            <div className="flex items-center justify-center mb-8">
               <img 
                 src="/logowhite.png" 
                 alt="Military Tees UK Logo" 
-                className="h-12 w-12 object-contain mr-4"
-                style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
+                className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
+                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
               />
               <div className="text-left">
                 <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
-                  Sale
+                  Launch Deals
                 </h1>
                 <p className="text-xl text-muted-foreground font-display tracking-wide">
-                  Military Apparel at Reduced Prices
+                  Exclusive Startup Pricing
                 </p>
               </div>
             </div>
             
-            <div className="max-w-3xl mx-auto mb-8">
+            <div className="max-w-3xl mx-auto mb-10">
               <p className="text-lg text-muted-foreground leading-relaxed">
-                Discover premium military-themed apparel at unbeatable prices. 
-                Limited time offers on our most popular designs.
+                As a new startup, we're offering exclusive deals to our early supporters. 
+                Premium military-themed apparel at special launch pricing.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700" asChild>
-                <Link href="/products?category=sale">
-                  Shop Sale Items
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
+                <Link href="/products">
+                  Shop Launch Deals
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="rounded-none border-2 font-display font-bold tracking-wide uppercase border-red-600 text-red-600 hover:bg-red-600 hover:text-white" asChild>
-                <Link href="#sale-categories">
-                  Browse Offers
+              <Button size="lg" variant="outline" className="rounded-none border-2 font-display font-bold tracking-wide uppercase" asChild>
+                <Link href="#deal-categories">
+                  View All Offers
                 </Link>
               </Button>
             </div>
           </div>
         </section>
 
-        {/* Sale Highlights */}
-        <section className="py-16 bg-red-600/5">
+        {/* Deal Highlights */}
+        <section className="py-16 bg-primary/5">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-2 mb-4">
-                <Percent className="h-6 w-6 text-red-600" />
+                <Tag className="h-6 w-6 text-primary" />
                 <h2 className="text-3xl font-display font-bold">
                   Current Offers
                 </h2>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
-                {saleHighlights.map((highlight, index) => (
-                  <div key={index} className="bg-background p-4 border-2 border-red-600/20 rounded-none text-center">
+                {dealHighlights.map((highlight, index) => (
+                  <div key={index} className="bg-background p-4 border-2 border-primary/20 rounded-none text-center">
                     <p className="text-sm font-medium">{highlight}</p>
                   </div>
                 ))}
@@ -126,24 +126,24 @@ export default function SalePage() {
           </div>
         </section>
 
-        {/* Sale Categories */}
-        <section id="sale-categories" className="py-16 bg-background">
+        {/* Deal Categories */}
+        <section id="deal-categories" className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-display font-bold mb-4">
-                Sale Categories
+                Launch Offers
               </h2>
               <p className="text-muted-foreground max-w-2xl mx-auto">
-                Browse our current sale offerings and find great deals on military-themed apparel.
+                Exclusive deals for our early customers. Supporting those who serve with startup pricing.
               </p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {saleCategories.map((category, index) => (
-                <Card key={index} className="border-2 border-border rounded-none hover:border-red-600 transition-colors group">
+              {dealCategories.map((category, index) => (
+                <Card key={index} className="border-2 border-border rounded-none hover:border-primary transition-colors group">
                   <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 bg-red-600/10 border-2 border-red-600 flex items-center justify-center group-hover:bg-red-600/20 transition-colors">
+                      <div className="w-16 h-16 bg-primary/10 border-2 border-primary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
                         {category.icon}
                       </div>
                     </div>
@@ -155,15 +155,16 @@ export default function SalePage() {
                     <p className="text-muted-foreground text-sm">
                       {category.description}
                     </p>
-                    <Badge className="rounded-none bg-red-600 hover:bg-red-700">
+                    <Badge className="rounded-none bg-primary hover:bg-primary/90">
                       {category.discount}
                     </Badge>
                     <Button 
-                      className="w-full rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700" 
+                      className="w-full rounded-none font-display font-bold tracking-wide uppercase" 
+                      variant="outline"
                       asChild
                     >
                       <Link href={category.href}>
-                        Shop Now
+                        Learn More
                       </Link>
                     </Button>
                   </CardContent>
@@ -207,10 +208,10 @@ export default function SalePage() {
           <div className="container mx-auto px-4">
             <div className="max-w-2xl mx-auto text-center">
               <h2 className="text-3xl font-display font-bold mb-4">
-                Never Miss a Sale
+                Stay Updated on New Deals
               </h2>
               <p className="text-muted-foreground mb-8">
-                Be the first to know about our exclusive offers, flash sales, and military discounts.
+                Be the first to know about our latest launches, exclusive offers, and military community updates.
               </p>
               
               <Card className="border-2 border-border rounded-none">
@@ -222,13 +223,13 @@ export default function SalePage() {
                       className="flex-1 px-4 py-3 border-2 border-border rounded-none focus:outline-none focus:border-primary"
                     />
                     <Button 
-                      className="rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700"
+                      className="rounded-none font-display font-bold tracking-wide uppercase"
                     >
                       Subscribe
                     </Button>
                   </div>
                   <p className="text-xs text-muted-foreground mt-4">
-                    By subscribing, you agree to receive sale notifications and can unsubscribe at any time.
+                    By subscribing, you agree to receive updates about new products and offers. Unsubscribe anytime.
                   </p>
                 </CardContent>
               </Card>
@@ -237,33 +238,34 @@ export default function SalePage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-gradient-to-r from-red-600 to-red-700 text-white">
+        <section className="py-16 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-display font-bold mb-4">
-              Don't Miss Out - Sale Ends Soon!
+              Join Our Military Community
             </h2>
             <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Premium military apparel at incredible prices. Stock is limited and these offers won't last long.
+              Premium military apparel from a startup founded by veterans. 
+              Support our journey while getting quality gear at launch pricing.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
                 variant="secondary" 
                 size="lg"
-                className="bg-white text-red-600 hover:bg-red-50 font-bold uppercase tracking-wide"
+                className="bg-background text-foreground hover:bg-background/90 font-bold uppercase tracking-wide"
                 asChild
               >
-                <Link href="/products?category=sale">
-                  Shop All Sale Items
+                <Link href="/products">
+                  Shop Our Collection
                 </Link>
               </Button>
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-2 border-white text-white hover:bg-white hover:text-red-600 font-bold uppercase tracking-wide"
+                className="border-2 border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-wide"
                 asChild
               >
-                <Link href="/categories">
-                  Browse All Categories
+                <Link href="/about">
+                  Our Story
                 </Link>
               </Button>
             </div>
