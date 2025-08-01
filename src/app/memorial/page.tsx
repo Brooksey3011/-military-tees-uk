@@ -80,7 +80,12 @@ export default function MemorialPage() {
         <div className="relative container mx-auto px-4 py-20 text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="bg-primary/10 p-4 border-2 border-primary mr-4">
-              <Heart className="h-12 w-12 text-primary" />
+              <img 
+                src="/logowhite.svg" 
+                alt="Military Tees UK Logo" 
+                className="h-12 w-12 object-contain"
+                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
+              />
             </div>
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
@@ -110,10 +115,6 @@ export default function MemorialPage() {
             </div>
           </div>
           
-          <p className="text-xs text-muted-foreground mt-4 max-w-2xl mx-auto">
-            *A portion of proceeds from memorial designs goes to military charities 
-            supporting veterans and families of the fallen.
-          </p>
         </div>
       </section>
 
@@ -241,9 +242,9 @@ export default function MemorialPage() {
                 <div className="flex items-start gap-3">
                   <Heart className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="font-medium text-foreground">Charity Partnership</p>
+                    <p className="font-medium text-foreground">Memorial Respect</p>
                     <p className="text-muted-foreground">
-                      Portion of proceeds support military charities and veterans' families
+                      Each design created with dignity and respect for fallen heroes
                     </p>
                   </div>
                 </div>

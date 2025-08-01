@@ -37,8 +37,8 @@ const customServices = [
   {
     icon: Palette,
     title: "Personal Designs",
-    description: "Individual custom designs for veterans, families, and military enthusiasts",
-    features: ["Personal service details", "Custom text & graphics", "Photo integration", "One-off pieces"],
+    description: "Custom designs for military personnel, businesses, and civilian clients seeking professional apparel",
+    features: ["Military rank & service details", "Corporate branding", "Personal achievements", "Civilian memorial designs"],
     minOrder: 1,
     timeline: "7-10 days"
   }
@@ -88,7 +88,12 @@ export default function CustomOrdersPage() {
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="bg-primary/10 p-4 border-2 border-primary mr-4">
-              <Palette className="h-12 w-12 text-primary" />
+              <img 
+                src="/logowhite.svg" 
+                alt="Military Tees UK Logo" 
+                className="h-12 w-12 object-contain"
+                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
+              />
             </div>
             <div className="text-left">
               <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
@@ -193,9 +198,9 @@ export default function CustomOrdersPage() {
                   
                   <div className="space-y-3 pt-4 border-t border-border">
                     <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">Min Order:</span>
+                      <span className="text-muted-foreground">Pricing:</span>
                       <Badge variant="secondary" className="rounded-none">
-                        {service.minOrder} {service.minOrder === 1 ? 'piece' : 'pieces'}
+                        Bulk discount available
                       </Badge>
                     </div>
                     
@@ -333,16 +338,6 @@ export default function CustomOrdersPage() {
                   />
                 </div>
                 
-                <div className="space-y-2">
-                  <label className="text-sm font-medium text-foreground">
-                    Phone Number
-                  </label>
-                  <Input 
-                    type="tel"
-                    placeholder="Your phone number"
-                    className="rounded-none border-2"
-                  />
-                </div>
                 
                 <div className="space-y-2">
                   <label className="text-sm font-medium text-foreground">
@@ -407,15 +402,6 @@ export default function CustomOrdersPage() {
                 </CardHeader>
                 
                 <CardContent className="space-y-4">
-                  <div className="flex items-start gap-3">
-                    <Phone className="h-5 w-5 text-primary mt-1" />
-                    <div>
-                      <p className="font-medium text-foreground">Phone</p>
-                      <p className="text-muted-foreground">+44 (0) 123 456 7890</p>
-                      <p className="text-xs text-muted-foreground">Mon-Fri, 9AM-5PM GMT</p>
-                    </div>
-                  </div>
-                  
                   <div className="flex items-start gap-3">
                     <Mail className="h-5 w-5 text-primary mt-1" />
                     <div>

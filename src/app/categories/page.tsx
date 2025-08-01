@@ -1,6 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Shield, MapPin, Users, Truck, Radio, Target, Building, Dumbbell, Lock, Award, Package, GraduationCap, Home, Crosshair, Heart, Store } from "lucide-react"
+import { Shield, MapPin, Users, Truck, Radio, Target, Building, Dumbbell, Lock, Award, Package, GraduationCap, Home, Crosshair, Heart, Store, Star, Baby } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -115,6 +115,18 @@ const categories = [
     name: "G10 Stores", 
     description: "General stores and supplies",
     icon: Package
+  },
+  { 
+    slug: "veterans", 
+    name: "Veterans", 
+    description: "Honoring those who served with pride",
+    icon: Star
+  },
+  { 
+    slug: "kids", 
+    name: "Kids", 
+    description: "Military-themed apparel for young recruits",
+    icon: Baby
   }
 ]
 

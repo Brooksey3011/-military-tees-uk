@@ -70,14 +70,6 @@ export default function ContactPage() {
                   <CardContent className="space-y-4">
                     <div className="space-y-3">
                       <div className="flex items-center gap-3">
-                        <Phone className="h-4 w-4 text-muted-foreground" />
-                        <div>
-                          <p className="font-medium text-foreground">Phone Support</p>
-                          <p className="text-sm text-muted-foreground">+44 1234 567890</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-3">
                         <Mail className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <p className="font-medium text-foreground">General Email</p>
@@ -152,10 +144,6 @@ export default function ContactPage() {
                       <span className="text-foreground font-medium">Within 24 hours</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Phone Support:</span>
-                      <span className="text-foreground font-medium">Immediate</span>
-                    </div>
-                    <div className="flex justify-between">
                       <span className="text-muted-foreground">Custom Designs:</span>
                       <span className="text-foreground font-medium">2-3 business days</span>
                     </div>
@@ -209,32 +197,18 @@ export default function ContactPage() {
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-2">
-                            Email Address *
-                          </label>
-                          <Input 
-                            type="email"
-                            className="rounded-none border-2"
-                            placeholder="your.email@example.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-medium text-foreground mb-2">
-                            Phone Number
-                          </label>
-                          <Input 
-                            type="tel"
-                            className="rounded-none border-2"
-                            placeholder="+44 1234 567890"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
-                          />
-                        </div>
+                      <div>
+                        <label className="block text-sm font-medium text-foreground mb-2">
+                          Email Address *
+                        </label>
+                        <Input 
+                          type="email"
+                          className="rounded-none border-2"
+                          placeholder="your.email@example.com"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          required
+                        />
                       </div>
 
                       {/* Subject and Order */}

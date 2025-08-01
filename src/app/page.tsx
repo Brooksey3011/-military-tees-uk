@@ -20,7 +20,7 @@ export default function Home() {
             <img 
               src="/logowhite.png" 
               alt="Military Tees UK Background Logo" 
-              className="w-[500px] h-auto md:w-[700px] lg:w-[800px] opacity-5 object-contain select-none"
+              className="w-[500px] h-auto md:w-[700px] lg:w-[800px] opacity-15 object-contain select-none"
             />
           </div>
           
@@ -52,6 +52,34 @@ export default function Home() {
           </div>
         </section>
 
+        {/* New Arrivals Section */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <Badge className="bg-primary text-primary-foreground font-bold mb-4">
+                🆕 FRESH STOCK
+              </Badge>
+              <h2 className="text-3xl font-display font-bold mb-4">
+                Latest Arrivals
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                The newest additions to our military heritage collection. Premium quality designs inspired by British Armed Forces tradition.
+              </p>
+            </div>
+            
+            <div className="text-center">
+              <Button 
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wide"
+                asChild
+              >
+                <Link href="/new-arrivals">
+                  View New Arrivals
+                </Link>
+              </Button>
+            </div>
+          </div>
+        </section>
 
         {/* Why Choose Us - Complementing About Page */}
         <section className="py-16 bg-background">
@@ -107,36 +135,6 @@ export default function Home() {
           </div>
         </section>
 
-
-        {/* New Arrivals Section */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <Badge className="bg-primary text-primary-foreground font-bold mb-4">
-                🆕 FRESH STOCK
-              </Badge>
-              <h2 className="text-3xl font-display font-bold mb-4">
-                Latest Arrivals
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                The newest additions to our military heritage collection. Premium quality designs inspired by British Armed Forces tradition.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <Button 
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wide"
-                asChild
-              >
-                <Link href="/new-arrivals">
-                  View New Arrivals
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
         {/* Payment Options & Trust */}
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4">
@@ -165,9 +163,9 @@ export default function Home() {
                 </Link>
               </Button>
               <Button 
-                variant="outline" 
+                variant="secondary" 
                 size="lg"
-                className="border-2 border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-wide"
+                className="bg-background text-foreground hover:bg-background/90 font-bold uppercase tracking-wide"
                 asChild
               >
                 <Link href="/custom">

@@ -92,7 +92,12 @@ export default function AboutPage() {
                 "inline-block p-4 mb-6",
                 "border-2 border-primary rounded-none bg-background"
               )}>
-                <Shield className="h-12 w-12 text-primary" />
+                <img 
+                  src="/logowhite.svg" 
+                  alt="Military Tees UK Logo" 
+                  className="h-12 w-12 object-contain"
+                  style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
+                />
               </div>
               
               <h1 className={cn(
@@ -366,20 +371,6 @@ export default function AboutPage() {
             </Link>
           </div>
           
-          <div className="mt-8 pt-8 border-t border-border">
-            <p className="text-sm text-muted-foreground mb-4">
-              <strong>Proudly Supporting:</strong>
-            </p>
-            <div className="flex justify-center items-center gap-6 text-xs text-muted-foreground">
-              <span>Help for Heroes</span>
-              <span>•</span>
-              <span>Royal British Legion</span>
-              <span>•</span>
-              <span>SSAFA</span>
-              <span>•</span>
-              <span>Combat Stress</span>
-            </div>
-          </div>
         </div>
       </section>
       </div>

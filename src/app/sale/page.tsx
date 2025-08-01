@@ -67,7 +67,12 @@ export default function SalePage() {
           <div className="container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-6">
               <div className="bg-red-600/10 p-4 border-2 border-red-600 mr-4">
-                <Tag className="h-12 w-12 text-red-600" />
+                <img 
+                  src="/logowhite.svg" 
+                  alt="Military Tees UK Logo" 
+                  className="h-12 w-12 object-contain"
+                  style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
+                />
               </div>
               <div className="text-left">
                 <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
