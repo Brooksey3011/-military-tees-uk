@@ -58,9 +58,6 @@ export default function Home() {
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <Badge className="bg-primary text-primary-foreground font-bold mb-4">
-                🆕 FRESH STOCK
-              </Badge>
               <h2 className="text-3xl font-display font-bold mb-4">
                 Latest Arrivals
               </h2>

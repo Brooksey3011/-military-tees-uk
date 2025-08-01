@@ -1,3 +1,5 @@
+"use client"
+
 import { Metadata } from "next"
 import Link from "next/link"
 import { Heart, ArrowLeft, ShoppingCart, Trash2, Share } from "lucide-react"
@@ -6,67 +8,40 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { useWishlistItems, useWishlistCount, useWishlistActions } from "@/store/wishlist"
+import { useCartActions } from "@/store/cart"
 
-export const metadata: Metadata = {
-  title: "My Wishlist | Military Tees UK",
-  description: "Your saved items at Military Tees UK. Keep track of your favorite military apparel and add them to your cart when ready.",
-  robots: {
-    index: false,
-    follow: false,
-  }
-}
+// Note: Metadata should be in layout.tsx for client components
+// export const metadata: Metadata = {
+//   title: "My Wishlist | Military Tees UK",
+//   description: "Your saved items at Military Tees UK. Keep track of your favorite military apparel and add them to your cart when ready.",
+//   robots: {
+//     index: false,
+//     follow: false,
+//   }
+// }
 
 export default function WishlistPage() {
-  const wishlistItems = [
-    {
-      id: 1,
-      name: "Royal Marines Commando T-Shirt",
-      slug: "royal-marines-commando",
-      price: 24.99,
-      originalPrice: null,
-      image: "/api/placeholder/300/400",
-      category: "Royal Marines",
-      inStock: true,
-      sizes: ["S", "M", "L", "XL"],
-      addedDate: "2024-01-10"
-    },
-    {
-      id: 2,
-      name: "SAS Special Forces Hoodie",
-      slug: "sas-special-forces-hoodie", 
-      price: 39.99,
-      originalPrice: 44.99,
-      image: "/api/placeholder/300/400",
-      category: "Special Forces",
-      inStock: true,
-      sizes: ["M", "L", "XL"],
-      addedDate: "2024-01-08"
-    },
-    {
-      id: 3,
-      name: "Parachute Regiment Cap Badge",
-      slug: "parachute-regiment-badge",
-      price: 15.99,
-      originalPrice: null,
-      image: "/api/placeholder/300/400",
-      category: "Accessories",
-      inStock: false,
-      sizes: ["One Size"],
-      addedDate: "2024-01-05"
-    },
-    {
-      id: 4,
-      name: "RAF Pilot Wings T-Shirt",
-      slug: "raf-pilot-wings",
-      price: 22.99,
-      originalPrice: null,
-      image: "/api/placeholder/300/400", 
-      category: "RAF",
-      inStock: true,
-      sizes: ["S", "M", "L", "XL", "XXL"],
-      addedDate: "2023-12-28"
-    }
-  ]
+  const wishlistItems = useWishlistItems()
+  const wishlistCount = useWishlistCount()
+  const { removeItem, clearWishlist } = useWishlistActions()
+  const { addItem: addToCart } = useCartActions()
+
+  const handleAddToCart = (item: any) => {
+    addToCart({
+      productId: item.productId,
+      variantId: `${item.productId}-default`, // You may need to adjust this based on your variant system
+      name: item.name,
+      price: item.price,
+      image: item.image,
+      size: item.sizes[0], // Default to first available size
+      maxQuantity: 10 // Default max quantity
+    })
+  }
+
+  const handleRemoveFromWishlist = (productId: string) => {
+    removeItem(productId)
+  }
 
   return (
     <Layout>
@@ -93,7 +68,7 @@ export default function WishlistPage() {
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
                   <Heart className="h-4 w-4 text-red-600" />
-                  <span className="text-sm text-muted-foreground">{wishlistItems.length} items saved</span>
+                  <span className="text-sm text-muted-foreground">{wishlistCount} items saved</span>
                 </div>
                 <Button size="sm" variant="outline" className="rounded-none border-2" disabled>
                   <Share className="h-4 w-4 mr-2" />
@@ -119,11 +94,26 @@ export default function WishlistPage() {
                         <p className="text-sm text-muted-foreground">Manage your saved items</p>
                       </div>
                       <div className="flex gap-3">
-                        <Button className="rounded-none" disabled>
+                        <Button 
+                          className="rounded-none" 
+                          onClick={() => {
+                            wishlistItems.forEach(item => {
+                              if (item.inStock) {
+                                handleAddToCart(item)
+                              }
+                            })
+                          }}
+                          disabled={wishlistItems.length === 0 || !wishlistItems.some(item => item.inStock)}
+                        >
                           <ShoppingCart className="h-4 w-4 mr-2" />
                           Add All to Cart
                         </Button>
-                        <Button variant="outline" className="rounded-none border-2" disabled>
+                        <Button 
+                          variant="outline" 
+                          className="rounded-none border-2" 
+                          onClick={clearWishlist}
+                          disabled={wishlistItems.length === 0}
+                        >
                           Clear Wishlist
                         </Button>
                       </div>
@@ -152,7 +142,7 @@ export default function WishlistPage() {
                             size="sm"
                             variant="ghost"
                             className="absolute top-3 right-3 rounded-none bg-white/80 hover:bg-white text-red-600 hover:text-red-700"
-                            disabled
+                            onClick={() => handleRemoveFromWishlist(item.productId)}
                           >
                             <Heart className="h-4 w-4 fill-current" />
                           </Button>
@@ -206,6 +196,7 @@ export default function WishlistPage() {
                               size="sm" 
                               className="flex-1 rounded-none" 
                               disabled={!item.inStock}
+                              onClick={() => item.inStock && handleAddToCart(item)}
                             >
                               <ShoppingCart className="h-3 w-3 mr-1" />
                               {item.inStock ? "Add to Cart" : "Notify Me"}
@@ -214,7 +205,7 @@ export default function WishlistPage() {
                               size="sm" 
                               variant="ghost" 
                               className="rounded-none text-red-600 hover:text-red-700 hover:bg-red-50"
-                              disabled
+                              onClick={() => handleRemoveFromWishlist(item.productId)}
                             >
                               <Trash2 className="h-3 w-3" />
                             </Button>
@@ -237,7 +228,17 @@ export default function WishlistPage() {
                     <p className="text-muted-foreground mb-4">
                       Move your favorite items to your cart and take advantage of our military discount.
                     </p>
-                    <Button className="rounded-none" disabled>
+                    <Button 
+                      className="rounded-none"
+                      onClick={() => {
+                        wishlistItems.forEach(item => {
+                          if (item.inStock) {
+                            handleAddToCart(item)
+                          }
+                        })
+                      }}
+                      disabled={wishlistItems.length === 0 || !wishlistItems.some(item => item.inStock)}
+                    >
                       <ShoppingCart className="h-4 w-4 mr-2" />
                       Add Available Items to Cart
                     </Button>
@@ -256,8 +257,10 @@ export default function WishlistPage() {
                     Start building your wishlist by clicking the heart icon on products you love. 
                     We'll save them here for you to purchase later.
                   </p>
-                  <Button className="rounded-none" disabled>
-                    Continue Shopping
+                  <Button className="rounded-none" asChild>
+                    <Link href="/products">
+                      Continue Shopping
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>

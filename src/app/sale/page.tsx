@@ -63,14 +63,14 @@ export default function SalePage() {
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-primary/10 to-background py-24 border-b-2 border-border">
+        <section className="bg-gradient-to-b from-red-600/10 to-background py-24 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-8">
               <img 
                 src="/logowhite.png" 
                 alt="Military Tees UK Logo" 
                 className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
-                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
+                style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
               />
               <div className="text-left">
                 <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
@@ -84,7 +84,7 @@ export default function SalePage() {
             
             <div className="max-w-3xl mx-auto mb-10">
               <p className="text-lg text-muted-foreground leading-relaxed">
-                As a new startup, we're offering exclusive deals to our early supporters. 
+                Exclusive deals for our early supporters. 
                 Premium military-themed apparel at special launch pricing.
               </p>
             </div>
@@ -105,11 +105,11 @@ export default function SalePage() {
         </section>
 
         {/* Deal Highlights */}
-        <section className="py-16 bg-primary/5">
+        <section className="py-16 bg-red-600/5">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <div className="flex items-center justify-center gap-2 mb-4">
-                <Tag className="h-6 w-6 text-primary" />
+                <Percent className="h-6 w-6 text-red-600" />
                 <h2 className="text-3xl font-display font-bold">
                   Current Offers
                 </h2>
@@ -117,7 +117,7 @@ export default function SalePage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
                 {dealHighlights.map((highlight, index) => (
-                  <div key={index} className="bg-background p-4 border-2 border-primary/20 rounded-none text-center">
+                  <div key={index} className="bg-background p-4 border-2 border-red-600/20 rounded-none text-center">
                     <p className="text-sm font-medium">{highlight}</p>
                   </div>
                 ))}
@@ -140,10 +140,10 @@ export default function SalePage() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               {dealCategories.map((category, index) => (
-                <Card key={index} className="border-2 border-border rounded-none hover:border-primary transition-colors group">
+                <Card key={index} className="border-2 border-border rounded-none hover:border-red-600 transition-colors group">
                   <CardHeader className="text-center">
                     <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 bg-primary/10 border-2 border-primary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                      <div className="w-16 h-16 bg-red-600/10 border-2 border-red-600 flex items-center justify-center group-hover:bg-red-600/20 transition-colors">
                         {category.icon}
                       </div>
                     </div>
@@ -155,12 +155,11 @@ export default function SalePage() {
                     <p className="text-muted-foreground text-sm">
                       {category.description}
                     </p>
-                    <Badge className="rounded-none bg-primary hover:bg-primary/90">
+                    <Badge className="rounded-none bg-red-600 hover:bg-red-700">
                       {category.discount}
                     </Badge>
                     <Button 
-                      className="w-full rounded-none font-display font-bold tracking-wide uppercase" 
-                      variant="outline"
+                      className="w-full rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700"
                       asChild
                     >
                       <Link href={category.href}>
@@ -223,7 +222,7 @@ export default function SalePage() {
                       className="flex-1 px-4 py-3 border-2 border-border rounded-none focus:outline-none focus:border-primary"
                     />
                     <Button 
-                      className="rounded-none font-display font-bold tracking-wide uppercase"
+                      className="rounded-none font-display font-bold tracking-wide uppercase bg-red-600 hover:bg-red-700"
                     >
                       Subscribe
                     </Button>
@@ -238,7 +237,7 @@ export default function SalePage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+        <section className="py-16 bg-gradient-to-r from-red-600 to-red-700 text-white">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-display font-bold mb-4">
               Join Our Military Community
