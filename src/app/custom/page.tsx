@@ -89,10 +89,9 @@ export default function CustomOrdersPage() {
           <div className="flex items-center justify-center mb-6">
             <div className="bg-primary/10 p-4 border-2 border-primary mr-4">
               <img 
-                src="/logowhite.svg" 
+                src="/logowhite.png" 
                 alt="Military Tees UK Logo" 
                 className="h-12 w-12 object-contain"
-                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
               />
             </div>
             <div className="text-left">

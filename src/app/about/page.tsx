@@ -93,10 +93,9 @@ export default function AboutPage() {
                 "border-2 border-primary rounded-none bg-background"
               )}>
                 <img 
-                  src="/logowhite.svg" 
+                  src="/logowhite.png" 
                   alt="Military Tees UK Logo" 
                   className="h-12 w-12 object-contain"
-                  style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
                 />
               </div>
               
