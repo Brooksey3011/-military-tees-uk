@@ -27,11 +27,14 @@ const footerLinks = {
     { title: "Shipping Policy", href: "/shipping" },
     { title: "Cookie Policy", href: "/cookies" },
   ],
-  "Categories": [
-    { title: "Armoury", href: "/categories/armoury" },
-    { title: "Mess Hall", href: "/categories/mess-hall" },
-    { title: "NAAFI", href: "/categories/naafi" },
-    { title: "The Ranges", href: "/categories/ranges" },
+  "Navigation": [
+    { title: "Categories", href: "/categories" },
+    { title: "Sale", href: "/sale" },
+    { title: "Memorial", href: "/memorial" },
+    { title: "Veterans", href: "/veterans" },
+    { title: "Kids", href: "/kids" },
+    { title: "Custom Orders", href: "/custom" },
+    { title: "About", href: "/about" },
   ]
 }
 
