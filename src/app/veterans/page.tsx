@@ -228,20 +228,20 @@ export default function VeteransPage() {
         </section>
 
         {/* Call to Action */}
-        <section className="py-16 bg-gradient-to-r from-primary to-secondary text-primary-foreground">
+        <section className="py-16 bg-muted text-foreground">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-display font-bold mb-4">
               Proud to Serve, Proud to Wear
             </h2>
-            <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of veterans who wear their service with pride. 
               Every purchase supports veteran causes and the military community.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
-                variant="secondary" 
+                variant="default" 
                 size="lg"
-                className="bg-background text-foreground hover:bg-background/90 font-bold uppercase tracking-wide"
+                className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wide"
                 asChild
               >
                 <Link href="/products?category=veterans">
@@ -251,7 +251,7 @@ export default function VeteransPage() {
               <Button 
                 variant="outline" 
                 size="lg"
-                className="border-2 border-white text-white hover:bg-white hover:text-black font-bold uppercase tracking-wide"
+                className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-wide"
                 asChild
               >
                 <Link href="/about">

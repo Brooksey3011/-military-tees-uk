@@ -301,7 +301,7 @@ export default function CookiesPage() {
                 <div className="space-y-2 text-sm">
                   <div><strong>Email:</strong> privacy@militarytees.co.uk</div>
                   <div><strong>Subject Line:</strong> Cookie Policy Inquiry</div>
-                  <div><strong>Phone:</strong> +44 1234 567890</div>
+                  <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                 </div>
                 
                 <p className="text-xs text-muted-foreground">

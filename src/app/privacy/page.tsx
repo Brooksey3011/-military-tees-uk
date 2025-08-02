@@ -323,7 +323,7 @@ export default function PrivacyPage() {
                 
                 <div className="space-y-2 text-sm">
                   <div><strong>Email:</strong> privacy@militarytees.co.uk</div>
-                  <div><strong>Phone:</strong> +44 1234 567890</div>
+                  <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   <div><strong>Address:</strong> Data Protection Officer, Military Tees UK, United Kingdom</div>
                 </div>
                 

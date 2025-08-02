@@ -334,8 +334,8 @@ export function QuoteForm({ serviceType, onClose }: QuoteFormProps) {
           <h4 className="font-medium text-foreground mb-3">Prefer to call or email?</h4>
           <div className="space-y-2 text-sm">
             <div className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-primary" />
-              <span>+44 (0) 123 456 7890</span>
+              <MessageCircle className="h-4 w-4 text-primary" />
+              <span>Live chat available during business hours</span>
             </div>
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-primary" />

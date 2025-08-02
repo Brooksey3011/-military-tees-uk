@@ -230,7 +230,7 @@ export default function TermsPage() {
                 
                 <div className="space-y-2 text-sm">
                   <div><strong>Email:</strong> legal@militarytees.co.uk</div>
-                  <div><strong>Phone:</strong> +44 1234 567890</div>
+                  <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   <div><strong>Address:</strong> Military Tees UK, United Kingdom</div>
                 </div>
                 

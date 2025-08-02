@@ -332,15 +332,15 @@ export default function TrackOrderPage() {
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">Phone Support</h4>
-                    <p className="text-sm text-muted-foreground">+44 1234 567890</p>
+                    <h4 className="font-semibold text-foreground mb-2">Live Chat</h4>
+                    <p className="text-sm text-muted-foreground">Available on website</p>
                     <p className="text-xs text-muted-foreground">Mon-Fri, 9AM-5PM GMT</p>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">Live Chat</h4>
-                    <p className="text-sm text-muted-foreground">Available on website</p>
-                    <p className="text-xs text-muted-foreground">Business hours only</p>
+                    <h4 className="font-semibold text-foreground mb-2">Order Updates</h4>
+                    <p className="text-sm text-muted-foreground">Automatic email notifications</p>
+                    <p className="text-xs text-muted-foreground">Real-time order tracking</p>
                   </div>
                 </div>
               </CardContent>

@@ -6,115 +6,49 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-// Categories data from navbar - following military camp theme
+// Professional condensed categories - core military themes
 const categories = [
   { 
     slug: "armoury", 
     name: "Armoury", 
-    description: "Tactical and combat gear themed tees",
+    description: "Tactical and combat gear designs",
     icon: Shield
   },
   { 
     slug: "regimental-hq", 
-    name: "Regimental HQ", 
-    description: "Command and leadership designs",
+    name: "Command & Leadership", 
+    description: "Officer and command structure themed",
     icon: MapPin
   },
   { 
-    slug: "mess-hall", 
-    name: "Mess Hall", 
-    description: "Military dining and camaraderie",
-    icon: Users
-  },
-  { 
     slug: "parade-square", 
-    name: "Parade Square", 
-    description: "Ceremonial and dress uniform styles",
+    name: "Ceremonial", 
+    description: "Dress uniform and parade designs",
     icon: Award
-  },
-  { 
-    slug: "med-centre", 
-    name: "Med Centre", 
-    description: "Military medical corps designs",
-    icon: Heart
-  },
-  { 
-    slug: "mt", 
-    name: "Motor Transport", 
-    description: "Vehicle and logistics themed",
-    icon: Truck
-  },
-  { 
-    slug: "signals", 
-    name: "Signals", 
-    description: "Communications corps gear",
-    icon: Radio
   },
   { 
     slug: "ops-room", 
-    name: "Operations Room", 
-    description: "Strategic operations themed",
+    name: "Operations", 
+    description: "Strategic and tactical operations",
     icon: Target
   },
   { 
-    slug: "naafi", 
-    name: "NAAFI", 
-    description: "Navy, Army and Air Force Institutes",
-    icon: Store
-  },
-  { 
-    slug: "gym", 
-    name: "Gym", 
-    description: "Physical training and fitness",
-    icon: Dumbbell
-  },
-  { 
-    slug: "guard-room", 
-    name: "Guard Room", 
-    description: "Security and duty themed",
-    icon: Lock
-  },
-  { 
-    slug: "sgts-mess", 
-    name: "Sergeants' Mess", 
-    description: "NCO and leadership designs",
-    icon: Award
-  },
-  { 
-    slug: "stores", 
-    name: "The Stores", 
-    description: "Supply and logistics gear",
-    icon: Package
-  },
-  { 
-    slug: "training-wing", 
-    name: "Training Wing", 
-    description: "Military education and training",
-    icon: GraduationCap
-  },
-  { 
-    slug: "block", 
-    name: "The Block", 
-    description: "Barracks and accommodation themed",
-    icon: Building
+    slug: "signals", 
+    name: "Corps & Specialist", 
+    description: "Signals, medical, transport & logistics",
+    icon: Radio
   },
   { 
     slug: "ranges", 
-    name: "The Ranges", 
-    description: "Shooting and marksmanship designs",
+    name: "Training & Fitness", 
+    description: "PT, marksmanship and military training",
     icon: Crosshair
   },
   { 
-    slug: "civvy-street", 
-    name: "Civvy Street", 
-    description: "Civilian life transition gear",
-    icon: Home
-  },
-  { 
-    slug: "g10-stores", 
-    name: "G10 Stores", 
-    description: "General stores and supplies",
-    icon: Package
+    slug: "mess-hall", 
+    name: "Barracks Life", 
+    description: "Military community and camaraderie",
+    icon: Users
   },
   { 
     slug: "veterans", 
@@ -124,9 +58,15 @@ const categories = [
   },
   { 
     slug: "kids", 
-    name: "Kids", 
+    name: "Kids Collection", 
     description: "Military-themed apparel for young recruits",
     icon: Baby
+  },
+  { 
+    slug: "civvy-street", 
+    name: "Veteran Life", 
+    description: "Post-service and civilian transition",
+    icon: Home
   }
 ]
 
@@ -184,7 +124,7 @@ export default function CategoriesPage() {
 
       {/* Categories Grid */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
           {categories.map((category) => {
             const IconComponent = category.icon
             

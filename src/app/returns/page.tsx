@@ -356,7 +356,7 @@ export default function ReturnsPage() {
                   <div className="space-y-2 text-sm">
                     <div><strong>Returns Email:</strong> returns@militarytees.co.uk</div>
                     <div><strong>General Support:</strong> support@militarytees.co.uk</div>
-                    <div><strong>Phone:</strong> +44 1234 567890</div>
+                    <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   </div>
                   
                   <div className="space-y-2 text-sm">

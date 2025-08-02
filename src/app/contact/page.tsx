@@ -297,7 +297,7 @@ export default function ContactPage() {
 
                       <p className="text-xs text-muted-foreground">
                         * Required fields. We typically respond within 24 hours during business days. 
-                        For urgent order issues, please call us directly at +44 1234 567890.
+                        For urgent order issues, please email us directly and we'll respond as soon as possible.
                       </p>
                     </form>
                   </CardContent>
@@ -318,12 +318,12 @@ export default function ContactPage() {
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
                     <div>
-                      <Phone className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <h3 className="font-semibold text-foreground mb-1">Call Us</h3>
+                      <Mail className="h-8 w-8 text-primary mx-auto mb-2" />
+                      <h3 className="font-semibold text-foreground mb-1">Email Support</h3>
                       <p className="text-sm text-muted-foreground">
-                        For immediate support during business hours
+                        For all support inquiries and assistance
                       </p>
-                      <p className="font-medium text-foreground">+44 1234 567890</p>
+                      <p className="font-medium text-foreground">info@militarytees.co.uk</p>
                     </div>
                     
                     <div>

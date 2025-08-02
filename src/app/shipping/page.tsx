@@ -377,7 +377,7 @@ export default function ShippingPage() {
                 
                 <div className="space-y-2 text-sm">
                   <div><strong>Email:</strong> shipping@militarytees.co.uk</div>
-                  <div><strong>Phone:</strong> +44 1234 567890</div>
+                  <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   <div><strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM GMT</div>
                 </div>
                 

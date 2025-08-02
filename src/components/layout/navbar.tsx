@@ -25,57 +25,31 @@ interface CategoryGroup {
 
 const categoryGroups: CategoryGroup[] = [
   {
-    title: "Combat & Tactical",
+    title: "Core Military",
     icon: "⚔️",
     categories: [
-      { title: "Armoury", href: "/categories/armoury", description: "Tactical and combat gear themed tees" },
-      { title: "Operations Room", href: "/categories/ops-room", description: "Strategic operations themed" },
-      { title: "The Ranges", href: "/categories/ranges", description: "Shooting and marksmanship designs" },
-      { title: "Guard Room", href: "/categories/guard-room", description: "Security and duty themed" },
+      { title: "Armoury", href: "/categories/armoury", description: "Tactical and combat gear designs" },
+      { title: "Operations", href: "/categories/ops-room", description: "Strategic and tactical operations" },
+      { title: "Command & Leadership", href: "/categories/regimental-hq", description: "Officer and command structure themed" },
+      { title: "Ceremonial", href: "/categories/parade-square", description: "Dress uniform and parade designs" },
     ]
   },
   {
-    title: "Units & Regiments",
-    icon: "🏛️",
-    categories: [
-      { title: "Regimental HQ", href: "/categories/regimental-hq", description: "Command and leadership designs" },
-      { title: "Parade Square", href: "/categories/parade-square", description: "Ceremonial and dress uniform styles" },
-      { title: "Sergeants' Mess", href: "/categories/sgts-mess", description: "NCO and leadership designs" },
-    ]
-  },
-  {
-    title: "Services & Support",
+    title: "Specialist Corps",
     icon: "🔧",
     categories: [
-      { title: "Med Centre", href: "/categories/med-centre", description: "Military medical corps designs" },
-      { title: "Motor Transport", href: "/categories/mt", description: "Vehicle and logistics themed" },
-      { title: "Signals", href: "/categories/signals", description: "Communications corps gear" },
-      { title: "The Stores", href: "/categories/stores", description: "Supply and logistics gear" },
+      { title: "Corps & Specialist", href: "/categories/signals", description: "Signals, medical, transport & logistics" },
+      { title: "Training & Fitness", href: "/categories/ranges", description: "PT, marksmanship and military training" },
+      { title: "Barracks Life", href: "/categories/mess-hall", description: "Military community and camaraderie" },
     ]
   },
   {
-    title: "Lifestyle & Leisure",
-    icon: "🏃",
+    title: "Special Collections",
+    icon: "🌟",
     categories: [
-      { title: "Mess Hall", href: "/categories/mess-hall", description: "Military dining and camaraderie" },
-      { title: "NAAFI", href: "/categories/naafi", description: "Navy, Army and Air Force Institutes" },
-      { title: "Gym", href: "/categories/gym", description: "Physical training and fitness" },
-      { title: "The Block", href: "/categories/block", description: "Barracks and accommodation themed" },
-    ]
-  },
-  {
-    title: "Training & Education",
-    icon: "🎓",
-    categories: [
-      { title: "Training Wing", href: "/categories/training-wing", description: "Military education and training" },
-      { title: "G10 Stores", href: "/categories/g10-stores", description: "General stores and supplies" },
-    ]
-  },
-  {
-    title: "Civilian Transition",
-    icon: "🌍",
-    categories: [
-      { title: "Civvy Street", href: "/categories/civvy-street", description: "Civilian life transition gear" },
+      { title: "Veterans", href: "/veterans", description: "Honoring those who served with pride" },
+      { title: "Kids Collection", href: "/kids", description: "Military-themed apparel for young recruits" },
+      { title: "Veteran Life", href: "/categories/civvy-street", description: "Post-service and civilian transition" },
     ]
   }
 ]

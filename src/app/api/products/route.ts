@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
         *,
         category:categories(id, name, slug),
         variants:product_variants(*)
-      `)
+      `, { count: 'exact' })
       .range(offset, offset + limit - 1);
 
     if (category) {
@@ -26,14 +26,22 @@ export async function GET(request: NextRequest) {
       query = query.ilike('name', `%${search}%`);
     }
 
-    const { data: products, error } = await query;
+    const { data: products, error, count } = await query;
 
     if (error) {
       console.error('Database error:', error);
       return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
     }
 
-    return NextResponse.json({ products });
+    // Calculate if there are more products
+    const hasMore = count ? (offset + limit) < count : false;
+    const total = count || 0;
+
+    return NextResponse.json({ 
+      products: products || [], 
+      hasMore,
+      total 
+    });
   } catch (error) {
     console.error('Server error:', error);
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
