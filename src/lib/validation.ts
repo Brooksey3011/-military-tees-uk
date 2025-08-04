@@ -106,8 +106,15 @@ export function validateRequestBody<T>(schema: z.ZodSchema<T>, body: unknown): {
     return { success: true, data }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const errorMessage = error.issues.map(err => `${err.path.join('.')}: ${err.message}`).join(', ')
-      return { success: false, error: errorMessage }
+      // More detailed error reporting
+      const errorDetails = error.issues.map(err => {
+        const path = err.path.length > 0 ? err.path.join('.') : 'root'
+        const receivedValue = err.code === 'invalid_type' && 'received' in err ? 
+          ` (received: ${typeof err.received === 'string' ? `"${err.received}"` : err.received})` : ''
+        return `${path}: ${err.message}${receivedValue}`
+      }).join(', ')
+      
+      return { success: false, error: errorDetails }
     }
     return { success: false, error: 'Invalid request data' }
   }

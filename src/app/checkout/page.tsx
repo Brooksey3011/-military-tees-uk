@@ -94,11 +94,15 @@ export default function CheckoutPage() {
     setError(null)
 
     try {
-      if (!user) {
-        throw new Error('Please log in to complete your order')
+      // Validate form data before submission
+      if (!shippingAddress.firstName || !shippingAddress.lastName || !shippingAddress.email || 
+          !shippingAddress.address1 || !shippingAddress.city || !shippingAddress.postcode ||
+          !billingAddress.firstName || !billingAddress.lastName || !billingAddress.address1 ||
+          !billingAddress.city || !billingAddress.postcode) {
+        throw new Error('Please fill out all required fields')
       }
 
-      // Prepare order data
+      // Prepare order data (guest checkout supported)
       const orderData = {
         items: items.map(item => ({
           variantId: item.variantId,
