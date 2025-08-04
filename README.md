@@ -1,3 +1,17 @@
+# Military Tees UK E-commerce Platform
+
+**🚀 PRODUCTION READY - DEPLOYED ON VERCEL**
+
+A complete, professional e-commerce platform for Military Tees UK featuring:
+
+- ✅ **13 Products** with full variants (sizes, colors) in database
+- ✅ **Working Shopping Cart** and checkout with Stripe Live payments
+- ✅ **Email System** configured with Hostinger SMTP
+- ✅ **Admin Dashboard** with authentication
+- ✅ **Custom Orders** system with file uploads
+- ✅ **SEO Optimized** for Google discoverability
+- ✅ **Military Heritage Theme** throughout
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
