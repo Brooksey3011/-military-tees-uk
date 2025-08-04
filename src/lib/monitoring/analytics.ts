@@ -24,6 +24,7 @@ interface ConversionEvent {
   value?: number
   currency?: string
   orderId?: string
+  properties?: Record<string, any>
   items?: Array<{
     id: string
     name: string

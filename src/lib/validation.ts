@@ -45,8 +45,43 @@ export const categorySchema = z.object({
   sort_order: z.number().int().min(0).max(999).optional(),
 })
 
-// Checkout session schema
+// UK postcode validation regex
+const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i
+
+// Comprehensive checkout schema that matches frontend data structure
 export const checkoutSchema = z.object({
+  items: z.array(z.object({
+    variantId: z.string().uuid('Invalid variant ID'),
+    quantity: z.number().int().min(1, 'Quantity must be at least 1').max(99, 'Quantity too high')
+  })).min(1, 'At least one item is required'),
+  
+  shippingAddress: z.object({
+    firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
+    lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
+    email: z.string().email('Invalid email address'),
+    phone: z.string().min(10, 'Phone number too short').max(15, 'Phone number too long'),
+    address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
+    address2: z.string().max(100, 'Address too long').optional(),
+    city: z.string().min(1, 'City is required').max(50, 'City name too long'),
+    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    country: z.string().min(1, 'Country is required')
+  }),
+  
+  billingAddress: z.object({
+    firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
+    lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
+    address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
+    address2: z.string().max(100, 'Address too long').optional(),
+    city: z.string().min(1, 'City is required').max(50, 'City name too long'),
+    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    country: z.string().min(1, 'Country is required')
+  }),
+  
+  customerNotes: z.string().max(500, 'Notes too long').optional()
+})
+
+// Legacy checkout schema for backward compatibility
+export const legacyCheckoutSchema = z.object({
   items: z.array(z.object({
     product_id: z.string().uuid('Invalid product ID'),
     variant_id: z.string().uuid('Invalid variant ID').optional(),

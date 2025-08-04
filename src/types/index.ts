@@ -106,11 +106,15 @@ export interface Review {
 
 export interface CartItem {
   id: string
-  product_id: string
-  variant_id: string
+  productId: string
+  variantId: string
+  name: string
+  price: number
+  image: string
+  size?: string
+  color?: string
   quantity: number
-  product: Product
-  variant: ProductVariant
+  maxQuantity: number
 }
 
 export interface FilterOptions {

@@ -32,8 +32,9 @@ function isRateLimited(key: string, limit: number, windowMs: number): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  // Rate limiting for API routes
-  if (request.nextUrl.pathname.startsWith('/api/')) {
+  // Rate limiting for API routes (exclude webhooks)
+  if (request.nextUrl.pathname.startsWith('/api/') && 
+      !request.nextUrl.pathname.startsWith('/api/webhook/')) {
     const key = getRateLimitKey(request)
     
     // Different limits for different endpoints

@@ -57,25 +57,16 @@ export function AddToCartButton({
       // Small delay for better UX
       await new Promise(resolve => setTimeout(resolve, 300))
       
-      // Create mock product and variant objects
-      const mockProduct = {
-        id: productId,
+      addItem({
+        productId,
+        variantId,
         name,
         price,
-        main_image_url: image
-      }
-
-      const mockVariant = {
-        id: variantId,
-        product_id: productId,
+        image,
         size,
         color,
-        sku: `SKU-${variantId}`,
-        stock_quantity: maxQuantity,
-        image_urls: [image]
-      }
-
-      addItem(mockProduct, mockVariant, quantity)
+        maxQuantity
+      })
       
       // Show success state
       setIsAdded(true)

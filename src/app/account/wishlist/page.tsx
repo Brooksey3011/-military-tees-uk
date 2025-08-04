@@ -28,25 +28,16 @@ export default function WishlistPage() {
   const { addItem: addToCart } = useCart()
 
   const handleAddToCart = (item: any) => {
-    // Create mock product and variant objects for cart
-    const mockProduct = {
-      id: item.productId,
+    addToCart({
+      productId: item.productId,
+      variantId: `${item.productId}-default`,
       name: item.name,
       price: item.price,
-      main_image_url: item.image
-    }
-
-    const mockVariant = {
-      id: `${item.productId}-default`,
-      product_id: item.productId,
-      size: item.sizes[0] || 'M',
+      image: item.image,
+      size: item.sizes?.[0] || 'M',
       color: 'Default',
-      sku: `SKU-${item.productId}`,
-      stock_quantity: 10,
-      image_urls: [item.image]
-    }
-
-    addToCart(mockProduct, mockVariant, 1)
+      maxQuantity: 10
+    })
   }
 
   const handleRemoveFromWishlist = (productId: string) => {

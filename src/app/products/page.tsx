@@ -36,15 +36,24 @@ export default function ProductsPage() {
 
   // Get available colors and sizes from loaded products
   const availableColors = Array.from(new Set(
-    products.flatMap(p => p.variants?.map(v => v.color).filter(Boolean) || [])
+    products.flatMap(p => p.variants?.map(v => v.color).filter(Boolean) || []).filter((color): color is string => !!color)
   ))
   
   const availableSizes = Array.from(new Set(
-    products.flatMap(p => p.variants?.map(v => v.size).filter(Boolean) || [])
+    products.flatMap(p => p.variants?.map(v => v.size).filter(Boolean) || []).filter((size): size is string => !!size)
   ))
 
   const handleAddToCart = (product: Product, variant: ProductVariant) => {
-    addItem(product, variant, 1)
+    addItem({
+      productId: product.id,
+      variantId: variant.id,
+      name: product.name,
+      price: product.price + variant.price_adjustment,
+      image: variant.image_urls?.[0] || product.main_image_url || '/placeholder-product.jpg',
+      size: variant.size,
+      color: variant.color,
+      maxQuantity: variant.stock_quantity
+    })
   }
 
   const handleToggleFavorite = (productId: string) => {

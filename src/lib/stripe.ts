@@ -1,5 +1,5 @@
 import Stripe from 'stripe'
-import { loadStripe } from '@stripe/stripe-js'
+import { loadStripe, type Stripe as StripeJS } from '@stripe/stripe-js'
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY is not set in environment variables')
@@ -7,11 +7,11 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 // Server-side Stripe instance
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-06-30.basil',
+  apiVersion: '2024-11-20.acacia',
 })
 
 // Client-side Stripe instance
-let stripePromise: Promise<Stripe | null>
+let stripePromise: Promise<StripeJS | null>
 
 export const getStripe = () => {
   if (!stripePromise) {
