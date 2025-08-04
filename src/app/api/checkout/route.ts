@@ -82,25 +82,40 @@ async function authenticateUser(request: NextRequest) {
 }
 
 // Helper function to get or create customer
-async function getOrCreateCustomer(userId: string, email: string, firstName: string, lastName: string) {
+async function getOrCreateCustomer(userId: string | null, email: string, firstName: string, lastName: string) {
   const supabase = createSupabaseAdmin()
   
-  // Check if customer exists
-  const { data: existingCustomer, error: customerError } = await supabase
-    .from('customers')
-    .select('id')
-    .eq('user_id', userId)
-    .single()
+  if (userId) {
+    // For authenticated users, check if customer exists
+    const { data: existingCustomer, error: customerError } = await supabase
+      .from('customers')
+      .select('id')
+      .eq('user_id', userId)
+      .single()
 
-  if (existingCustomer) {
-    return existingCustomer.id
+    if (existingCustomer) {
+      return existingCustomer.id
+    }
+  } else {
+    // For guest users, check if customer exists by email
+    const { data: existingCustomer, error: customerError } = await supabase
+      .from('customers')
+      .select('id')
+      .eq('email', email)
+      .is('user_id', null)
+      .single()
+
+    if (existingCustomer) {
+      return existingCustomer.id
+    }
   }
 
-  // Create new customer
+  // Create new customer (authenticated or guest)
   const { data: newCustomer, error: createError } = await supabase
     .from('customers')
     .insert({
       user_id: userId,
+      email: email,
       first_name: firstName,
       last_name: lastName,
       marketing_consent: false
@@ -312,9 +327,16 @@ export async function POST(request: NextRequest) {
 
     const { items, shippingAddress, billingAddress, customerNotes } = validation.data
 
-    // Authenticate user
-    const user = await authenticateUser(request)
-    console.log('Checkout API: User authenticated:', user.id)
+    // Try to authenticate user (optional for guest checkout)
+    let user = null
+    let isGuest = false
+    try {
+      user = await authenticateUser(request)
+      console.log('Checkout API: User authenticated:', user.id)
+    } catch (error) {
+      console.log('Checkout API: Guest checkout detected')
+      isGuest = true
+    }
 
     // Validate inventory and get product details
     const productDetails = await validateInventoryAndGetProducts(items)
@@ -328,9 +350,9 @@ export async function POST(request: NextRequest) {
 
     console.log('Checkout API: Calculated totals:', { subtotal, shipping, tax, total })
 
-    // Get or create customer
+    // Get or create customer (handle guest checkout)
     const customerId = await getOrCreateCustomer(
-      user.id,
+      user?.id || null,
       shippingAddress.email,
       shippingAddress.firstName,
       shippingAddress.lastName

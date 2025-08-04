@@ -68,15 +68,12 @@ export default function CheckoutPage() {
 
   const [sameAsBilling, setSameAsBilling] = React.useState(true)
 
-  // Redirect if cart is empty or user not authenticated
+  // Redirect if cart is empty (guest checkout is allowed)
   React.useEffect(() => {
-    if (!authLoading && !user) {
-      window.location.href = "/login?redirect=/checkout"
-    }
     if (items.length === 0) {
       window.location.href = "/categories"
     }
-  }, [items.length, user, authLoading])
+  }, [items.length])
 
   const handleNextStep = () => {
     setError(null)
@@ -138,19 +135,22 @@ export default function CheckoutPage() {
         customerNotes: ""
       }
 
-      // Get session token
+      // Get session token (optional for guest checkout)
       const { data: { session } } = await supabase.auth.getSession()
-      if (!session) {
-        throw new Error('Authentication required')
+      
+      // Create Stripe checkout session
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json'
+      }
+      
+      // Add auth header only if user is logged in
+      if (session?.access_token) {
+        headers['Authorization'] = `Bearer ${session.access_token}`
       }
 
-      // Create Stripe checkout session
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session.access_token}`
-        },
+        headers,
         body: JSON.stringify(orderData)
       })
 
