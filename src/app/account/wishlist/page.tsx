@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 import { useWishlistItems, useWishlistCount, useWishlistActions } from "@/store/wishlist"
-import { useCartActions } from "@/store/cart"
+import { useCart } from "@/hooks/use-cart"
 
 // Note: Metadata should be in layout.tsx for client components
 // export const metadata: Metadata = {
@@ -25,18 +25,28 @@ export default function WishlistPage() {
   const wishlistItems = useWishlistItems()
   const wishlistCount = useWishlistCount()
   const { removeItem, clearWishlist } = useWishlistActions()
-  const { addItem: addToCart } = useCartActions()
+  const { addItem: addToCart } = useCart()
 
   const handleAddToCart = (item: any) => {
-    addToCart({
-      productId: item.productId,
-      variantId: `${item.productId}-default`, // You may need to adjust this based on your variant system
+    // Create mock product and variant objects for cart
+    const mockProduct = {
+      id: item.productId,
       name: item.name,
       price: item.price,
-      image: item.image,
-      size: item.sizes[0], // Default to first available size
-      maxQuantity: 10 // Default max quantity
-    })
+      main_image_url: item.image
+    }
+
+    const mockVariant = {
+      id: `${item.productId}-default`,
+      product_id: item.productId,
+      size: item.sizes[0] || 'M',
+      color: 'Default',
+      sku: `SKU-${item.productId}`,
+      stock_quantity: 10,
+      image_urls: [item.image]
+    }
+
+    addToCart(mockProduct, mockVariant, 1)
   }
 
   const handleRemoveFromWishlist = (productId: string) => {
