@@ -1,4 +1,5 @@
 import Link from "next/link"
+import { Metadata } from "next"
 import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -6,6 +7,31 @@ import { Badge } from "@/components/ui/badge"
 import { PromoBanner } from "@/components/ui/promo-banner"
 import { PaymentOptions } from "@/components/ui/payment-options"
 import { Truck, Award, Users, Check } from "lucide-react"
+
+export const metadata: Metadata = {
+  title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
+  description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50. Shop veterans, memorial & custom military clothing.",
+  keywords: [
+    "military t-shirts UK", "British Army apparel", "military clothing", "veterans clothing", 
+    "army merchandise", "military themed shirts", "British military gear", "army t-shirts",
+    "memorial clothing", "custom military designs", "military fashion UK", "army veterans gifts"
+  ],
+  openGraph: {
+    title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
+    description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50.",
+    images: ["/og-image.jpg"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
+    description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50.",
+    images: ["/twitter-image.jpg"],
+  },
+  alternates: {
+    canonical: "/",
+  },
+}
 
 export default function Home() {
   return (

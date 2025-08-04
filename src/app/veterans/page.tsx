@@ -7,18 +7,28 @@ import { Layout } from "@/components/layout/layout"
 import { Medal, Shield, Users, Heart, Award, Star } from "lucide-react"
 
 export const metadata: Metadata = {
-  title: "Veterans Collection - Military Tees UK",
-  description: "Celebrating those who served - premium veteran pride designs and military-themed apparel for UK veterans and their families.",
+  title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel",
+  description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour. 10% military discount available.",
   keywords: [
-    "veterans",
-    "veteran apparel",
-    "military veterans",
-    "UK veterans",
-    "veteran pride",
-    "military heritage",
-    "served",
-    "british veterans"
-  ]
+    "veterans clothing UK", "veteran apparel", "military veterans gifts", "UK veterans merchandise",
+    "veteran pride shirts", "military heritage clothing", "British veterans apparel", "served with honour",
+    "veteran t-shirts", "military discount clothing", "army veteran gifts", "RAF veteran merchandise"
+  ],
+  openGraph: {
+    title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel",
+    description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
+    images: ["/veterans-og-image.jpg"],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel", 
+    description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
+    images: ["/veterans-twitter-image.jpg"],
+  },
+  alternates: {
+    canonical: "/veterans",
+  },
 }
 
 export default function VeteransPage() {

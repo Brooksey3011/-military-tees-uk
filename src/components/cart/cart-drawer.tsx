@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProductImage } from "@/components/ui/product-image"
-import { useCartStore, useCartItems, useCartTotal, useCartActions, useCartOpen } from "@/store/cart-minimal"
+import { useCart } from "@/hooks/use-cart"
 import { CheckoutButton } from "./checkout-button"
 import { cn, formatPrice } from "@/lib/utils"
 
@@ -16,10 +16,16 @@ interface CartDrawerProps {
 }
 
 export function CartDrawer({ className }: CartDrawerProps) {
-  const items = useCartItems()
-  const { totalItems, totalPrice } = useCartTotal()
-  const isOpen = useCartOpen()
-  const { closeCart, updateQuantity, removeItem, clearCart } = useCartActions()
+  const { 
+    items, 
+    totalItems, 
+    totalPrice, 
+    isOpen, 
+    closeCart, 
+    updateQuantity, 
+    removeItem, 
+    clearCart 
+  } = useCart()
 
 
   // Handle backdrop click - Improved version

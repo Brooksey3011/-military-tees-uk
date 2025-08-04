@@ -12,7 +12,7 @@ export { Skeleton } from "./skeleton"
 export { Modal } from "./modal"
 export { ToastComponent, ToastContainer, type Toast, type ToastType } from "./toast"
 export { ProductImage } from "./product-image"
-export { AdvancedSearchBar } from "./advanced-search-bar"
+export { AdvancedSearchBar } from "../search/advanced-search-bar"
 export { 
   EmptyState, 
   EmptyCart, 

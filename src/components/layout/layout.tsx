@@ -1,6 +1,6 @@
 import { Header } from "./header"
 import { Footer } from "./footer"
-import { CartDrawerMilitary } from "@/components/cart/cart-drawer-military"
+import { CartDrawer } from "@/components/cart/cart-drawer"
 
 interface LayoutProps {
   children: React.ReactNode
@@ -14,7 +14,7 @@ export function Layout({ children }: LayoutProps) {
         {children}
       </main>
       <Footer />
-      <CartDrawerMilitary />
+      <CartDrawer />
     </div>
   )
 }

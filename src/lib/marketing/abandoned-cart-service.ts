@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js'
 import { emailService } from '@/lib/email/email-service'
-import type { CartItem } from '@/store/cart-minimal'
+import type { CartItem } from '@/store/cart'
 
 // Initialize Supabase client
 const supabase = createClient(

@@ -4,7 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { Menu, X, Search, User, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { CartIconSafe } from "@/components/cart/cart-icon-safe"
+import { CartIcon } from "@/components/cart/cart-icon"
 import { AdvancedSearchBar } from "@/components/search/advanced-search-bar"
 import { cn } from "@/lib/utils"
 import { useWishlistCount } from "@/store/wishlist"
@@ -316,7 +316,7 @@ export function Navbar() {
             </Button>
 
             {/* Shopping Cart */}
-            <CartIconSafe />
+            <CartIcon />
 
             {/* Mobile menu toggle */}
             <Button

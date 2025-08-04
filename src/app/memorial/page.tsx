@@ -8,14 +8,28 @@ import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
 export const metadata: Metadata = {
-  title: "Honouring the Fallen - Memorial Collection | Military Tees UK",
-  description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Designs that honour fallen heroes and preserve their memory with dignity and respect.",
-  keywords: ["military memorial", "remembrance", "fallen heroes", "military tribute", "poppy collection"],
+  title: "Memorial Collection | Military Tees UK - Honouring the Fallen",
+  description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Respectful designs honouring fallen heroes, remembrance day apparel & custom memorial tributes.",
+  keywords: [
+    "military memorial clothing", "remembrance day apparel", "fallen heroes tribute", "military tribute shirts",
+    "poppy collection UK", "memorial t-shirts", "remembrance clothing", "military memorial gifts",
+    "custom memorial designs", "battlefield memorial apparel", "service tribute clothing", "UK memorial wear"
+  ],
   openGraph: {
-    title: "Honouring the Fallen - Memorial Collection",
-    description: "Tribute and remembrance designs honouring military heroes",
+    title: "Memorial Collection | Military Tees UK - Honouring the Fallen",
+    description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Respectful designs honouring fallen heroes and remembrance day apparel.",
+    images: ["/memorial-og-image.jpg"],
     type: "website",
-  }
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Memorial Collection | Military Tees UK - Honouring the Fallen",
+    description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Respectful designs honouring fallen heroes.",
+    images: ["/memorial-twitter-image.jpg"],
+  },
+  alternates: {
+    canonical: "/memorial",
+  },
 }
 
 const memorialCollections = [

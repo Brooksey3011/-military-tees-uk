@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { ShoppingCart, CreditCard, Loader2 } from 'lucide-react'
-import { useCartItems, useCartTotal, useCartActions } from '@/store/cart-minimal'
+import { useCart } from '@/hooks/use-cart'
 import { formatPrice } from '@/lib/utils'
 import { cn } from '@/lib/utils'
 
@@ -25,9 +25,7 @@ export function CheckoutButton({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   
-  const items = useCartItems()
-  const { totalPrice } = useCartTotal()
-  const { clearCart } = useCartActions()
+  const { items, totalPrice, clearCart } = useCart()
 
   const handleCheckout = async () => {
     if (items.length === 0) return

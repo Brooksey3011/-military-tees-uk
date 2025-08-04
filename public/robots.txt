@@ -1,0 +1,60 @@
+# Military Tees UK - Robots.txt
+# https://militarytees.co.uk/robots.txt
+
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://militarytees.co.uk/sitemap.xml
+
+# Allow all search engines to crawl the site
+Crawl-delay: 1
+
+# Specific directives for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Block access to admin areas and sensitive files
+Disallow: /admin/
+Disallow: /api/
+Disallow: /_next/
+Disallow: /.next/
+Disallow: /node_modules/
+Disallow: /*.json$
+Disallow: /checkout/
+Disallow: /account/
+
+# Block common bot patterns
+User-agent: CCBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+# Allow access to important pages
+Allow: /products/
+Allow: /categories/
+Allow: /veterans/
+Allow: /memorial/
+Allow: /custom/
+Allow: /about/
+Allow: /contact/
+Allow: /search/
+
+# Host directive (if using custom domain)
+Host: https://militarytees.co.uk

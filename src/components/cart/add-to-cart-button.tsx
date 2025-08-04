@@ -5,7 +5,7 @@ import { ShoppingCart, Check } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { useCartStore } from "@/store/cart-ultra-minimal"
+import { useCart } from "@/hooks/use-cart"
 import { cn } from "@/lib/utils"
 
 interface AddToCartButtonProps {
@@ -43,6 +43,7 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const [isAdding, setIsAdding] = React.useState(false)
   const [isAdded, setIsAdded] = React.useState(false)
+  const { addItem } = useCart()
 
   const isOutOfStock = maxQuantity <= 0
   const isDisabled = disabled || isOutOfStock || isAdding
@@ -56,16 +57,25 @@ export function AddToCartButton({
       // Small delay for better UX
       await new Promise(resolve => setTimeout(resolve, 300))
       
-      useCartStore.getState().addItem({
-        productId,
-        variantId,
+      // Create mock product and variant objects
+      const mockProduct = {
+        id: productId,
         name,
         price,
-        image,
+        main_image_url: image
+      }
+
+      const mockVariant = {
+        id: variantId,
+        product_id: productId,
         size,
         color,
-        maxQuantity
-      })
+        sku: `SKU-${variantId}`,
+        stock_quantity: maxQuantity,
+        image_urls: [image]
+      }
+
+      addItem(mockProduct, mockVariant, quantity)
       
       // Show success state
       setIsAdded(true)

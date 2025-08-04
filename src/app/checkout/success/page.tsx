@@ -8,7 +8,7 @@ import { Suspense } from "react"
 export const dynamic = 'force-dynamic'
 import { Layout } from "@/components/layout/layout"
 import { useAuth } from "@/hooks/use-auth"
-import { useCartActions } from "@/store/cart-minimal"
+import { useCart } from "@/hooks/use-cart"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -27,7 +27,7 @@ import Link from "next/link"
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const { clearCart } = useCartActions()
+  const { clearCart } = useCart()
   const [orderData, setOrderData] = React.useState<any>(null)
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)

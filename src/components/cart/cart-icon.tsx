@@ -4,7 +4,7 @@ import * as React from "react"
 import { ShoppingCart } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { useCartTotal, useCartActions } from "@/store/cart-minimal"
+import { useCart } from "@/hooks/use-cart"
 import { cn } from "@/lib/utils"
 
 interface CartIconProps {
@@ -18,8 +18,7 @@ export function CartIcon({
   showBadge = true, 
   variant = "default" 
 }: CartIconProps) {
-  const { totalItems } = useCartTotal()
-  const { toggleCart } = useCartActions()
+  const { totalItems, toggleCart } = useCart()
 
   return (
     <Button
