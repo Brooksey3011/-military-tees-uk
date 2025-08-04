@@ -5,8 +5,8 @@ import { createSupabaseAdmin } from '@/lib/supabase'
 import { sendOrderConfirmation, sendOrderNotificationToAdmin } from '@/lib/email/email-service'
 import { validateRequestBody } from '@/lib/validation'
 
-// UK postcode validation regex
-const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i
+// UK postcode validation regex (more flexible)
+const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i
 
 // Comprehensive checkout validation schema
 const checkoutSchema = z.object({
