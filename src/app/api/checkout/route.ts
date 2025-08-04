@@ -11,7 +11,7 @@ const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i
 // Comprehensive checkout validation schema
 const checkoutSchema = z.object({
   items: z.array(z.object({
-    variantId: z.string().uuid('Invalid variant ID'),
+    variantId: z.string().min(1, 'Variant ID is required'),
     quantity: z.number().int().min(1, 'Quantity must be at least 1').max(99, 'Quantity too high')
   })).min(1, 'At least one item is required'),
   
@@ -19,7 +19,7 @@ const checkoutSchema = z.object({
     firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
     lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
     email: z.string().email('Invalid email address'),
-    phone: z.string().min(10, 'Phone number too short').max(15, 'Phone number too long'),
+    phone: z.string().min(8, 'Phone number too short').max(15, 'Phone number too long'),
     address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
     address2: z.string().max(100, 'Address too long').optional(),
     city: z.string().min(1, 'City is required').max(50, 'City name too long'),
