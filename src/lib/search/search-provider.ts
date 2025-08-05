@@ -42,8 +42,7 @@ class SearchProvider {
 
   getService(): SearchService {
     if (!this.service) {
-      // Fallback to enhanced search if not initialized
-      console.warn('Search service not initialized, falling back to enhanced search')
+      // Fallback to enhanced search if not initialized - do this silently
       this.service = new EnhancedSearchService()
     }
     return this.service
@@ -77,13 +76,13 @@ const initializeSearchProvider = () => {
         indexName: algoliaIndexName
       }
     })
-    console.log('Initialized Algolia search')
+    // Algolia search initialized
   } else {
     // Fallback to enhanced search (production-ready database search)
     searchProvider.initialize({
       provider: 'enhanced'
     })
-    console.log('Initialized enhanced database search (Algolia credentials not found)')
+    // Enhanced database search initialized
   }
 }
 

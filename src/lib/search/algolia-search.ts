@@ -101,9 +101,8 @@ export class AlgoliaSearchService extends BaseSearchService {
   }
 
   private mockSearch(query: string, options: any): Promise<AlgoliaResponse> {
-    // Mock Algolia response for demonstration
+    // Mock Algolia response for demonstration - return immediately to avoid CSP issues
     return new Promise((resolve) => {
-      setTimeout(() => {
         const mockHits: AlgoliaHit[] = [
           {
             objectID: '1',
@@ -173,35 +172,34 @@ export class AlgoliaSearchService extends BaseSearchService {
             )
           : mockHits
 
-        resolve({
-          hits: filteredHits,
-          nbHits: filteredHits.length,
-          page: options.page || 0,
-          nbPages: Math.ceil(filteredHits.length / (options.hitsPerPage || 20)),
-          hitsPerPage: options.hitsPerPage || 20,
-          query,
-          facets: {
-            category: {
-              'Army': 1,
-              'Navy': 1,
-              'RAF': 1
-            },
-            'variants.color': {
-              'black': 2,
-              'navy': 1,
-              'olive': 1,
-              'grey': 1,
-              'white': 1
-            },
-            'variants.size': {
-              'S': 2,
-              'M': 3,
-              'L': 3,
-              'XL': 1
-            }
+      resolve({
+        hits: filteredHits,
+        nbHits: filteredHits.length,
+        page: options.page || 0,
+        nbPages: Math.ceil(filteredHits.length / (options.hitsPerPage || 20)),
+        hitsPerPage: options.hitsPerPage || 20,
+        query,
+        facets: {
+          category: {
+            'Army': 1,
+            'Navy': 1,
+            'RAF': 1
+          },
+          'variants.color': {
+            'black': 2,
+            'navy': 1,
+            'olive': 1,
+            'grey': 1,
+            'white': 1
+          },
+          'variants.size': {
+            'S': 2,
+            'M': 3,
+            'L': 3,
+            'XL': 1
           }
-        })
-      }, 200) // Simulate network delay
+        }
+      })
     })
   }
 
