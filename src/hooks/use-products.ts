@@ -84,7 +84,7 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
 
   useEffect(() => {
     refetch()
-  }, [category, search, sortBy, sortOrder, featured])
+  }, [category, search, sortBy, sortOrder, featured, limit])
 
   return {
     products,
