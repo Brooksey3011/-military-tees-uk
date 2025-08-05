@@ -1,0 +1,42 @@
+VERCEL ENVIRONMENT VARIABLES SETUP
+=====================================
+
+COPY AND PASTE THESE EXACT VALUES INTO VERCEL DASHBOARD:
+
+Go to: https://vercel.com/dashboard
+1. Find your "military-tees-uk" project
+2. Click: Settings → Environment Variables
+3. Add each variable below (click "Add" for each one):
+
+VARIABLE 1:
+Name: NEXT_PUBLIC_SUPABASE_URL
+Value: https://rdpjldootsglcbzhfkdi.supabase.co
+Environment: Production ✓ Preview ✓ Development ✓
+
+VARIABLE 2:
+Name: NEXT_PUBLIC_SUPABASE_ANON_KEY
+Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkcGpsZG9vdHNnbGNiemhma2RpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMxMzc2MjMsImV4cCI6MjA2ODcxMzYyM30.yp7j4ulpuu6uAhQDY2C0ahBLvovNo3fuf332fta3wQw
+Environment: Production ✓ Preview ✓ Development ✓
+
+VARIABLE 3:
+Name: SUPABASE_SERVICE_ROLE_KEY
+Value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkcGpsZG9vdHNnbGNiemhma2RpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1MzEzNzYyMywiZXhwIjoyMDY4NzEzNjIzfQ.gOErYwxvYfh5D1ofayzIBivOYVCaQ0qEM5kuhOmqxhE
+Environment: Production ✓ Preview ✓ Development ✓
+
+OPTIONAL BUT RECOMMENDED:
+Name: NEXT_PUBLIC_APP_URL
+Value: https://military-tees-uk-4ijs-mei2aqnh0-brooksey3011s-projects.vercel.app
+Environment: Production ✓ Preview ✓ Development ✓
+
+Name: NEXT_PUBLIC_APP_NAME
+Value: Military Tees UK
+Environment: Production ✓ Preview ✓ Development ✓
+
+IMPORTANT: After adding all variables, click "Redeploy" to apply them!
+
+=====================================
+QUICK CHECK:
+After deployment, test this URL:
+https://military-tees-uk-4ijs-mei2aqnh0-brooksey3011s-projects.vercel.app/api/products?featured=true&limit=1
+
+Should return JSON with product data instead of 401 error.

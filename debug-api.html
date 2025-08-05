@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Debug Test</title>
+</head>
+<body>
+    <h1>API Debug Test</h1>
+    <button onclick="testAPI()">Test Products API</button>
+    <div id="result"></div>
+
+    <script>
+        async function testAPI() {
+            const result = document.getElementById('result');
+            result.innerHTML = 'Testing...';
+            
+            try {
+                const response = await fetch('/api/products?featured=true&limit=1');
+                const text = await response.text();
+                
+                result.innerHTML = `
+                    <h3>Status: ${response.status}</h3>
+                    <h3>Response:</h3>
+                    <pre>${text}</pre>
+                `;
+            } catch (error) {
+                result.innerHTML = `<h3>Error: ${error.message}</h3>`;
+            }
+        }
+    </script>
+</body>
+</html>
