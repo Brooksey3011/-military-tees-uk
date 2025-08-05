@@ -194,7 +194,7 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Military Tees UK. All rights reserved.
+            © 2025 Military Tees UK. All rights reserved.
           </div>
           
           <div className="flex items-center space-x-4 text-sm text-muted-foreground">
