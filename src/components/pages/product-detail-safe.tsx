@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
+import { useCartActions } from "@/store/cart"
 
 interface Product {
   id: string
@@ -27,11 +28,13 @@ interface Product {
 export function ProductDetailSafe() {
   const params = useParams()
   const router = useRouter()
+  const { addItem } = useCartActions()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [selectedSize, setSelectedSize] = useState<string>("")
   const [selectedColor, setSelectedColor] = useState<string>("")
+  const [isAddingToCart, setIsAddingToCart] = useState(false)
 
   useEffect(() => {
     async function fetchProduct() {
@@ -126,6 +129,31 @@ export function ProductDetailSafe() {
   )
 
   const displayPrice = product.sale_price || product.price
+
+  const handleAddToCart = async () => {
+    if (!product || !currentVariant) return
+
+    setIsAddingToCart(true)
+    
+    try {
+      addItem({
+        productId: product.id,
+        variantId: currentVariant.id,
+        name: product.name,
+        price: displayPrice,
+        image: product.main_image_url,
+        size: selectedSize,
+        color: selectedColor,
+        maxQuantity: currentVariant.stock_quantity
+      })
+      
+      // Show success feedback
+      setTimeout(() => setIsAddingToCart(false), 1000)
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      setIsAddingToCart(false)
+    }
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -234,14 +262,17 @@ export function ProductDetailSafe() {
 
           {/* Add to Cart */}
           <button
-            className={`w-full py-3 px-6 rounded-lg font-semibold ${
+            onClick={handleAddToCart}
+            className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
               currentVariant && currentVariant.stock_quantity > 0
                 ? 'bg-green-600 text-white hover:bg-green-700'
                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
             }`}
-            disabled={!currentVariant || currentVariant.stock_quantity === 0}
+            disabled={!currentVariant || currentVariant.stock_quantity === 0 || isAddingToCart}
           >
-            {currentVariant && currentVariant.stock_quantity > 0 
+            {isAddingToCart 
+              ? 'Adding...' 
+              : currentVariant && currentVariant.stock_quantity > 0 
               ? 'Add to Cart' 
               : 'Select Options'
             }
