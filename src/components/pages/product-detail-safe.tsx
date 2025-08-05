@@ -1,0 +1,271 @@
+"use client"
+
+import { useEffect, useState } from "react"
+import { useParams, useRouter } from "next/navigation"
+
+interface Product {
+  id: string
+  name: string
+  price: number
+  sale_price?: number
+  main_image_url: string
+  description: string
+  slug: string
+  stock_quantity: number
+  category?: {
+    name: string
+    slug: string
+  }
+  variants?: Array<{
+    id: string
+    size: string
+    color: string
+    stock_quantity: number
+  }>
+}
+
+export function ProductDetailSafe() {
+  const params = useParams()
+  const router = useRouter()
+  const [product, setProduct] = useState<Product | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [selectedSize, setSelectedSize] = useState<string>("")
+  const [selectedColor, setSelectedColor] = useState<string>("")
+
+  useEffect(() => {
+    async function fetchProduct() {
+      if (!params.slug) return
+
+      try {
+        setLoading(true)
+        const response = await fetch(`/api/products/${params.slug}`)
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            setError('Product not found')
+          } else {
+            throw new Error(`HTTP error! status: ${response.status}`)
+          }
+          return
+        }
+        
+        const data = await response.json()
+        setProduct(data.product)
+        
+        // Set default selections
+        if (data.product.variants && data.product.variants.length > 0) {
+          const availableVariant = data.product.variants.find((v: any) => v.stock_quantity > 0)
+          if (availableVariant) {
+            setSelectedSize(availableVariant.size)
+            setSelectedColor(availableVariant.color)
+          }
+        }
+      } catch (err) {
+        console.error('Error fetching product:', err)
+        setError(err instanceof Error ? err.message : 'Failed to load product')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchProduct()
+  }, [params.slug])
+
+  if (loading) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-gray-100 aspect-square rounded animate-pulse"></div>
+          <div className="space-y-4">
+            <div className="bg-gray-100 h-8 rounded animate-pulse"></div>
+            <div className="bg-gray-100 h-6 rounded animate-pulse"></div>
+            <div className="bg-gray-100 h-12 rounded animate-pulse"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
+        <p className="text-gray-600 mb-6">{error}</p>
+        <button 
+          onClick={() => router.back()}
+          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+        >
+          Go Back
+        </button>
+      </div>
+    )
+  }
+
+  if (!product) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
+        <button 
+          onClick={() => router.back()}
+          className="bg-green-600 text-white px-6 py-2 rounded hover:bg-green-700"
+        >
+          Go Back
+        </button>
+      </div>
+    )
+  }
+
+  // Get unique sizes and colors
+  const sizes = [...new Set(product.variants?.map(v => v.size) || [])]
+  const colors = [...new Set(product.variants?.map(v => v.color) || [])]
+
+  // Find current variant
+  const currentVariant = product.variants?.find(
+    v => v.size === selectedSize && v.color === selectedColor
+  )
+
+  const displayPrice = product.sale_price || product.price
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      {/* Breadcrumb */}
+      <nav className="flex items-center gap-2 text-sm text-gray-600 mb-8">
+        <button onClick={() => router.push('/')} className="hover:text-green-600">Home</button>
+        <span>/</span>
+        <button onClick={() => router.push('/products')} className="hover:text-green-600">Products</button>
+        <span>/</span>
+        <span className="text-green-600">{product.name}</span>
+      </nav>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        {/* Product Image */}
+        <div>
+          <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden">
+            <img
+              src={product.main_image_url}
+              alt={product.name}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                const target = e.target as HTMLImageElement
+                target.src = '/placeholder-product.jpg'
+              }}
+            />
+          </div>
+        </div>
+
+        {/* Product Details */}
+        <div className="space-y-6">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">{product.name}</h1>
+            <p className="text-gray-600 mb-4">{product.description}</p>
+            
+            <div className="flex items-center gap-4 mb-6">
+              <span className="text-3xl font-bold text-green-600">
+                £{displayPrice}
+              </span>
+              {product.sale_price && (
+                <span className="text-xl text-gray-500 line-through">
+                  £{product.price}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Size Selection */}
+          {sizes.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Size</h3>
+              <div className="flex flex-wrap gap-2">
+                {sizes.map((size) => (
+                  <button
+                    key={size}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 border rounded ${
+                      selectedSize === size
+                        ? 'border-green-600 bg-green-50 text-green-600'
+                        : 'border-gray-300 hover:border-green-600'
+                    }`}
+                  >
+                    {size}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Color Selection */}
+          {colors.length > 0 && (
+            <div>
+              <h3 className="text-lg font-semibold mb-3">Color</h3>
+              <div className="flex flex-wrap gap-2">
+                {colors.map((color) => (
+                  <button
+                    key={color}
+                    onClick={() => setSelectedColor(color)}
+                    className={`px-4 py-2 border rounded ${
+                      selectedColor === color
+                        ? 'border-green-600 bg-green-50 text-green-600'
+                        : 'border-gray-300 hover:border-green-600'
+                    }`}
+                  >
+                    {color}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Stock Status */}
+          <div>
+            {currentVariant ? (
+              <p className={`text-sm ${
+                currentVariant.stock_quantity > 0 ? 'text-green-600' : 'text-red-600'
+              }`}>
+                {currentVariant.stock_quantity > 0 
+                  ? `In Stock (${currentVariant.stock_quantity} available)`
+                  : 'Out of Stock'
+                }
+              </p>
+            ) : (
+              <p className="text-sm text-gray-600">Select size and color to see availability</p>
+            )}
+          </div>
+
+          {/* Add to Cart */}
+          <button
+            className={`w-full py-3 px-6 rounded-lg font-semibold ${
+              currentVariant && currentVariant.stock_quantity > 0
+                ? 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={!currentVariant || currentVariant.stock_quantity === 0}
+          >
+            {currentVariant && currentVariant.stock_quantity > 0 
+              ? 'Add to Cart' 
+              : 'Select Options'
+            }
+          </button>
+
+          {/* Product Info */}
+          <div className="border-t pt-6 space-y-4">
+            <div>
+              <h3 className="font-semibold mb-2">Product Details</h3>
+              <p className="text-gray-600 text-sm">
+                Premium quality military-themed apparel. Made with high-quality materials 
+                and designed to honor military heritage and service.
+              </p>
+            </div>
+            
+            {product.category && (
+              <div>
+                <h3 className="font-semibold mb-2">Category</h3>
+                <p className="text-gray-600 text-sm">{product.category.name}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
