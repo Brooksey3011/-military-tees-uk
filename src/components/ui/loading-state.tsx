@@ -51,11 +51,9 @@ export const militaryLoadingMessages = [
   "Preparing for deployment..."
 ]
 
-// Hook for random military loading message
+// Hook for military loading message (using static message to prevent hydration issues)
 export function useMilitaryLoadingMessage() {
-  const [message] = React.useState(() => 
-    militaryLoadingMessages[Math.floor(Math.random() * militaryLoadingMessages.length)]
-  )
+  const [message] = React.useState("Loading military gear...")
   
   return message
 }
