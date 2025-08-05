@@ -108,3 +108,22 @@ Slow filesystem detected. The benchmark took 206ms. If /Users/militaryteesukltd.
  ✓ Starting...
  ✓ Compiled middleware in 192ms
  ✓ Ready in 1502ms
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.4.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.97:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 226ms
+ ✓ Ready in 1566ms
+ ⚠ Found a change in next.config.ts. Restarting the server to apply the changes...
+   ▲ Next.js 15.4.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.97:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 179ms
+ ✓ Ready in 1436ms
+[?25h
