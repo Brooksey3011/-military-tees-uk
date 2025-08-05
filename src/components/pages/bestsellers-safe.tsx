@@ -9,6 +9,7 @@ interface Product {
   price: number
   main_image_url: string
   description: string
+  slug: string
 }
 
 export function BestsellersSafe() {
@@ -102,9 +103,12 @@ export function BestsellersSafe() {
                 <span className="text-2xl font-bold text-green-600">
                   £{product.price}
                 </span>
-                <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors">
+                <a 
+                  href={`/products/${product.slug}`}
+                  className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition-colors inline-block text-center"
+                >
                   View Product
-                </button>
+                </a>
               </div>
             </div>
           </div>
