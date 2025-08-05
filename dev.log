@@ -1,0 +1,90 @@
+
+> military-tees-uk@0.1.0 dev
+> next dev --turbo
+
+   ▲ Next.js 15.4.2 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://192.168.0.97:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Compiled middleware in 244ms
+ ✓ Ready in 1969ms
+ ○ Compiling /api/products ...
+ ✓ Compiled /api/products in 2.7s
+Products API called with: {
+  category: 'armoury',
+  search: null,
+  featured: false,
+  limit: 2,
+  offset: 0
+}
+Database error: {
+  code: '22P02',
+  details: null,
+  hint: null,
+  message: 'invalid input syntax for type uuid: "armoury"'
+}
+ GET /api/products?category=armoury&limit=2 500 in 3064ms
+Products API called with: {
+  category: 'armoury',
+  search: null,
+  featured: false,
+  limit: 2,
+  offset: 0
+}
+Looking up category with slug: armoury
+Found category ID: f0c6d826-7819-4a33-b320-524027bfcace
+ GET /api/products?category=armoury&limit=2 200 in 330ms
+Products API called with: {
+  category: 'mess-hall',
+  search: null,
+  featured: false,
+  limit: 1,
+  offset: 0
+}
+Looking up category with slug: mess-hall
+Found category ID: 595842b5-a5af-4b0f-8952-c96597bddc68
+ GET /api/products?category=mess-hall&limit=1 200 in 277ms
+Products API called with: {
+  category: 'veterans',
+  search: null,
+  featured: false,
+  limit: 1,
+  offset: 0
+}
+Looking up category with slug: veterans
+Found category ID: 9938b0bb-3dfa-4d09-aa9b-ecd4a4f842b2
+ GET /api/products?category=veterans&limit=1 200 in 274ms
+Products API called with: {
+  category: 'regimental-hq',
+  search: null,
+  featured: false,
+  limit: 1,
+  offset: 0
+}
+Looking up category with slug: regimental-hq
+Found category ID: 19994228-dd06-4ad8-ae06-b124330e13e8
+ GET /api/products?category=regimental-hq&limit=1 200 in 266ms
+Products API called with: {
+  category: 'med-centre',
+  search: null,
+  featured: false,
+  limit: 1,
+  offset: 0
+}
+Looking up category with slug: med-centre
+Found category ID: 61b8d69b-ca75-49eb-93d8-92402f233cde
+ GET /api/products?category=med-centre&limit=1 200 in 205ms
+Products API called with: {
+  category: 'signals',
+  search: null,
+  featured: false,
+  limit: 1,
+  offset: 0
+}
+Looking up category with slug: signals
+Found category ID: da8744d1-16fd-4bc4-ba5c-60159d8b6fc2
+ GET /api/products?category=signals&limit=1 200 in 229ms
+ ✓ Compiled middleware in 1ms
+ ✓ Compiled middleware in 1ms
