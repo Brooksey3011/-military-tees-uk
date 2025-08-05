@@ -25,6 +25,8 @@ async function apiRequest<T>(
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`
   
+  console.log('🌐 API Request:', url)
+  
   const response = await fetch(url, {
     headers: {
       'Content-Type': 'application/json',
@@ -33,12 +35,17 @@ async function apiRequest<T>(
     ...options,
   })
 
+  console.log('📡 API Response:', response.status, response.statusText)
+
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({ error: 'Request failed' }))
+    console.error('❌ API Error:', errorData)
     throw new Error(errorData.error || `HTTP ${response.status}`)
   }
 
-  return response.json()
+  const data = await response.json()
+  console.log('✅ API Success:', data)
+  return data
 }
 
 // Auth API calls
