@@ -26,11 +26,13 @@ export function CookieConsent() {
 
   React.useEffect(() => {
     // Check if user has already made a choice
-    const consent = localStorage.getItem('cookie-consent')
-    if (!consent) {
-      // Show banner after a short delay
-      const timer = setTimeout(() => setIsVisible(true), 1000)
-      return () => clearTimeout(timer)
+    if (typeof window !== 'undefined') {
+      const consent = localStorage.getItem('cookie-consent')
+      if (!consent) {
+        // Show banner after a short delay
+        const timer = setTimeout(() => setIsVisible(true), 1000)
+        return () => clearTimeout(timer)
+      }
     }
   }, [])
 
@@ -64,8 +66,10 @@ export function CookieConsent() {
   }
 
   const saveCookieConsent = (consent: CookiePreferences) => {
-    localStorage.setItem('cookie-consent', JSON.stringify(consent))
-    localStorage.setItem('cookie-consent-date', new Date().toISOString())
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('cookie-consent', JSON.stringify(consent))
+      localStorage.setItem('cookie-consent-date', Date.now().toString())
+    }
     
     // Trigger analytics configuration based on consent
     if (consent.analytics) {
