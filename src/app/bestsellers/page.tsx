@@ -1,7 +1,5 @@
 import { Layout } from "@/components/layout"
-import { BestsellersClient } from "@/components/pages/bestsellers-client"
-import { HydrationWrapper } from "@/components/ui/hydration-wrapper"
-import { ProductGridSkeleton } from "@/components/ui"
+import { BestsellersSafe } from "@/components/pages/bestsellers-safe"
 import { cn } from "@/lib/utils"
 
 export const metadata = {
@@ -41,11 +39,7 @@ export default function BestsellersPage() {
         </section>
 
         {/* Products Section */}
-        <div className="container mx-auto px-4 py-8">
-          <HydrationWrapper fallback={<ProductGridSkeleton count={6} />}>
-            <BestsellersClient />
-          </HydrationWrapper>
-        </div>
+        <BestsellersSafe />
       </div>
     </Layout>
   )

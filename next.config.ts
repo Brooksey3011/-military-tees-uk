@@ -13,6 +13,7 @@ const nextConfig: NextConfig = {
   images: {
     domains: ['rdpjldootsglcbzhfkdi.supabase.co'],
     formats: ['image/webp', 'image/avif'],
+    unoptimized: true, // Disable optimization to prevent 400 errors
   },
   
   async headers() {
