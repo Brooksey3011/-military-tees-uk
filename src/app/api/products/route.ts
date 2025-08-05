@@ -25,21 +25,27 @@ export async function GET(request: NextRequest) {
     if (category) {
       // If category looks like a slug, get the category ID first
       if (category.includes('-')) {
-        const { data: categoryData } = await supabase
-          .from('categories')
-          .select('id')
-          .eq('slug', category)
-          .single()
-        
-        if (categoryData) {
+        try {
+          const { data: categoryData, error: categoryError } = await supabase
+            .from('categories')
+            .select('id')
+            .eq('slug', category)
+            .single()
+          
+          if (categoryError || !categoryData) {
+            console.log(`Category '${category}' not found:`, categoryError)
+            // Category not found, return empty results
+            return NextResponse.json({ 
+              products: [], 
+              hasMore: false,
+              total: 0 
+            });
+          }
+          
           query = query.eq('category_id', categoryData.id)
-        } else {
-          // Category not found, return empty results
-          return NextResponse.json({ 
-            products: [], 
-            hasMore: false,
-            total: 0 
-          });
+        } catch (error) {
+          console.error('Category lookup error:', error)
+          return NextResponse.json({ error: 'Failed to lookup category' }, { status: 500 });
         }
       } else {
         // Assume it's a category ID

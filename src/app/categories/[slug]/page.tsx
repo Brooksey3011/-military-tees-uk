@@ -302,9 +302,3 @@ export default function CategoryPage({ params, searchParams }: CategoryPageProps
   )
 }
 
-// Generate static paths for all known categories
-export async function generateStaticParams() {
-  return Object.keys(categoryData).map((slug) => ({
-    slug,
-  }))
-}
