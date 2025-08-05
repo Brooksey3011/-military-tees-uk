@@ -9,6 +9,12 @@ interface PromoBannerProps {
 
 export function PromoBanner({ className }: PromoBannerProps) {
   const [isVisible, setIsVisible] = useState(true)
+  const [isClient, setIsClient] = useState(false)
+
+  // Prevent hydration issues by only enabling scroll behavior on client-side
+  useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   const promoMessages = [
     "FREE SHIPPING ON YOUR FIRST ORDER - CREATE ACCOUNT TODAY",
@@ -19,6 +25,8 @@ export function PromoBanner({ className }: PromoBannerProps) {
   ]
 
   useEffect(() => {
+    if (!isClient) return
+
     const handleScroll = () => {
       const scrollY = window.scrollY
       const shouldHide = scrollY > 100
@@ -27,7 +35,7 @@ export function PromoBanner({ className }: PromoBannerProps) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
-  }, [])
+  }, [isClient])
 
   if (!isVisible) return null
 

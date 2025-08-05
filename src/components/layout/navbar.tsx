@@ -93,9 +93,16 @@ const navigation: NavItem[] = [
 ]
 
 function WishlistBadge() {
+  const [isClient, setIsClient] = React.useState(false)
   const wishlistCount = useWishlistCount()
   
-  if (wishlistCount === 0) return null
+  // Prevent hydration issues
+  React.useEffect(() => {
+    setIsClient(true)
+  }, [])
+  
+  // Don't render on server to prevent hydration mismatch
+  if (!isClient || wishlistCount === 0) return null
   
   return (
     <span className="absolute -top-1 -right-1 bg-red-600 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">

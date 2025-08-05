@@ -18,7 +18,13 @@ export function CartIcon({
   showBadge = true, 
   variant = "default" 
 }: CartIconProps) {
+  const [isClient, setIsClient] = React.useState(false)
   const { totalItems, toggleCart } = useCart()
+
+  // Prevent hydration issues
+  React.useEffect(() => {
+    setIsClient(true)
+  }, [])
 
   return (
     <Button
@@ -29,7 +35,7 @@ export function CartIcon({
     >
       <ShoppingCart className="h-4 w-4" />
       
-      {showBadge && totalItems > 0 && (
+      {showBadge && isClient && totalItems > 0 && (
         <AnimatePresence>
           <motion.div
             initial={{ scale: 0, opacity: 0 }}
@@ -49,7 +55,7 @@ export function CartIcon({
       )}
       
       <span className="sr-only">
-        Shopping cart {totalItems > 0 && `with ${totalItems} items`}
+        Shopping cart {isClient && totalItems > 0 && `with ${totalItems} items`}
       </span>
     </Button>
   )
