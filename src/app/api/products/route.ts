@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,6 +12,13 @@ export async function GET(request: NextRequest) {
     const sortBy = searchParams.get('sortBy') || 'created_at';
     const sortOrder = searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
 
+    console.log('Products API called with:', { category, search, featured, limit, offset });
+
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!
+    );
+
     let query = supabase
       .from('products')
       .select(`
@@ -23,9 +30,17 @@ export async function GET(request: NextRequest) {
       .range(offset, offset + limit - 1);
 
     if (category) {
-      // If category looks like a slug, get the category ID first
-      if (category.includes('-')) {
+      // Check if category is a UUID (format: 8-4-4-4-12 characters)
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      
+      if (uuidRegex.test(category)) {
+        // It's a UUID, use directly as category_id
+        console.log(`Using category UUID: ${category}`);
+        query = query.eq('category_id', category);
+      } else {
+        // It's a slug, look up the category ID
         try {
+          console.log(`Looking up category with slug: ${category}`);
           const { data: categoryData, error: categoryError } = await supabase
             .from('categories')
             .select('id')
@@ -33,8 +48,8 @@ export async function GET(request: NextRequest) {
             .single()
           
           if (categoryError || !categoryData) {
-            console.log(`Category '${category}' not found:`, categoryError)
-            // Category not found, return empty results
+            console.log(`Category '${category}' not found:`, categoryError);
+            // Return empty results for non-existent category
             return NextResponse.json({ 
               products: [], 
               hasMore: false,
@@ -42,14 +57,12 @@ export async function GET(request: NextRequest) {
             });
           }
           
-          query = query.eq('category_id', categoryData.id)
+          console.log(`Found category ID: ${categoryData.id}`);
+          query = query.eq('category_id', categoryData.id);
         } catch (error) {
-          console.error('Category lookup error:', error)
+          console.error('Category lookup error:', error);
           return NextResponse.json({ error: 'Failed to lookup category' }, { status: 500 });
         }
-      } else {
-        // Assume it's a category ID
-        query = query.eq('category_id', category);
       }
     }
 
