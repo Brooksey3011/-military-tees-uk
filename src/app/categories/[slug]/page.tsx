@@ -1,3 +1,5 @@
+"use client"
+
 import { Metadata } from "next"
 import Link from "next/link"
 import { notFound } from "next/navigation"
@@ -6,7 +8,9 @@ import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
 import { ProductGrid } from "@/components/product/product-grid"
 import { EmptyProductGrid, ProductGridSkeleton } from "@/components/ui"
+import { useProducts } from "@/hooks/use-products"
 import { cn } from "@/lib/utils"
+import { use } from "react"
 
 // Category data matching navbar structure
 const categoryData: Record<string, { 
@@ -117,40 +121,43 @@ interface CategoryPageProps {
   }>
 }
 
-export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-  const { slug } = await params
-  const category = categoryData[slug]
-  
-  if (!category) {
-    return {
-      title: "Category Not Found | Military Tees UK"
-    }
-  }
-
-  return {
-    title: `${category.name} - Military T-Shirts | Military Tees UK`,
-    description: category.longDescription,
-    keywords: [`${category.name.toLowerCase()}`, "military t-shirts", "british army", "military clothing"],
-    openGraph: {
-      title: `${category.name} Military T-Shirts`,
-      description: category.description,
-      type: "website",
-    }
-  }
-}
-
-export default async function CategoryPage({ params, searchParams }: CategoryPageProps) {
-  const { slug } = await params
+export default function CategoryPage({ params, searchParams }: CategoryPageProps) {
+  const { slug } = use(params)
   const category = categoryData[slug]
   
   if (!category) {
     notFound()
   }
 
-  // TODO: Fetch actual products from Supabase
-  // For now, we'll show empty state with proper structure
-  const products: any[] = [] // Will be replaced with actual product fetching
-  const isLoading = false // Will be replaced with actual loading state
+  // Get category slug for API query - map display names to database slugs
+  const categorySlugMap: Record<string, string> = {
+    'armoury': 'armoury',
+    'regimental-hq': 'regimental-hq', 
+    'mess-hall': 'mess-hall',
+    'parade-square': 'parade-square',
+    'med-centre': 'med-centre',
+    'mt': 'mt',
+    'signals': 'signals',
+    'ops-room': 'ops-room',
+    'naafi': 'naafi',
+    'gym': 'gym',
+    'guard-room': 'guard-room',
+    'sgts-mess': 'sgts-mess',
+    'stores': 'stores',
+    'training-wing': 'training-wing',
+    'block': 'block',
+    'ranges': 'ranges',
+    'civvy-street': 'civvy-street',
+    'g10-stores': 'g10-stores'
+  }
+
+  const categorySlug = categorySlugMap[slug]
+  
+  // Use the products hook to fetch real data
+  const { products, loading, error } = useProducts({
+    category: categorySlug,
+    limit: 20
+  })
   
   return (
     <Layout>
@@ -269,8 +276,17 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
             </div>
 
             {/* Products Display */}
-            {isLoading ? (
+            {loading ? (
               <ProductGridSkeleton count={8} />
+            ) : error ? (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground text-lg mb-6">
+                  Failed to load products. Please try again.
+                </p>
+                <Button onClick={() => window.location.reload()} className="rounded-none">
+                  Try Again
+                </Button>
+              </div>
             ) : products.length > 0 ? (
               <ProductGrid products={products} />
             ) : (

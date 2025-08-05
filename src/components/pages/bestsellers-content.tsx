@@ -4,112 +4,45 @@ import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { ProductGrid } from "@/components/product/product-grid"
+import { LoadingState, ErrorDisplay } from "@/components/ui"
+import { useProducts } from "@/hooks/use-products"
 import Link from "next/link"
 
-// Generate variants for bestseller products
-function generateBestsellerVariants(productId: string) {
-  const sizes = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
-  const colors = ["black", "olive green", "white", "navy", "maroon", "brown", "sand", "green"]
-  const variants = []
-  
-  for (const size of sizes) {
-    for (const color of colors) {
-      variants.push({
-        id: `bestseller-${productId}-${size}-${color}`,
-        size,
-        color,
-        stock_quantity: Math.floor(Math.random() * 15) + 3 // Random stock 3-17
-      })
-    }
-  }
-  
-  return variants
-}
-
-// Mock data for bestsellers - will be replaced with real data from backend  
-const bestsellers = [
-  {
-    id: "1",
-    name: "Classic British Army Logo Tee",
-    price: 22.99,
-    compareAtPrice: 27.99,
-    image: "/products/royal-marine-commando-tee.jpg",
-    category: "British Army",
-    slug: "classic-british-army-logo-tee",
-    salesRank: 1,
-    badge: "#1 BESTSELLER",
-    variants: generateBestsellerVariants("1")
-  },
-  {
-    id: "2",
-    name: "Royal Navy Anchor Heritage",
-    price: 24.99,
-    image: "/products/raf-fighter-pilot-heritage.jpg", 
-    category: "Royal Navy",
-    slug: "royal-navy-anchor-heritage",
-    rating: 4.7,
-    reviewCount: 89,
-    salesRank: 2,
-    badge: "TOP SELLER",
-    variants: generateBestsellerVariants("2")
-  },
-  {
-    id: "3",
-    name: "RAF Wings of Victory Design",
-    price: 23.99,
-    compareAtPrice: 28.99,
-    image: "/products/raf-fighter-pilot-heritage.jpg",
-    category: "Royal Air Force", 
-    slug: "raf-wings-victory-design",
-    rating: 4.9,
-    reviewCount: 156,
-    salesRank: 3,
-    badge: "CUSTOMER FAVORITE",
-    variants: generateBestsellerVariants("3")
-  },
-  {
-    id: "4",
-    name: "SAS Who Dares Wins Tribute",
-    price: 26.99,
-    image: "/products/sas-regiment-elite-tee.jpg",
-    category: "Special Forces",
-    slug: "sas-who-dares-wins-tribute", 
-    rating: 4.6,
-    reviewCount: 73,
-    salesRank: 4,
-    badge: "HIGHLY RATED",
-    variants: generateBestsellerVariants("4")
-  },
-  {
-    id: "5",
-    name: "Remembrance Poppy Military",
-    price: 21.99,
-    compareAtPrice: 25.99,
-    image: "/products/army-medic-corps-tribute.jpg",
-    category: "Remembrance",
-    slug: "remembrance-poppy-military",
-    rating: 4.8,
-    reviewCount: 201,
-    salesRank: 5,
-    badge: "MOST REVIEWED",
-    variants: generateBestsellerVariants("5")
-  },
-  {
-    id: "6",
-    name: "Parachute Regiment Pride",
-    price: 25.99,
-    image: "/products/paratrooper-wings-design.jpg",
-    category: "Parachute Regiment",
-    slug: "parachute-regiment-pride",
-    rating: 4.7,
-    reviewCount: 94,
-    salesRank: 6,
-    badge: "TRENDING",
-    variants: generateBestsellerVariants("6")
-  }
-]
-
 export default function BestsellersContent() {
+  const { products, loading, error } = useProducts({
+    featured: true,
+    limit: 6,
+    sortBy: 'created_at',
+    sortOrder: 'desc'
+  })
+
+  if (loading) {
+    return (
+      <Layout>
+        <div className="min-h-screen">
+          <div className="container mx-auto px-4 py-16">
+            <LoadingState />
+          </div>
+        </div>
+      </Layout>
+    )
+  }
+
+  if (error) {
+    return (
+      <Layout>
+        <div className="min-h-screen">
+          <div className="container mx-auto px-4 py-16">
+            <ErrorDisplay 
+              message="Failed to load bestsellers. Please try again."
+              onRetry={() => window.location.reload()}
+            />
+          </div>
+        </div>
+      </Layout>
+    )
+  }
   return (
     <Layout>
       <div className="min-h-screen">
@@ -149,86 +82,20 @@ export default function BestsellersContent() {
         {/* Products Grid */}
         <section className="py-16">
           <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {bestsellers.map((product) => (
-                <Card key={product.id} className="hover:shadow-lg transition-shadow group border-2 border-border rounded-none relative">
-                  {/* Sales Rank Badge */}
-                  <div className="absolute -top-2 -left-2 bg-primary text-primary-foreground w-8 h-8 flex items-center justify-center text-sm font-bold z-10">
-                    #{product.salesRank}
-                  </div>
-                  
-                  <div className="relative">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-64 object-cover"
-                    />
-                    <Badge 
-                      className={`absolute top-2 right-2 rounded-none font-bold ${
-                        product.badge.includes('#1') ? 'bg-yellow-600' :
-                        product.badge.includes('TOP') ? 'bg-blue-600' :
-                        product.badge.includes('FAVORITE') ? 'bg-purple-600' :
-                        product.badge.includes('RATED') ? 'bg-green-600' :
-                        product.badge.includes('REVIEWED') ? 'bg-orange-600' :
-                        'bg-red-600'
-                      } text-white text-xs`}
-                    >
-                      {product.badge}
-                    </Badge>
-                  </div>
-                  
-                  <CardHeader className="p-4">
-                    <CardTitle className="text-lg font-display font-bold mb-2">
-                      {product.name}
-                    </CardTitle>
-                    
-                    {/* Category Badge */}
-                    <Badge variant="outline" className="rounded-none w-fit">
-                      {product.category}
-                    </Badge>
-                  </CardHeader>
-                  
-                  <CardContent className="p-4 pt-0">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xl font-bold">£{product.price}</span>
-                        {product.compareAtPrice && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            £{product.compareAtPrice}
-                          </span>
-                        )}
-                      </div>
-                      {product.compareAtPrice && (
-                        <Badge variant="secondary" className="rounded-none">
-                          SAVE £{(product.compareAtPrice - product.price).toFixed(2)}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <div className="flex gap-2">
-                      <Button 
-                        asChild 
-                        className="flex-1 rounded-none font-display font-bold tracking-wide uppercase"
-                      >
-                        <Link href={`/products/${product.slug}`}>
-                          View Details
-                        </Link>
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        className="px-4 rounded-none border-2"
-                        onClick={() => {
-                          // Add to cart functionality - will be implemented with backend
-                          console.log('Add to cart:', product.id)
-                        }}
-                      >
-                        🛒
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
+            <ProductGrid products={products} />
+            
+            {products.length === 0 && (
+              <div className="text-center py-16">
+                <p className="text-muted-foreground text-lg mb-6">
+                  No bestsellers available at the moment. Check back soon!
+                </p>
+                <Link href="/products">
+                  <Button size="lg" className="rounded-none">
+                    Browse All Products
+                  </Button>
+                </Link>
+              </div>
+            )}
           </div>
         </section>
 

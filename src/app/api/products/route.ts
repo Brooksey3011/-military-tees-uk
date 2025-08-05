@@ -6,8 +6,11 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const category = searchParams.get('category');
     const search = searchParams.get('search');
+    const featured = searchParams.get('featured') === 'true';
     const limit = parseInt(searchParams.get('limit') || '20');
     const offset = parseInt(searchParams.get('offset') || '0');
+    const sortBy = searchParams.get('sortBy') || 'created_at';
+    const sortOrder = searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
 
     let query = supabase
       .from('products')
@@ -16,15 +19,44 @@ export async function GET(request: NextRequest) {
         category:categories(id, name, slug),
         variants:product_variants(*)
       `, { count: 'exact' })
+      .eq('is_active', true)
       .range(offset, offset + limit - 1);
 
     if (category) {
-      query = query.eq('category_id', category);
+      // If category looks like a slug, get the category ID first
+      if (category.includes('-')) {
+        const { data: categoryData } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('slug', category)
+          .single()
+        
+        if (categoryData) {
+          query = query.eq('category_id', categoryData.id)
+        } else {
+          // Category not found, return empty results
+          return NextResponse.json({ 
+            products: [], 
+            hasMore: false,
+            total: 0 
+          });
+        }
+      } else {
+        // Assume it's a category ID
+        query = query.eq('category_id', category);
+      }
     }
 
     if (search) {
       query = query.ilike('name', `%${search}%`);
     }
+
+    if (featured) {
+      query = query.eq('featured', true);
+    }
+
+    // Add sorting
+    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
 
     const { data: products, error, count } = await query;
 
