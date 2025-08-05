@@ -10,6 +10,7 @@ interface UseProductsOptions {
   limit?: number
   sortBy?: string
   sortOrder?: 'asc' | 'desc'
+  featured?: boolean
 }
 
 interface UseProductsReturn {
@@ -33,7 +34,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
     search,
     limit = 12,
     sortBy = 'created_at',
-    sortOrder = 'desc'
+    sortOrder = 'desc',
+    featured
   } = options
 
   const fetchProducts = async (reset = false) => {
@@ -48,7 +50,8 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
         limit,
         offset: currentOffset,
         sortBy,
-        sortOrder
+        sortOrder,
+        featured
       })
       
       if (reset) {
@@ -81,7 +84,7 @@ export function useProducts(options: UseProductsOptions = {}): UseProductsReturn
 
   useEffect(() => {
     refetch()
-  }, [category, search, sortBy, sortOrder])
+  }, [category, search, sortBy, sortOrder, featured])
 
   return {
     products,

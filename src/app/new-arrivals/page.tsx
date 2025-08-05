@@ -1,5 +1,7 @@
 import { Layout } from "@/components/layout"
 import { NewArrivalsClient } from "@/components/pages/new-arrivals-client"
+import { HydrationWrapper } from "@/components/ui/hydration-wrapper"
+import { ProductGridSkeleton } from "@/components/ui"
 import { cn } from "@/lib/utils"
 
 export const metadata = {
@@ -40,7 +42,9 @@ export default function NewArrivalsPage() {
 
         {/* Products Section */}
         <div className="container mx-auto px-4 py-8">
-          <NewArrivalsClient />
+          <HydrationWrapper fallback={<ProductGridSkeleton count={12} />}>
+            <NewArrivalsClient />
+          </HydrationWrapper>
         </div>
       </div>
     </Layout>

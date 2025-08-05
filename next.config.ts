@@ -49,7 +49,7 @@ const nextConfig: NextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://checkout.stripe.com",
+              "script-src 'self' 'unsafe-inline' https://js.stripe.com https://checkout.stripe.com",
               "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
               "img-src 'self' blob: data: https://*.supabase.co https://images.unsplash.com",
               "font-src 'self' https://fonts.gstatic.com",

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { CategoryProductsClient } from "@/components/pages/category-products-client"
+import { HydrationWrapper } from "@/components/ui/hydration-wrapper"
+import { ProductGridSkeleton } from "@/components/ui"
 import { cn } from "@/lib/utils"
 
 // Category data matching navbar structure
@@ -208,10 +210,12 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Products Section */}
       <div className="container mx-auto px-4 py-8">
-        <CategoryProductsClient 
-          categorySlug={categorySlug}
-          categoryName={category.name}
-        />
+        <HydrationWrapper fallback={<ProductGridSkeleton count={12} />}>
+          <CategoryProductsClient 
+            categorySlug={categorySlug}
+            categoryName={category.name}
+          />
+        </HydrationWrapper>
       </div>
       </div>
     </Layout>

@@ -69,8 +69,10 @@ export function ProductCard({
     return images.length > 0 ? images : ['/images/products/placeholder-tshirt.svg']
   }, [product.main_image_url, selectedVariant])
   
-  // Auto-cycle images on hover
+  // Auto-cycle images on hover - only on client side
   React.useEffect(() => {
+    if (typeof window === 'undefined') return
+    
     if (isHovered && allImages.length > 1) {
       const interval = setInterval(() => {
         setCurrentImageIndex(prev => (prev + 1) % allImages.length)
