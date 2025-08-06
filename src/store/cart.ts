@@ -144,16 +144,34 @@ export const useCartStore = create<CartStore>()(
     }),
     {
       name: 'military-tees-cart',
-      storage: createJSONStorage(() => localStorage),
+      storage: createJSONStorage(() => {
+        // Only use localStorage in browser environment
+        if (typeof window !== 'undefined') {
+          return localStorage
+        }
+        // Return a dummy storage object for SSR
+        return {
+          getItem: () => null,
+          setItem: () => {},
+          removeItem: () => {},
+        }
+      }),
       // Persist everything except isOpen state
       partialize: (state) => ({
         items: state.items,
         totalItems: state.totalItems,
         totalPrice: state.totalPrice
       }),
+      // Only run persistence on client side
+      skipHydration: typeof window === 'undefined',
     }
   )
 )
+
+// Hydration fix: Manually trigger hydration on client side
+if (typeof window !== 'undefined') {
+  useCartStore.persist.rehydrate()
+}
 
 // Utility hooks for common cart operations
 export const useCartItems = () => useCartStore(state => state.items)
