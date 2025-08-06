@@ -1,5 +1,5 @@
 import { Layout } from "@/components/layout"
-import { SimpleProductDetail } from "@/components/debug/simple-product-detail"
+import { ProductDetailHydrationSafe } from "@/components/pages/product-detail-hydration-safe"
 import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata = {
@@ -23,7 +23,7 @@ export default function ProductPage() {
             </div>
           </div>
         }>
-          <SimpleProductDetail />
+          <ProductDetailHydrationSafe />
         </ClientOnly>
       </div>
     </Layout>

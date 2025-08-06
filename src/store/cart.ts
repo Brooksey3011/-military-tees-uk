@@ -168,9 +168,13 @@ export const useCartStore = create<CartStore>()(
   )
 )
 
-// Hydration fix: Manually trigger hydration on client side
-if (typeof window !== 'undefined') {
-  useCartStore.persist.rehydrate()
+// Hydration fix: Rehydrate only after component mounts
+let hasRehydrated = false
+export const rehydrateCartStore = () => {
+  if (typeof window !== 'undefined' && !hasRehydrated) {
+    hasRehydrated = true
+    useCartStore.persist.rehydrate()
+  }
 }
 
 // Utility hooks for common cart operations
