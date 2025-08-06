@@ -32,9 +32,11 @@ function isRateLimited(key: string, limit: number, windowMs: number): boolean {
 }
 
 export function middleware(request: NextRequest) {
-  // Rate limiting for API routes (exclude webhooks)
-  if (request.nextUrl.pathname.startsWith('/api/') && 
-      !request.nextUrl.pathname.startsWith('/api/webhook/')) {
+  const pathname = request.nextUrl.pathname
+
+  // Only handle API and admin routes based on matcher
+  if (pathname.startsWith('/api/') && 
+      !pathname.startsWith('/api/webhook/')) {
     const key = getRateLimitKey(request)
     
     // Different limits for different endpoints
@@ -83,7 +85,7 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    // Only apply middleware to API routes and admin routes
+    // Only apply middleware to API and admin routes
     '/api/:path*',
     '/admin/:path*'
   ],
