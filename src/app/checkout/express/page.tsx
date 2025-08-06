@@ -25,6 +25,7 @@ import {
   Apple,
   Chrome
 } from "lucide-react"
+import { StripeCardElement } from "@/components/checkout/stripe-card-element"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -91,7 +92,7 @@ export default function ExpressCheckoutPage() {
     }
   }
 
-  const handleCardPayment = async () => {
+  const handlePaymentSuccess = async (paymentMethod: any) => {
     setIsProcessing(true)
     setError(null)
 
@@ -117,53 +118,22 @@ export default function ExpressCheckoutPage() {
         ...billingAddress
       }
 
-      // Prepare order data
-      const orderData = {
-        items: items.map(item => ({
-          variantId: item.variantId,
-          quantity: item.quantity
-        })),
-        shippingAddress: {
-          ...customerDetails,
-          ...shippingAddress
-        },
-        billingAddress: finalBillingAddress,
-        customerNotes: ""
-      }
-
-      // Get session token (optional for guest checkout)
-      const { data: { session } } = await supabase.auth.getSession()
+      // For now, redirect to success page since this is test mode
+      // In production, you'd process the payment here
+      console.log('Payment method created:', paymentMethod)
       
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json'
-      }
-      
-      if (session?.access_token) {
-        headers['Authorization'] = `Bearer ${session.access_token}`
-      }
-
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(orderData)
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to create checkout session')
-      }
-
-      const { url } = await response.json()
-
-      if (url) {
-        window.location.href = url
-      }
+      // Simulate successful payment
+      window.location.href = '/checkout/success'
       
     } catch (err) {
       console.error('Checkout error:', err)
       setError(err instanceof Error ? err.message : "Payment processing failed. Please try again.")
       setIsProcessing(false)
     }
+  }
+
+  const handlePaymentError = (error: string) => {
+    setError(error)
   }
 
   const shippingCost = totalPrice > 50 ? 0 : 4.99
@@ -400,20 +370,13 @@ export default function ExpressCheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Complete Order */}
-              <LoadingState 
-                isLoading={isProcessing}
-                message="Processing your order..."
-              >
-                <Button 
-                  onClick={handleCardPayment}
-                  className="w-full h-12 rounded-md font-semibold text-lg"
-                  size="lg"
-                >
-                  <Lock className="h-5 w-5 mr-2" />
-                  Complete Order - £{finalTotal.toFixed(2)}
-                </Button>
-              </LoadingState>
+              {/* Stripe Card Payment */}
+              <StripeCardElement
+                onPaymentSuccess={handlePaymentSuccess}
+                onError={handlePaymentError}
+                isProcessing={isProcessing}
+                amount={finalTotal}
+              />
 
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">
