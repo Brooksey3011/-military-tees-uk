@@ -25,7 +25,7 @@ import {
   Apple,
   Chrome
 } from "lucide-react"
-import { StripeCardElement } from "@/components/checkout/stripe-card-element"
+import { SimpleStripeCheckout } from "@/components/checkout/simple-stripe-checkout"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -367,11 +367,10 @@ export default function ExpressCheckoutPage() {
               </Card>
 
               {/* Stripe Card Payment */}
-              <StripeCardElement
-                onPaymentSuccess={handlePaymentSuccess}
-                onError={handlePaymentError}
-                isProcessing={isProcessing}
+              <SimpleStripeCheckout
                 amount={finalTotal}
+                onPaymentSuccess={handlePaymentSuccess}
+                onPaymentError={handlePaymentError}
               />
 
               <div className="text-center space-y-2">
