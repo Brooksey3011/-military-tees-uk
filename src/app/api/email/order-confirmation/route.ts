@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Only initialize Resend if API key is available
+let resend: Resend | null = null
+if (process.env.RESEND_API_KEY) {
+  resend = new Resend(process.env.RESEND_API_KEY)
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,6 +21,15 @@ export async function POST(request: NextRequest) {
       tax,
       total
     } = body
+
+    // Check if email service is available
+    if (!resend) {
+      console.log('Resend API key not configured, skipping email send')
+      return NextResponse.json({ 
+        success: false, 
+        message: 'Email service not configured' 
+      }, { status: 200 })
+    }
 
     console.log('Sending order confirmation email to:', customerEmail)
 
