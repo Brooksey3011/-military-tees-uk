@@ -118,8 +118,9 @@ export default function ExpressCheckoutPage() {
       // In production, you'd process the payment here
       console.log('Payment method created:', paymentMethod)
       
-      // Simulate successful payment
-      window.location.href = '/checkout/success'
+      // Create a mock session for the success page
+      const mockSessionId = 'test_' + Date.now()
+      window.location.href = `/checkout/success?session_id=${mockSessionId}`
       
     } catch (err) {
       console.error('Checkout error:', err)

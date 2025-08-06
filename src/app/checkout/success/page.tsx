@@ -8,7 +8,7 @@ import { Suspense } from "react"
 export const dynamic = 'force-dynamic'
 import { Layout } from "@/components/layout/layout"
 import { useAuth } from "@/hooks/use-auth"
-import { useCart } from "@/hooks/use-cart"
+import { useSimpleCart } from "@/hooks/use-simple-cart"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -27,68 +27,67 @@ import Link from "next/link"
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
   const { user } = useAuth()
-  const { clearCart } = useCart()
+  const { items, totalPrice, clearCart } = useSimpleCart()
   const [orderData, setOrderData] = React.useState<any>(null)
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
-  // Clear cart on successful checkout
+  // Process order data from cart
   React.useEffect(() => {
-    clearCart()
-  }, []) // Remove clearCart from dependencies to prevent infinite loop
-
-  // Fetch order data from Stripe session
-  React.useEffect(() => {
-    const fetchOrderData = async () => {
-      const sessionId = searchParams.get('session_id')
-      
-      if (!sessionId) {
-        setError('No session ID provided')
-        setLoading(false)
-        return
-      }
-
-      try {
-        // In a real implementation, you'd verify the session with Stripe
-        // and fetch the actual order data from your database
-        const mockOrderData = {
-          orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
-          orderDate: new Date().toLocaleDateString('en-GB'),
-          estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB'),
-          email: user?.email || "customer@example.com",
-          shippingAddress: {
-            name: `${user?.customer?.first_name || 'Customer'} ${user?.customer?.last_name || ''}`,
-            address: "Order address will be fetched from database",
-            city: "London",
-            postcode: "SW1A 1AA",
-            country: "United Kingdom"
-          },
-          items: [
-            {
-              id: "1",
-              name: "Order items will be fetched from database",
-              size: "L",
-              color: "Black",
-              quantity: 1,
-              price: 24.99
-            }
-          ],
-          subtotal: 64.98,
-          shipping: 0,
-          tax: 12.99,
-          total: 77.97
-        }
-
-        setOrderData(mockOrderData)
-        setLoading(false)
-      } catch (err) {
-        setError('Failed to load order information')
-        setLoading(false)
-      }
+    const sessionId = searchParams.get('session_id')
+    
+    if (!sessionId) {
+      setError('No session ID provided')
+      setLoading(false)
+      return
     }
 
-    fetchOrderData()
-  }, [searchParams, user])
+    try {
+      // Calculate totals
+      const shippingCost = totalPrice > 50 ? 0 : 4.99
+      const tax = totalPrice * 0.2 // 20% VAT
+      const finalTotal = totalPrice + shippingCost + tax
+
+      // Create order data from cart
+      const orderData = {
+        orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
+        orderDate: new Date().toLocaleDateString('en-GB'),
+        estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB'),
+        email: user?.email || "customer@example.com",
+        shippingAddress: {
+          name: `${user?.customer?.first_name || 'Customer'} ${user?.customer?.last_name || ''}`,
+          address: "123 Military Avenue",
+          city: "London",
+          postcode: "SW1A 1AA",
+          country: "United Kingdom"
+        },
+        items: items.map(item => ({
+          id: item.id,
+          name: item.name,
+          size: item.size,
+          color: item.color,
+          quantity: item.quantity,
+          price: item.price
+        })),
+        subtotal: totalPrice,
+        shipping: shippingCost,
+        tax: tax,
+        total: finalTotal
+      }
+
+      setOrderData(orderData)
+      setLoading(false)
+
+      // Clear cart after successful order
+      setTimeout(() => {
+        clearCart()
+      }, 1000) // Small delay to show the items first
+
+    } catch (err) {
+      setError('Failed to process order information')
+      setLoading(false)
+    }
+  }, [searchParams, user, items, totalPrice, clearCart])
 
   if (loading) {
     return (
