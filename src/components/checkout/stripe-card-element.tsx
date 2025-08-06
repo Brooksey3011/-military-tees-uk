@@ -1,27 +1,38 @@
 "use client"
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { loadStripe, Stripe, StripeElements } from '@stripe/stripe-js'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { LoadingState } from '@/components/ui'
 import { CreditCard, Lock } from 'lucide-react'
 
-let stripePromise: Promise<Stripe | null>
+// Global stripe instance to prevent multiple loads
+let stripeInstance: Stripe | null = null
+let stripePromise: Promise<Stripe | null> | null = null
 
-const getStripe = () => {
+const getStripe = async (): Promise<Stripe | null> => {
+  if (stripeInstance) {
+    return stripeInstance
+  }
+  
   if (!stripePromise) {
     const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
     
     if (!publishableKey) {
       console.error('❌ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is missing!')
-      return Promise.resolve(null)
+      return null
     }
     
     console.log('🔑 Loading Stripe with key:', publishableKey.substring(0, 20) + '...')
     stripePromise = loadStripe(publishableKey)
   }
-  return stripePromise
+  
+  if (!stripeInstance) {
+    stripeInstance = await stripePromise
+  }
+  
+  return stripeInstance
 }
 
 interface StripeCardElementProps {
@@ -31,6 +42,10 @@ interface StripeCardElementProps {
   amount: number
 }
 
+// Global elements instance to prevent duplicates
+let globalElements: StripeElements | null = null
+let globalCardElement: any = null
+
 export function StripeCardElement({ 
   onPaymentSuccess, 
   onError, 
@@ -38,53 +53,97 @@ export function StripeCardElement({
   amount 
 }: StripeCardElementProps) {
   const [stripe, setStripe] = useState<Stripe | null>(null)
-  const [elements, setElements] = useState<StripeElements | null>(null)
+  const [isReady, setIsReady] = useState(false)
   const [cardError, setCardError] = useState<string | null>(null)
   const [isCardComplete, setIsCardComplete] = useState(false)
+  const cardElementRef = useRef<HTMLDivElement>(null)
+  const isInitializedRef = useRef(false)
 
   useEffect(() => {
+    if (isInitializedRef.current) return
+    
     const initStripe = async () => {
-      const stripeInstance = await getStripe()
-      if (stripeInstance) {
+      try {
+        const stripeInstance = await getStripe()
+        if (!stripeInstance) {
+          onError('Failed to load Stripe')
+          return
+        }
+
         setStripe(stripeInstance)
-        
-        const elementsInstance = stripeInstance.elements({
-          appearance: {
-            theme: 'stripe',
-            variables: {
-              colorPrimary: '#4a5d23',
-              colorBackground: '#ffffff',
-              colorText: '#1a1a1a',
-              colorDanger: '#df1b41',
-              fontFamily: 'Inter, system-ui, sans-serif',
-              spacingUnit: '4px',
-              borderRadius: '6px',
+
+        // Only create elements if they don't exist
+        if (!globalElements) {
+          globalElements = stripeInstance.elements({
+            appearance: {
+              theme: 'stripe',
+              variables: {
+                colorPrimary: '#4a5d23',
+                colorBackground: '#ffffff',
+                colorText: '#1a1a1a',
+                colorDanger: '#df1b41',
+                fontFamily: 'Inter, system-ui, sans-serif',
+                spacingUnit: '4px',
+                borderRadius: '6px',
+              },
             },
-          },
-          locale: 'en-GB',
-        })
-        
-        setElements(elementsInstance)
+            locale: 'en-GB',
+          })
+        }
+
+        // Only create card element if it doesn't exist
+        if (!globalCardElement) {
+          globalCardElement = globalElements.create('card', {
+            style: {
+              base: {
+                fontSize: '16px',
+                color: '#1a1a1a',
+                '::placeholder': {
+                  color: '#6b7280',
+                },
+              },
+              invalid: {
+                color: '#df1b41',
+                iconColor: '#df1b41',
+              },
+            },
+            hidePostalCode: false,
+            disableLink: true,
+          })
+
+          globalCardElement.on('change', (event: any) => {
+            setCardError(event.error ? event.error.message : null)
+            setIsCardComplete(event.complete)
+          })
+        }
+
+        // Mount the card element
+        if (cardElementRef.current && globalCardElement) {
+          globalCardElement.mount(cardElementRef.current)
+        }
+
+        setIsReady(true)
+        isInitializedRef.current = true
+      } catch (err) {
+        console.error('Stripe initialization error:', err)
+        onError('Failed to initialize payment form')
       }
     }
     
     initStripe()
+
+    return () => {
+      // Don't unmount on cleanup to prevent re-mounting issues
+    }
   }, [])
 
   const handleSubmit = async () => {
-    if (!stripe || !elements || isProcessing) return
+    if (!stripe || !globalCardElement || isProcessing) return
 
     try {
-      const cardElement = elements.getElement('card')
-      
-      if (!cardElement) {
-        onError('Card element not found')
-        return
-      }
-
       const { error, paymentMethod } = await stripe.createPaymentMethod({
         type: 'card',
-        card: cardElement,
+        card: globalCardElement,
       })
 
       if (error) {
@@ -97,12 +156,7 @@ export function StripeCardElement({
     }
   }
 
-  const handleCardChange = (event: any) => {
-    setCardError(event.error ? event.error.message : null)
-    setIsCardComplete(event.complete)
-  }
-
-  if (!stripe || !elements) {
+  if (!stripe || !isReady) {
     return (
       <Card className="border border-border/50">
         <CardContent className="p-6">
@@ -143,14 +197,8 @@ export function StripeCardElement({
 
         {/* Stripe Elements Card Input */}
         <div className="p-3 border border-border/50 rounded-md">
-          <div id="card-element">
+          <div ref={cardElementRef} id="stripe-card-element">
             {/* Stripe will inject the card element here */}
-            {elements && (
-              <StripeCardInput 
-                elements={elements} 
-                onChange={handleCardChange}
-              />
-            )}
           </div>
         </div>
 
@@ -181,55 +229,6 @@ export function StripeCardElement({
       </CardContent>
     </Card>
   )
-}
-
-// Simple card input component using Stripe Elements
-function StripeCardInput({ 
-  elements, 
-  onChange 
-}: { 
-  elements: StripeElements
-  onChange: (event: any) => void 
-}) {
-  const [cardElement, setCardElement] = useState<any>(null)
-
-  useEffect(() => {
-    // Check if element already exists
-    let existingElement = elements.getElement('card')
-    
-    if (!existingElement) {
-      // Create new element only if none exists
-      existingElement = elements.create('card', {
-        style: {
-          base: {
-            fontSize: '16px',
-            color: '#1a1a1a',
-            '::placeholder': {
-              color: '#6b7280',
-            },
-          },
-          invalid: {
-            color: '#df1b41',
-            iconColor: '#df1b41',
-          },
-        },
-        hidePostalCode: false, // Keep postcode field
-        disableLink: true,
-      })
-    }
-
-    setCardElement(existingElement)
-    existingElement.mount('#stripe-card-element')
-    existingElement.on('change', onChange)
-
-    return () => {
-      if (existingElement) {
-        existingElement.unmount()
-      }
-    }
-  }, [elements, onChange])
-
-  return <div id="stripe-card-element" />
 }
 
 export default StripeCardElement
