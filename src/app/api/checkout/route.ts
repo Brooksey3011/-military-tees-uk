@@ -274,11 +274,24 @@ async function createOrderInDatabase(
 
 // Main POST handler
 export async function POST(request: NextRequest) {
+  console.log('🚀 POST /api/checkout - Handler Started')
+  console.log('📨 Request method:', request.method)
+  console.log('🔗 Request URL:', request.url)
+  console.log('📋 Headers:', Object.fromEntries(request.headers.entries()))
+  
   try {
     console.log('Checkout API: Processing request')
 
     // Parse and validate request body
+    console.log('📥 Attempting to parse request body...')
     const body = await request.json()
+    console.log('✅ Request body parsed successfully')
+    console.log('🔍 Body preview:', { 
+      hasItems: !!body.items, 
+      hasShippingAddress: !!body.shippingAddress,
+      hasBillingAddress: !!body.billingAddress 
+    })
+    
     const validation = validateRequestBody(checkoutSchema, body)
     
     if (!validation.success) {
@@ -522,6 +535,7 @@ export async function POST(request: NextRequest) {
 
 // Health check endpoint
 export async function GET() {
+  console.log('💡 GET /api/checkout - Health check called')
   return NextResponse.json({
     status: 'ok',
     service: 'checkout-api',
