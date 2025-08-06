@@ -1,9 +1,27 @@
 import { NextRequest, NextResponse } from 'next/server'
+import nodemailer from 'nodemailer'
 import { Resend } from 'resend'
 
-// Only initialize Resend if API key is available
+// Email service setup - supports both Hostinger SMTP and Resend
+let emailService: 'hostinger' | 'resend' | null = null
 let resend: Resend | null = null
-if (process.env.RESEND_API_KEY) {
+let transporter: any = null
+
+// Check for Hostinger SMTP configuration first (preferred)
+if (process.env.HOSTINGER_EMAIL_HOST && process.env.HOSTINGER_EMAIL_USER && process.env.HOSTINGER_EMAIL_PASS) {
+  emailService = 'hostinger'
+  transporter = nodemailer.createTransport({
+    host: process.env.HOSTINGER_EMAIL_HOST,
+    port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '587'),
+    secure: process.env.HOSTINGER_EMAIL_SECURE === 'true', // true for 465, false for 587
+    auth: {
+      user: process.env.HOSTINGER_EMAIL_USER,
+      pass: process.env.HOSTINGER_EMAIL_PASS
+    }
+  })
+} else if (process.env.RESEND_API_KEY) {
+  // Fallback to Resend if available
+  emailService = 'resend'
   resend = new Resend(process.env.RESEND_API_KEY)
 }
 
@@ -23,15 +41,24 @@ export async function POST(request: NextRequest) {
     } = body
 
     // Check if email service is available
-    if (!resend) {
-      console.log('Resend API key not configured, skipping email send')
+    if (!emailService) {
+      console.log('❌ EMAIL SERVICE NOT CONFIGURED')
+      console.log('⚠️  To enable email confirmations with Hostinger:')
+      console.log('1. Add these environment variables:')
+      console.log('   HOSTINGER_EMAIL_HOST=mail.yourdomain.com')
+      console.log('   HOSTINGER_EMAIL_USER=orders@yourdomain.com')
+      console.log('   HOSTINGER_EMAIL_PASS=your-email-password')
+      console.log('   HOSTINGER_EMAIL_PORT=587')
+      console.log('2. Customer will NOT receive email confirmation until configured')
+      
       return NextResponse.json({ 
         success: false, 
-        message: 'Email service not configured' 
+        message: 'Email service not configured - customer will not receive confirmation email',
+        instructions: 'Add Hostinger SMTP credentials to environment variables'
       }, { status: 200 })
     }
 
-    console.log('Sending order confirmation email to:', customerEmail)
+    console.log(`Sending order confirmation email to: ${customerEmail} using ${emailService}`)
 
     // Create HTML email content
     const emailHtml = `
@@ -131,21 +158,66 @@ export async function POST(request: NextRequest) {
       </html>
     `
 
-    // Send email using Resend
-    const { data, error } = await resend.emails.send({
-      from: 'Military Tees UK <orders@militarytees.co.uk>',
-      to: [customerEmail],
-      subject: `Order Confirmation - ${orderNumber}`,
-      html: emailHtml,
-    })
+    // Send email using the configured service
+    if (emailService === 'hostinger' && transporter) {
+      // Send email using Hostinger SMTP
+      try {
+        const info = await transporter.sendMail({
+          from: `"Military Tees UK" <${process.env.HOSTINGER_EMAIL_USER}>`,
+          to: customerEmail,
+          subject: `Order Confirmation - ${orderNumber}`,
+          html: emailHtml,
+        })
 
-    if (error) {
-      console.error('Error sending email:', error)
-      return NextResponse.json({ error: 'Failed to send email' }, { status: 500 })
+        console.log('Hostinger email sent successfully:', info.messageId)
+        return NextResponse.json({ 
+          success: true, 
+          messageId: info.messageId,
+          service: 'hostinger'
+        })
+      } catch (error) {
+        console.error('Error sending Hostinger email:', error)
+        return NextResponse.json({ 
+          error: 'Failed to send email via Hostinger SMTP',
+          details: error instanceof Error ? error.message : 'Unknown error',
+          config: {
+            host: process.env.HOSTINGER_EMAIL_HOST,
+            port: process.env.HOSTINGER_EMAIL_PORT,
+            secure: process.env.HOSTINGER_EMAIL_SECURE,
+            user: process.env.HOSTINGER_EMAIL_USER?.substring(0, 5) + '***'
+          }
+        }, { status: 500 })
+      }
+    } else if (emailService === 'resend' && resend) {
+      // Send email using Resend (fallback)
+      try {
+        const { data, error } = await resend.emails.send({
+          from: 'Military Tees UK <orders@militarytees.co.uk>',
+          to: [customerEmail],
+          subject: `Order Confirmation - ${orderNumber}`,
+          html: emailHtml,
+        })
+
+        if (error) {
+          console.error('Error sending Resend email:', error)
+          return NextResponse.json({ error: 'Failed to send email via Resend' }, { status: 500 })
+        }
+
+        console.log('Resend email sent successfully:', data)
+        return NextResponse.json({ 
+          success: true, 
+          messageId: data?.id,
+          service: 'resend'
+        })
+      } catch (error) {
+        console.error('Resend email error:', error)
+        return NextResponse.json({ error: 'Failed to send email via Resend' }, { status: 500 })
+      }
+    } else {
+      return NextResponse.json({ 
+        error: 'Email service configuration error' 
+      }, { status: 500 })
     }
-
-    console.log('Email sent successfully:', data)
-    return NextResponse.json({ success: true, messageId: data?.id })
 
   } catch (error) {
     console.error('Email API error:', error)

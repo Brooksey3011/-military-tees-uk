@@ -19,13 +19,9 @@ import {
   User, 
   Mail, 
   Phone,
-  ArrowLeft,
-  Smartphone,
-  Wallet,
-  Apple,
-  Chrome
+  ArrowLeft
 } from "lucide-react"
-import { SimpleStripeCheckout } from "@/components/checkout/simple-stripe-checkout"
+import { SmartPaymentCheckout } from "@/components/checkout/smart-payment-checkout"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -78,15 +74,7 @@ export default function ExpressCheckoutPage() {
     }
   }, [items.length, authLoading])
 
-  const handleExpressPayment = async (method: 'paypal' | 'googlepay' | 'applepay') => {
-    setError(null)
-
-    // Show user-friendly message
-    const methodName = method === 'paypal' ? 'PayPal' : 
-                      method === 'googlepay' ? 'Google Pay' : 'Apple Pay'
-    
-    setError(`${methodName} express checkout is coming soon! Please use the card payment form below for now.`)
-  }
+  // Express payment is now handled by the ExpressStripeCheckout component
 
   const handlePaymentSuccess = async (paymentMethod: any) => {
     setIsProcessing(true)
@@ -228,62 +216,39 @@ export default function ExpressCheckoutPage() {
                 />
               )}
 
-              {/* Express Payment Options */}
-              <Card className="border border-border/50">
-                <CardContent className="p-6">
-                  <h2 className="text-lg font-semibold mb-4">Express Checkout</h2>
-                  <div className="grid grid-cols-1 gap-3">
-                    {/* PayPal */}
-                    <Button
-                      onClick={() => handleExpressPayment('paypal')}
-                      disabled={isProcessing}
-                      className="h-12 bg-[#0070ba] hover:bg-[#005ea6] text-white border-0 rounded-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Wallet className="h-5 w-5" />
-                        <span className="font-medium">PayPal</span>
-                      </div>
-                    </Button>
-
-                    {/* Google Pay */}
-                    <Button
-                      onClick={() => handleExpressPayment('googlepay')}
-                      disabled={isProcessing}
-                      className="h-12 bg-black hover:bg-gray-800 text-white border-0 rounded-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Chrome className="h-5 w-5" />
-                        <span className="font-medium">Google Pay</span>
-                      </div>
-                    </Button>
-
-                    {/* Apple Pay */}
-                    <Button
-                      onClick={() => handleExpressPayment('applepay')}
-                      disabled={isProcessing}
-                      className="h-12 bg-black hover:bg-gray-800 text-white border-0 rounded-md"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Apple className="h-5 w-5" />
-                        <span className="font-medium">Apple Pay</span>
-                      </div>
-                    </Button>
-                  </div>
-
-                  <div className="relative my-6">
-                    <Separator />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <span className="px-3 bg-background text-sm text-muted-foreground">
-                        OR
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-muted-foreground text-center">
-                    Pay with card below
-                  </p>
-                </CardContent>
-              </Card>
+              {/* Smart Payment Checkout with Device Detection */}
+              <SmartPaymentCheckout
+                items={items.map(item => ({
+                  variantId: item.variantId || item.id,
+                  quantity: item.quantity,
+                  price: item.price
+                }))}
+                shippingAddress={{
+                  firstName: customerDetails.firstName,
+                  lastName: customerDetails.lastName,
+                  email: customerDetails.email,
+                  phone: customerDetails.phone,
+                  address1: shippingAddress.address1,
+                  address2: shippingAddress.address2,
+                  city: shippingAddress.city,
+                  postcode: shippingAddress.postcode,
+                  country: 'GB'
+                }}
+                billingAddress={sameAsBilling ? undefined : {
+                  firstName: customerDetails.firstName,
+                  lastName: customerDetails.lastName,
+                  email: customerDetails.email,
+                  phone: customerDetails.phone,
+                  address1: billingAddress.address1,
+                  address2: billingAddress.address2,
+                  city: billingAddress.city,
+                  postcode: billingAddress.postcode,
+                  country: 'GB'
+                }}
+                customerNotes=""
+                onPaymentSuccess={handlePaymentSuccess}
+                onPaymentError={handlePaymentError}
+              />
 
               {/* Customer Information */}
               <Card className="border border-border/50">
@@ -409,12 +374,7 @@ export default function ExpressCheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Stripe Card Payment */}
-              <SimpleStripeCheckout
-                amount={finalTotal}
-                onPaymentSuccess={handlePaymentSuccess}
-                onPaymentError={handlePaymentError}
-              />
+              {/* Express checkout component above already handles all payment methods */}
 
               <div className="text-center space-y-2">
                 <div className="flex items-center justify-center gap-4 text-xs text-muted-foreground">

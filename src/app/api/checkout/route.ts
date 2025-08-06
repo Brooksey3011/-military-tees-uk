@@ -50,40 +50,24 @@ async function authenticateUser(request: NextRequest) {
 async function getOrCreateCustomer(userId: string | null, email: string, firstName: string, lastName: string) {
   const supabase = createSupabaseAdmin()
   
-  if (userId) {
-    // For authenticated users, check if customer exists
-    const { data: existingCustomer, error: customerError } = await supabase
-      .from('customers')
-      .select('id')
-      .eq('user_id', userId)
-      .single()
+  // Check if customer exists by email (simplified approach)
+  const { data: existingCustomer, error: customerError } = await supabase
+    .from('customers')
+    .select('id')
+    .eq('email', email)
+    .single()
 
-    if (existingCustomer) {
-      return existingCustomer.id
-    }
-  } else {
-    // For guest users, check if customer exists by email
-    const { data: existingCustomer, error: customerError } = await supabase
-      .from('customers')
-      .select('id')
-      .eq('email', email)
-      .is('user_id', null)
-      .single()
-
-    if (existingCustomer) {
-      return existingCustomer.id
-    }
+  if (existingCustomer && !customerError) {
+    return existingCustomer.id
   }
 
-  // Create new customer (authenticated or guest)
+  // Create new customer (authenticated or guest) with minimal required fields
   const { data: newCustomer, error: createError } = await supabase
     .from('customers')
     .insert({
-      user_id: userId,
       email: email,
       first_name: firstName,
-      last_name: lastName,
-      marketing_consent: false
+      last_name: lastName
     })
     .select('id')
     .single()
@@ -109,7 +93,7 @@ async function validateInventoryAndGetProducts(items: CheckoutRequest['items']) 
         id,
         sku,
         stock_quantity,
-        price_adjustment,
+        price,
         size,
         color,
         products (
@@ -137,7 +121,7 @@ async function validateInventoryAndGetProducts(items: CheckoutRequest['items']) 
       throw new Error(`Insufficient stock for ${product.name}. Available: ${variant.stock_quantity}, Requested: ${item.quantity}`)
     }
 
-    const unitPrice = product.price + (variant.price_adjustment || 0)
+    const unitPrice = product.price + (variant.price || 0)
     const totalPrice = unitPrice * item.quantity
 
     productDetails.push({
@@ -179,7 +163,7 @@ async function createOrderInDatabase(
     .from('orders')
     .insert({
       order_number: orderNumber,
-      customer_id: customerId,
+      customer_id: customerId, // May be null for guest checkout
       status: 'pending',
       subtotal,
       shipping_cost: shipping,
@@ -340,13 +324,9 @@ export async function POST(request: NextRequest) {
 
     console.log('Checkout API: Calculated totals:', { subtotal, shipping, tax, total })
 
-    // Get or create customer (handle guest checkout)
-    const customerId = await getOrCreateCustomer(
-      user?.id || null,
-      shippingAddress.email,
-      shippingAddress.firstName,
-      shippingAddress.lastName
-    )
+    // For now, skip customer table and embed customer info in order
+    // This allows guest checkout without complex auth setup
+    const customerId = null // Will embed customer data in order instead
 
     // Generate order number
     const orderNumber = generateOrderNumber()
@@ -363,7 +343,7 @@ export async function POST(request: NextRequest) {
           product_data: {
             name: product.name,
             description: `${product.size ? `Size: ${product.size}` : ''}${product.size && product.color ? ', ' : ''}${product.color ? `Color: ${product.color}` : ''}`.trim(),
-            images: product.imageUrl ? [product.imageUrl] : undefined,
+            // images: product.imageUrl ? [product.imageUrl] : undefined, // Disabled - relative URLs not supported
             metadata: {
               sku: product.sku,
               variant_id: product.variantId
@@ -383,7 +363,7 @@ export async function POST(request: NextRequest) {
               product_data: {
                 name: product.name,
                 description: `${product.size ? `Size: ${product.size}` : ''}${product.size && product.color ? ', ' : ''}${product.color ? `Color: ${product.color}` : ''}`.trim(),
-                images: product.imageUrl ? [product.imageUrl] : undefined,
+                // images: product.imageUrl ? [product.imageUrl] : undefined, // Disabled - relative URLs not supported
                 metadata: {
                   sku: product.sku,
                   variant_id: product.variantId
@@ -420,7 +400,7 @@ export async function POST(request: NextRequest) {
 
       metadata: {
         order_number: orderNumber,
-        customer_id: customerId,
+        customer_id: customerId || 'guest',
         user_id: user?.id || 'guest',
         subtotal: subtotal.toString(),
         shipping_cost: shipping.toString(),
@@ -429,8 +409,8 @@ export async function POST(request: NextRequest) {
         customer_notes: customerNotes || '',
       },
 
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://militarytees.co.uk'}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_number=${orderNumber}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL || 'https://militarytees.co.uk'}/checkout?cancelled=true`,
+      success_url: `http://localhost:3000/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_number=${orderNumber}`,
+      cancel_url: `http://localhost:3000/checkout?cancelled=true`,
 
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes from now
     })
