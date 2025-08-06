@@ -18,6 +18,34 @@ const nextConfig: NextConfig = {
   
   async headers() {
     return [
+      // Specific headers for manifest files
+      {
+        source: '/site.webmanifest',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'application/manifest+json'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400'
+          },
+          {
+            key: 'Access-Control-Allow-Origin',
+            value: '*'
+          }
+        ],
+      },
+      // Specific headers for other static files
+      {
+        source: '/favicon.ico',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400'
+          }
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
