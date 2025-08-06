@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Crown, Users, Award } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Sergeants' Mess - NCO & Leadership | Military Tees UK",
@@ -13,40 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function SgtsMessPage() {
-  const mockProducts = [
-    {
-      id: "21",
-      name: "Sergeant's Stripes",
-      slug: "sergeant-stripes",
-      price: 25.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "sgts-mess",
-      description: "Non-commissioned officer leadership and military backbone",
-      variants: [
-        {
-          id: "21-1",
-          size: "S",
-          color: "Army Green",
-          stockQuantity: 10,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "21-2",
-          size: "M",
-          color: "Army Green",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "21-3",
-          size: "L",
-          color: "Army Green",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -70,7 +37,18 @@ export default function SgtsMessPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="sgts-mess"
+              categoryName="Sgts Mess"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

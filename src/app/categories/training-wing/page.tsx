@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { GraduationCap, BookOpen, Target } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Training Wing - Military Education | Military Tees UK",
@@ -13,40 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function TrainingWingPage() {
-  const mockProducts = [
-    {
-      id: "23",
-      name: "Military Instructor",
-      slug: "military-instructor",
-      price: 24.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "training-wing",
-      description: "Military education excellence and instruction leadership",
-      variants: [
-        {
-          id: "23-1",
-          size: "S",
-          color: "Navy",
-          stockQuantity: 10,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "23-2",
-          size: "M",
-          color: "Navy",
-          stockQuantity: 15,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "23-3",
-          size: "L",
-          color: "Navy",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -70,7 +37,18 @@ export default function TrainingWingPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="training-wing"
+              categoryName="Training Wing"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

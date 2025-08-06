@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Package, Clipboard, Archive } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "G10 Stores - General Stores & Supplies | Military Tees UK",
@@ -13,62 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function G10StoresPage() {
-  const mockProducts = [
-    {
-      id: "26",
-      name: "Supply Chain Hero",
-      slug: "supply-chain",
-      price: 22.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "g10-stores",
-      description: "Military supply management and logistics excellence",
-      is_featured: false,
-      is_active: true,
-      created_at: "2024-01-01T00:00:00Z",
-      updated_at: "2024-01-01T00:00:00Z",
-      variants: [
-        {
-          id: "26-1",
-          product_id: "26",
-          size: "S",
-          color: "Army Green",
-          sku: "SCH-S-AGR",
-          stock_quantity: 13,
-          price_adjustment: 0,
-          is_active: true,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "26-2",
-          product_id: "26",
-          size: "M",
-          color: "Army Green",
-          sku: "SCH-M-AGR",
-          stock_quantity: 19,
-          price_adjustment: 0,
-          is_active: true,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "26-3",
-          product_id: "26",
-          size: "L",
-          color: "Army Green",
-          sku: "SCH-L-AGR",
-          stock_quantity: 15,
-          price_adjustment: 0,
-          is_active: true,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -92,7 +37,18 @@ export default function G10StoresPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="g10-stores"
+              categoryName="G10 Stores"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

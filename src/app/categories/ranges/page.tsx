@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Target, Crosshair, Zap } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "The Ranges - Shooting & Marksmanship | Military Tees UK",
@@ -13,72 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function RangesPage() {
-  const mockProducts = [
-    {
-      id: "11",
-      name: "Marksman Expert",
-      slug: "marksman-expert",
-      price: 25.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "ranges",
-      description: "Celebrating marksmanship excellence and shooting precision",
-      variants: [
-        {
-          id: "11-1",
-          size: "S",
-          color: "Army Green",
-          stockQuantity: 9,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "11-2",
-          size: "M",
-          color: "Army Green",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "11-3",
-          size: "L",
-          color: "Army Green",
-          stockQuantity: 11,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    },
-    {
-      id: "12",
-      name: "Sniper School Graduate",
-      slug: "sniper-school",
-      price: 27.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "ranges",
-      description: "Elite sniper training and tactical marksmanship excellence",
-      variants: [
-        {
-          id: "12-1",
-          size: "S",
-          color: "Black",
-          stockQuantity: 6,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "12-2",
-          size: "M",
-          color: "Black",
-          stockQuantity: 10,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "12-3",
-          size: "L",
-          color: "Black",
-          stockQuantity: 8,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -102,7 +37,18 @@ export default function RangesPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="ranges"
+              categoryName="Ranges"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

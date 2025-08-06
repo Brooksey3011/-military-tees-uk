@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Package, Warehouse, ClipboardList } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "The Stores - Supply & Logistics | Military Tees UK",
@@ -13,40 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function StoresPage() {
-  const mockProducts = [
-    {
-      id: "22",
-      name: "Quartermaster Corps",
-      slug: "quartermaster",
-      price: 23.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "stores",
-      description: "Supply chain excellence and quartermaster operations",
-      variants: [
-        {
-          id: "22-1",
-          size: "S",
-          color: "Army Green",
-          stockQuantity: 13,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "22-2",
-          size: "M",
-          color: "Army Green",
-          stockQuantity: 17,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "22-3",
-          size: "L",
-          color: "Army Green",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -70,7 +37,18 @@ export default function StoresPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="stores"
+              categoryName="Stores"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

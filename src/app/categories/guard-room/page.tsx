@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Shield, Eye, Lock } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Guard Room - Security & Duty | Military Tees UK",
@@ -13,40 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function GuardRoomPage() {
-  const mockProducts = [
-    {
-      id: "20",
-      name: "Military Police",
-      slug: "military-police",
-      price: 24.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "guard-room",
-      description: "Military police excellence and security force operations",
-      variants: [
-        {
-          id: "20-1",
-          size: "S",
-          color: "Black",
-          stockQuantity: 11,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "20-2",
-          size: "M",
-          color: "Black",
-          stockQuantity: 16,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "20-3",
-          size: "L",
-          color: "Black",
-          stockQuantity: 13,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -70,7 +37,18 @@ export default function GuardRoomPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="guard-room"
+              categoryName="Guard Room"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

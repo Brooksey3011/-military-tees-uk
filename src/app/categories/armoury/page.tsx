@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Shield } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Armoury - Tactical & Combat Gear | Military Tees UK",
@@ -13,118 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function ArmouryPage() {
-  // Mock products for the category
-  const mockProducts = [
-    {
-      id: "1",
-      name: "SAS Tactical Operator Tee",
-      slug: "sas-tactical-operator",
-      price: 24.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "armoury",
-      description: "Elite tactical operator design celebrating special forces excellence",
-      is_featured: false,
-      is_active: true,
-      created_at: "2024-01-01T00:00:00Z",
-      updated_at: "2024-01-01T00:00:00Z",
-      variants: [
-        {
-          id: "1-1",
-          product_id: "1",
-          size: "S",
-          color: "Black",
-          sku: "SAS-TAC-S-BLK",
-          stock_quantity: 12,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "1-2",
-          product_id: "1",
-          size: "M",
-          color: "Black",
-          sku: "SAS-TAC-M-BLK",
-          stock_quantity: 18,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "1-3",
-          product_id: "1",
-          size: "L",
-          color: "Black",
-          sku: "SAS-TAC-L-BLK",
-          stock_quantity: 15,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        }
-      ]
-    },
-    {
-      id: "2", 
-      name: "British Army Combat Medic",
-      slug: "army-combat-medic",
-      price: 22.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "armoury",
-      description: "Honoring battlefield medics and combat medical professionals",
-      is_featured: false,
-      is_active: true,
-      created_at: "2024-01-01T00:00:00Z",
-      updated_at: "2024-01-01T00:00:00Z",
-      variants: [
-        {
-          id: "2-1",
-          product_id: "2",
-          size: "S",
-          color: "Army Green",
-          sku: "MEDIC-S-GRN",
-          stock_quantity: 10,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "2-2",
-          product_id: "2",
-          size: "M",
-          color: "Army Green",
-          sku: "MEDIC-M-GRN",
-          stock_quantity: 14,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "2-3",
-          product_id: "2",
-          size: "L",
-          color: "Army Green",
-          sku: "MEDIC-L-GRN",
-          stock_quantity: 12,
-          price_adjustment: 0,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          is_active: true,
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        }
-      ]
-    }
-  ]
-
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -149,7 +38,18 @@ export default function ArmouryPage() {
 
         {/* Products */}
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="armoury"
+              categoryName="Armoury"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

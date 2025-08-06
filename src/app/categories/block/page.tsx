@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Building, Bed, Home } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "The Block - Barracks & Accommodation | Military Tees UK",
@@ -13,56 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function BlockPage() {
-  const mockProducts = [
-    {
-      id: "24",
-      name: "Barrack Room Blues",
-      slug: "barrack-room",
-      price: 22.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "block",
-      description: "Celebrating barrack life and military living quarters bonds",
-      is_featured: false,
-      is_active: true,
-      created_at: "2024-01-01T00:00:00Z",
-      updated_at: "2024-01-01T00:00:00Z",
-      variants: [
-        {
-          id: "24-1",
-          product_id: "24",
-          size: "S",
-          color: "Black",
-          sku: "BRB-S-BLK",
-          stock_quantity: 15,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "24-2",
-          product_id: "24",
-          size: "M",
-          color: "Black", 
-          sku: "BRB-M-BLK",
-          stock_quantity: 20,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        },
-        {
-          id: "24-3",
-          product_id: "24",
-          size: "L",
-          color: "Black",
-          sku: "BRB-L-BLK",
-          stock_quantity: 16,
-          image_urls: ["/images/products/placeholder-tshirt.svg"],
-          created_at: "2024-01-01T00:00:00Z",
-          updated_at: "2024-01-01T00:00:00Z"
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -86,7 +37,18 @@ export default function BlockPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="block"
+              categoryName="Block"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { MapPin, ArrowRight, Heart } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Civvy Street - Civilian Life Transition | Military Tees UK",
@@ -13,40 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function CivvyStreetPage() {
-  const mockProducts = [
-    {
-      id: "25",
-      name: "Veteran Transition",
-      slug: "veteran-transition",
-      price: 23.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "civvy-street",
-      description: "Supporting veterans transitioning to civilian life with pride",
-      variants: [
-        {
-          id: "25-1",
-          size: "S",
-          color: "Navy",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "25-2",
-          size: "M",
-          color: "Navy",
-          stockQuantity: 18,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "25-3",
-          size: "L",
-          color: "Navy",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -70,7 +37,18 @@ export default function CivvyStreetPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="civvy-street"
+              categoryName="Civvy Street"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

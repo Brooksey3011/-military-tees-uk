@@ -1,7 +1,8 @@
 import { Metadata } from "next"
 import { Store, Coffee, ShoppingBag } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "NAAFI - Navy, Army & Air Force Institutes | Military Tees UK",
@@ -13,72 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function NAAFIPage() {
-  const mockProducts = [
-    {
-      id: "9",
-      name: "NAAFI Classic Logo",
-      slug: "naafi-classic",
-      price: 23.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "naafi",
-      description: "Classic NAAFI logo celebrating Navy, Army and Air Force Institutes",
-      variants: [
-        {
-          id: "9-1",
-          size: "S",
-          color: "Navy",
-          stockQuantity: 15,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "9-2",
-          size: "M",
-          color: "Navy",
-          stockQuantity: 20,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "9-3",
-          size: "L",
-          color: "Navy",
-          stockQuantity: 17,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    },
-    {
-      id: "10",
-      name: "Military Retail Heritage",
-      slug: "military-retail-heritage",
-      price: 22.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "naafi",
-      description: "Celebrating the iconic military retail service and forces welfare",
-      variants: [
-        {
-          id: "10-1",
-          size: "S",
-          color: "Black",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "10-2",
-          size: "M",
-          color: "Black",
-          stockQuantity: 18,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "10-3",
-          size: "L",
-          color: "Black",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -102,7 +37,18 @@ export default function NAAFIPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="naafi"
+              categoryName="NAAFI"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

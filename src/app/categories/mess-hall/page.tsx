@@ -1,7 +1,8 @@
 import { Metadata } from "next"
-import { Utensils, Coffee, Users } from "lucide-react"
+import { Utensils } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Mess Hall - Military Dining & Camaraderie | Military Tees UK",
@@ -13,72 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function MessHallPage() {
-  const mockProducts = [
-    {
-      id: "5",
-      name: "Mess Hall Brotherhood",
-      slug: "mess-hall-brotherhood",
-      price: 22.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "mess-hall",
-      description: "Celebrating the bonds formed over shared meals and military brotherhood",
-      variants: [
-        {
-          id: "5-1",
-          size: "S",
-          color: "Black",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "5-2",
-          size: "M",
-          color: "Black",
-          stockQuantity: 18,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "5-3",
-          size: "L",
-          color: "Black",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    },
-    {
-      id: "6",
-      name: "Military Chef's Pride",
-      slug: "military-chef-pride",
-      price: 21.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "mess-hall",
-      description: "Honoring military chefs and catering corps excellence",
-      variants: [
-        {
-          id: "6-1",
-          size: "S",
-          color: "Army Green",
-          stockQuantity: 11,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "6-2",
-          size: "M",
-          color: "Army Green",
-          stockQuantity: 16,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "6-3",
-          size: "L",
-          color: "Army Green",
-          stockQuantity: 13,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -102,7 +37,18 @@ export default function MessHallPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="mess-hall"
+              categoryName="Mess Hall"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>

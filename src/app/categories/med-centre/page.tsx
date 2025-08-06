@@ -1,7 +1,8 @@
 import { Metadata } from "next"
-import { Cross, Heart, Shield } from "lucide-react"
+import { Cross } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { ProductGrid } from "@/components/product/product-grid"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 
 export const metadata: Metadata = {
   title: "Med Centre - Military Medical Corps | Military Tees UK",
@@ -13,72 +14,6 @@ export const metadata: Metadata = {
 }
 
 export default function MedCentrePage() {
-  const mockProducts = [
-    {
-      id: "13",
-      name: "Military Medic Cross",
-      slug: "military-medic",
-      price: 24.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "med-centre",
-      description: "Honoring military medical corps and healthcare heroes",
-      variants: [
-        {
-          id: "13-1",
-          size: "S",
-          color: "Navy",
-          stockQuantity: 10,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "13-2",
-          size: "M",
-          color: "Navy",
-          stockQuantity: 16,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "13-3",
-          size: "L",
-          color: "Navy",
-          stockQuantity: 12,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    },
-    {
-      id: "14",
-      name: "Combat Medical Technician",
-      slug: "combat-medic-tech",
-      price: 23.99,
-      main_image_url: "/images/products/placeholder-tshirt.svg",
-      category_id: "med-centre",
-      description: "Combat medical excellence and battlefield healthcare",
-      variants: [
-        {
-          id: "14-1",
-          size: "S",
-          color: "Black",
-          stockQuantity: 14,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "14-2",
-          size: "M",
-          color: "Black",
-          stockQuantity: 18,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        },
-        {
-          id: "14-3",
-          size: "L",
-          color: "Black",
-          stockQuantity: 15,
-          imageUrls: ["/images/products/placeholder-tshirt.svg"]
-        }
-      ]
-    }
-  ]
 
   return (
     <Layout>
@@ -102,7 +37,18 @@ export default function MedCentrePage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ProductGrid products={mockProducts as any} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="med-centre"
+              categoryName="Med Centre"
+            />
+          </ClientOnly>
         </section>
       </div>
     </Layout>
