@@ -85,6 +85,7 @@ export const config = {
   matcher: [
     '/api/:path*',
     '/admin/:path*',
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    // Exclude static files, images, manifests, and other assets
+    '/((?!_next/static|_next/image|favicon.ico|site.webmanifest|robots.txt|.*\\.[a-zA-Z0-9]+$).*)',
   ],
 }
