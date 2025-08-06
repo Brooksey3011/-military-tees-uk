@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { LoadingState, ErrorDisplay } from "@/components/ui"
-import { useCart } from "@/hooks/use-cart"
+import { useSimpleCart } from "@/hooks/use-simple-cart"
 import { useAuth } from "@/hooks/use-auth"
 import { getStripe } from "@/lib/stripe"
 import { supabase } from "@/lib/supabase"
@@ -30,7 +30,7 @@ export const dynamic = 'force-dynamic'
 
 export default function CheckoutPage() {
   const { user, loading: authLoading } = useAuth()
-  const { items, totalItems, totalPrice } = useCart()
+  const { items, totalItems, totalPrice } = useSimpleCart()
 
   const [step, setStep] = React.useState(1) // 1: Address, 2: Payment, 3: Review
   const [isProcessing, setIsProcessing] = React.useState(false)

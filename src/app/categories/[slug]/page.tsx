@@ -4,6 +4,7 @@ import { notFound } from "next/navigation"
 import { ArrowLeft } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 
 // Category data matching navbar structure
@@ -208,10 +209,18 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
       {/* Products Section */}
       <div className="container mx-auto px-4 py-8">
-        <CategoryProductsSafe 
-          categorySlug={categorySlug}
-          categoryName={category.name}
-        />
+        <ClientOnly fallback={
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(12)].map((_, i) => (
+              <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+            ))}
+          </div>
+        }>
+          <CategoryProductsSafe 
+            categorySlug={categorySlug}
+            categoryName={category.name}
+          />
+        </ClientOnly>
       </div>
       </div>
     </Layout>

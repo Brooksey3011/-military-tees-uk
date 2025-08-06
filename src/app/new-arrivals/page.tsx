@@ -1,5 +1,6 @@
 import { Layout } from "@/components/layout"
 import { NewArrivalsSafe } from "@/components/pages/new-arrivals-safe"
+import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 
 export const metadata = {
@@ -39,7 +40,17 @@ export default function NewArrivalsPage() {
         </section>
 
         {/* Products Section */}
-        <NewArrivalsSafe />
+        <ClientOnly fallback={
+          <div className="container mx-auto px-4 py-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          </div>
+        }>
+          <NewArrivalsSafe />
+        </ClientOnly>
       </div>
     </Layout>
   )
