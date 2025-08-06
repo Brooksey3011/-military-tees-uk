@@ -1,0 +1,61 @@
+import { NextResponse } from 'next/server'
+
+export async function GET() {
+  const manifest = {
+    name: "Military Tees UK - Premium British Army Themed Apparel",
+    short_name: "Military Tees UK",
+    description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army.",
+    start_url: "/",
+    display: "standalone",
+    background_color: "#1a1a1a",
+    theme_color: "#4a5d23",
+    orientation: "portrait-primary",
+    icons: [
+      {
+        src: "/favicon.svg",
+        sizes: "any",
+        type: "image/svg+xml"
+      },
+      {
+        src: "/logo.svg",
+        sizes: "any",
+        type: "image/svg+xml",
+        purpose: "any maskable"
+      }
+    ],
+    categories: ["shopping", "lifestyle", "fashion"],
+    lang: "en-GB",
+    dir: "ltr",
+    scope: "/",
+    shortcuts: [
+      {
+        name: "Shop Veterans Collection",
+        short_name: "Veterans",
+        description: "Browse our veterans apparel collection",
+        url: "/veterans",
+        icons: [{ src: "/favicon.svg", sizes: "any" }]
+      },
+      {
+        name: "Memorial Collection",
+        short_name: "Memorial",
+        description: "Memorial and remembrance clothing",
+        url: "/memorial",
+        icons: [{ src: "/favicon.svg", sizes: "any" }]
+      },
+      {
+        name: "Custom Orders",
+        short_name: "Custom",
+        description: "Create custom military designs",
+        url: "/custom",
+        icons: [{ src: "/favicon.svg", sizes: "any" }]
+      }
+    ]
+  }
+
+  return NextResponse.json(manifest, {
+    headers: {
+      'Content-Type': 'application/manifest+json',
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
+  })
+}

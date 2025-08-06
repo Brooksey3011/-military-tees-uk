@@ -11,7 +11,15 @@ let stripePromise: Promise<Stripe | null>
 
 const getStripe = () => {
   if (!stripePromise) {
-    stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
+    const publishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+    
+    if (!publishableKey) {
+      console.error('❌ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY is missing!')
+      return Promise.resolve(null)
+    }
+    
+    console.log('🔑 Loading Stripe with key:', publishableKey.substring(0, 20) + '...')
+    stripePromise = loadStripe(publishableKey)
   }
   return stripePromise
 }
@@ -98,7 +106,20 @@ export function StripeCardElement({
       <Card className="border border-border/50">
         <CardContent className="p-6">
           <div className="flex items-center justify-center py-8">
-            <LoadingState isLoading={true} message="Loading payment form..." />
+            {process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY ? (
+              <LoadingState isLoading={true} message="Loading payment form..." />
+            ) : (
+              <div className="text-center space-y-4">
+                <div className="text-destructive font-semibold">⚠️ Payment Configuration Error</div>
+                <p className="text-sm text-muted-foreground">
+                  Stripe publishable key is missing. Please add it to your environment variables.
+                </p>
+                <div className="text-xs text-muted-foreground bg-muted p-3 rounded">
+                  <p><strong>For testing:</strong></p>
+                  <p>Add <code>NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY</code> to your Vercel environment variables</p>
+                </div>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
