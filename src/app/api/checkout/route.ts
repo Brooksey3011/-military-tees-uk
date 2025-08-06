@@ -21,9 +21,9 @@ const checkoutSchema = z.object({
     email: z.string().email('Invalid email address'),
     phone: z.string().min(8, 'Phone number too short').max(15, 'Phone number too long'),
     address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional(),
+    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
     city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'), // More flexible postcode validation
     country: z.string().min(1, 'Country is required')
   }),
   
@@ -31,9 +31,9 @@ const checkoutSchema = z.object({
     firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
     lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
     address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional(),
+    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
     city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'), // More flexible postcode validation
     country: z.string().min(1, 'Country is required')
   }),
   
