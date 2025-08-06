@@ -10,15 +10,25 @@ let transporter: any = null
 // Check for Hostinger SMTP configuration first (preferred)
 if (process.env.HOSTINGER_EMAIL_HOST && process.env.HOSTINGER_EMAIL_USER && process.env.HOSTINGER_EMAIL_PASS) {
   emailService = 'hostinger'
-  transporter = nodemailer.createTransport({
-    host: process.env.HOSTINGER_EMAIL_HOST,
-    port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '587'),
-    secure: process.env.HOSTINGER_EMAIL_SECURE === 'true', // true for 465, false for 587
-    auth: {
-      user: process.env.HOSTINGER_EMAIL_USER,
-      pass: process.env.HOSTINGER_EMAIL_PASS
-    }
-  })
+  try {
+    transporter = nodemailer.createTransport({
+      host: process.env.HOSTINGER_EMAIL_HOST,
+      port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '465'),
+      secure: process.env.HOSTINGER_EMAIL_SECURE === 'true',
+      auth: {
+        user: process.env.HOSTINGER_EMAIL_USER,
+        pass: process.env.HOSTINGER_EMAIL_PASS
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    })
+    console.log('✅ Hostinger SMTP transporter created successfully')
+  } catch (error) {
+    console.error('❌ Error creating Hostinger transporter:', error)
+    emailService = null
+    transporter = null
+  }
 } else if (process.env.RESEND_API_KEY) {
   // Fallback to Resend if available
   emailService = 'resend'
@@ -159,10 +169,23 @@ export async function POST(request: NextRequest) {
     `
 
     // Send email using the configured service
-    if (emailService === 'hostinger' && transporter) {
-      // Send email using Hostinger SMTP
+    if (emailService === 'hostinger') {
+      // Create fresh transporter for this request (avoid stale connections)
       try {
-        const info = await transporter.sendMail({
+        const freshTransporter = nodemailer.createTransport({
+          host: process.env.HOSTINGER_EMAIL_HOST,
+          port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '465'),
+          secure: process.env.HOSTINGER_EMAIL_SECURE === 'true',
+          auth: {
+            user: process.env.HOSTINGER_EMAIL_USER,
+            pass: process.env.HOSTINGER_EMAIL_PASS
+          },
+          tls: {
+            rejectUnauthorized: false
+          }
+        })
+
+        const info = await freshTransporter.sendMail({
           from: `"Military Tees UK" <${process.env.HOSTINGER_EMAIL_USER}>`,
           to: customerEmail,
           subject: `Order Confirmation - ${orderNumber}`,
