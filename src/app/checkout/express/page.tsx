@@ -21,7 +21,7 @@ import {
   Phone,
   ArrowLeft
 } from "lucide-react"
-import { SmartPaymentCheckout } from "@/components/checkout/smart-payment-checkout"
+import ModernPaymentCheckout from "@/components/checkout/modern-payment-checkout"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -216,8 +216,8 @@ export default function ExpressCheckoutPage() {
                 />
               )}
 
-              {/* Smart Payment Checkout with Device Detection */}
-              <SmartPaymentCheckout
+              {/* Modern Payment Checkout - Thrudark Style */}
+              <ModernPaymentCheckout
                 items={items.map(item => ({
                   variantId: item.variantId || item.id,
                   quantity: item.quantity,
@@ -234,18 +234,6 @@ export default function ExpressCheckoutPage() {
                   postcode: shippingAddress.postcode,
                   country: 'GB'
                 }}
-                billingAddress={sameAsBilling ? undefined : {
-                  firstName: customerDetails.firstName,
-                  lastName: customerDetails.lastName,
-                  email: customerDetails.email,
-                  phone: customerDetails.phone,
-                  address1: billingAddress.address1,
-                  address2: billingAddress.address2,
-                  city: billingAddress.city,
-                  postcode: billingAddress.postcode,
-                  country: 'GB'
-                }}
-                customerNotes=""
                 onPaymentSuccess={handlePaymentSuccess}
                 onPaymentError={handlePaymentError}
               />

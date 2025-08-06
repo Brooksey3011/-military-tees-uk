@@ -110,7 +110,9 @@ export async function POST(request: NextRequest) {
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(total * 100), // Convert to pence
       currency: 'gbp',
-      payment_method_types: ['card'],
+      automatic_payment_methods: {
+        enabled: true
+      },
       capture_method: 'automatic',
       setup_future_usage: 'off_session', // Allow saving payment methods
       metadata: {
