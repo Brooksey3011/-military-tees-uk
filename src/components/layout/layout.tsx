@@ -1,6 +1,7 @@
 import { Header } from "./header"
 import { Footer } from "./footer"
 import { CartDrawer } from "@/components/cart/cart-drawer"
+import { ClientOnly } from "@/components/ui/client-only"
 
 interface LayoutProps {
   children: React.ReactNode
@@ -14,7 +15,9 @@ export function Layout({ children }: LayoutProps) {
         {children}
       </main>
       <Footer />
-      <CartDrawer />
+      <ClientOnly>
+        <CartDrawer />
+      </ClientOnly>
     </div>
   )
 }
