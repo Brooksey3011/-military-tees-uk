@@ -16,7 +16,7 @@ import { Lock, CreditCard } from 'lucide-react'
 // Load Stripe - this should only happen once
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
-// Card element options for UK
+// Card element options for UK - hide postal code since we collect it in address form
 const cardElementOptions = {
   style: {
     base: {
@@ -32,7 +32,7 @@ const cardElementOptions = {
       color: '#9e2146',
     },
   },
-  hidePostalCode: false, // Show postcode for UK
+  hidePostalCode: true, // Hide postal code - we collect it separately in address form
 }
 
 interface CheckoutFormProps {
