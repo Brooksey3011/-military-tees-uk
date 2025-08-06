@@ -96,9 +96,9 @@ export default function CheckoutPage() {
     try {
       // Validate form data before submission
       if (!shippingAddress.firstName || !shippingAddress.lastName || !shippingAddress.email || 
-          !shippingAddress.address1 || !shippingAddress.city || !shippingAddress.postcode ||
-          !billingAddress.firstName || !billingAddress.lastName || !billingAddress.address1 ||
-          !billingAddress.city || !billingAddress.postcode) {
+          !shippingAddress.phone || !shippingAddress.address1 || !shippingAddress.city || 
+          !shippingAddress.postcode || !billingAddress.firstName || !billingAddress.lastName || 
+          !billingAddress.address1 || !billingAddress.city || !billingAddress.postcode) {
         throw new Error('Please fill out all required fields')
       }
 

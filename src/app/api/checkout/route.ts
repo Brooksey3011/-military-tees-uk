@@ -282,10 +282,22 @@ export async function POST(request: NextRequest) {
     const validation = validateRequestBody(checkoutSchema, body)
     
     if (!validation.success) {
-      console.error('Validation error details:', validation.error)
-      console.error('Request body:', JSON.stringify(body, null, 2))
+      console.error('❌ Checkout Validation Failed')
+      console.error('📋 Detailed errors:', validation.error)
+      console.error('📦 Request body structure:', {
+        hasItems: !!body.items,
+        itemsCount: body.items?.length || 0,
+        hasShippingAddress: !!body.shippingAddress,
+        shippingKeys: Object.keys(body.shippingAddress || {}),
+        hasBillingAddress: !!body.billingAddress,
+        billingKeys: Object.keys(body.billingAddress || {}),
+      })
+      console.error('📝 Full request body:', JSON.stringify(body, null, 2))
       return NextResponse.json(
-        { error: `Validation failed: ${validation.error}` },
+        { 
+          error: `Validation failed: ${validation.error}`,
+          details: validation.error 
+        },
         { status: 400 }
       )
     }
