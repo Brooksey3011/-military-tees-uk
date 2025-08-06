@@ -4,6 +4,7 @@ import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SimpleErrorBoundary } from "@/components/ui/simple-error-boundary";
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import { AuthProvider } from "@/hooks/use-auth";
+import { CartProvider } from "@/hooks/use-simple-cart";
 import "./globals.css";
 
 const sourceSans3 = Source_Sans_3({
@@ -203,8 +204,10 @@ export default function RootLayout({
       <body className="antialiased">
         <SimpleErrorBoundary>
           <AuthProvider>
-            {children}
-            <CookieConsent />
+            <CartProvider>
+              {children}
+              <CookieConsent />
+            </CartProvider>
           </AuthProvider>
         </SimpleErrorBoundary>
       </body>

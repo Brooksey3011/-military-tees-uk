@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
-import { useHydrationSafeCart } from "@/hooks/use-hydration-safe-cart"
+import { useSimpleCart } from "@/hooks/use-simple-cart"
 
 interface Product {
   id: string
@@ -28,7 +28,7 @@ interface Product {
 export function ProductDetailHydrationSafe() {
   const params = useParams()
   const router = useRouter()
-  const { addItem, isHydrated } = useHydrationSafeCart()
+  const { addItem } = useSimpleCart()
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -131,7 +131,7 @@ export function ProductDetailHydrationSafe() {
   const displayPrice = product.sale_price || product.price
 
   const handleAddToCart = async () => {
-    if (!product || !currentVariant || !isHydrated) return
+    if (!product || !currentVariant) return
 
     setIsAddingToCart(true)
     
@@ -260,29 +260,23 @@ export function ProductDetailHydrationSafe() {
             )}
           </div>
 
-          {/* Add to Cart - Only show when cart is hydrated */}
-          {isHydrated ? (
-            <button
-              onClick={handleAddToCart}
-              className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
-                currentVariant && currentVariant.stock_quantity > 0
-                  ? 'bg-green-600 text-white hover:bg-green-700'
-                  : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-              }`}
-              disabled={!currentVariant || currentVariant.stock_quantity === 0 || isAddingToCart}
-            >
-              {isAddingToCart 
-                ? 'Adding...' 
-                : currentVariant && currentVariant.stock_quantity > 0 
-                ? 'Add to Cart' 
-                : 'Select Options'
-              }
-            </button>
-          ) : (
-            <div className="w-full py-3 px-6 rounded-lg bg-gray-100 text-center text-gray-500">
-              Loading cart...
-            </div>
-          )}
+          {/* Add to Cart */}
+          <button
+            onClick={handleAddToCart}
+            className={`w-full py-3 px-6 rounded-lg font-semibold transition-colors ${
+              currentVariant && currentVariant.stock_quantity > 0
+                ? 'bg-green-600 text-white hover:bg-green-700'
+                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+            }`}
+            disabled={!currentVariant || currentVariant.stock_quantity === 0 || isAddingToCart}
+          >
+            {isAddingToCart 
+              ? 'Adding...' 
+              : currentVariant && currentVariant.stock_quantity > 0 
+              ? 'Add to Cart' 
+              : 'Select Options'
+            }
+          </button>
 
           {/* Product Info */}
           <div className="border-t pt-6 space-y-4">

@@ -4,7 +4,7 @@ import * as React from "react"
 import { ShoppingCart } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { useCart } from "@/hooks/use-cart"
+import { useSimpleCart } from "@/hooks/use-simple-cart"
 import { cn } from "@/lib/utils"
 
 interface CartIconProps {
@@ -19,7 +19,7 @@ export function CartIcon({
   variant = "default" 
 }: CartIconProps) {
   const [isClient, setIsClient] = React.useState(false)
-  const { totalItems, toggleCart } = useCart()
+  const { totalItems, toggleCart } = useSimpleCart()
 
   // Prevent hydration issues
   React.useEffect(() => {
