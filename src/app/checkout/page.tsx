@@ -102,6 +102,20 @@ export default function CheckoutPage() {
         throw new Error('Please fill out all required fields')
       }
 
+      // Debug: Log form data before sending
+      console.log('🔍 Frontend Debug - Form Data:', {
+        shippingAddress: shippingAddress,
+        billingAddress: billingAddress,
+        sameAsBilling: sameAsBilling,
+        cartItems: items,
+        processedItems: items.map(item => ({ 
+          variantId: item.variantId, 
+          quantity: item.quantity,
+          hasValidVariantId: !!item.variantId && typeof item.variantId === 'string',
+          hasValidQuantity: typeof item.quantity === 'number' && item.quantity > 0
+        }))
+      })
+
       // Prepare order data (guest checkout supported)
       const orderData = {
         items: items.map(item => ({
@@ -138,6 +152,9 @@ export default function CheckoutPage() {
         },
         customerNotes: ""
       }
+
+      // Debug: Log final order data being sent
+      console.log('📦 Frontend Debug - Order Data Being Sent:', JSON.stringify(orderData, null, 2))
 
       // Get session token (optional for guest checkout)
       const { data: { session } } = await supabase.auth.getSession()
