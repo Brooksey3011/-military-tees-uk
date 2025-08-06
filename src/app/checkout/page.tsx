@@ -68,12 +68,18 @@ export default function CheckoutPage() {
 
   const [sameAsBilling, setSameAsBilling] = React.useState(true)
 
-  // Redirect if cart is empty (guest checkout is allowed)
+  // Redirect if cart is empty (guest checkout is allowed) - but wait for hydration
   React.useEffect(() => {
-    if (items.length === 0) {
-      window.location.href = "/categories"
+    if (items.length === 0 && !authLoading) {
+      // Add a small delay to ensure cart has loaded from localStorage
+      const timer = setTimeout(() => {
+        if (items.length === 0) {
+          window.location.href = "/categories"
+        }
+      }, 100)
+      return () => clearTimeout(timer)
     }
-  }, [items.length])
+  }, [items.length, authLoading])
 
   const handleNextStep = () => {
     setError(null)
@@ -223,6 +229,13 @@ export default function CheckoutPage() {
                 <h1 className="text-3xl font-display font-bold tracking-wider uppercase">
                   Secure Checkout
                 </h1>
+                <div className="mt-2">
+                  <Link href="/checkout/express">
+                    <Button variant="outline" size="sm" className="rounded-none">
+                      Try Express Checkout →
+                    </Button>
+                  </Link>
+                </div>
               </div>
               <div className="flex items-center gap-2">
                 <Shield className="h-5 w-5 text-green-600" />

@@ -26,9 +26,8 @@ export function CheckoutButton({
   const handleCheckout = () => {
     if (items.length === 0) return
 
-    // Redirect to checkout page where user can enter details
-    // This is much better UX than trying to create a session directly
-    window.location.href = '/checkout'
+    // Redirect to express checkout page for better UX
+    window.location.href = '/checkout/express'
   }
 
   const isDisabled = items.length === 0 || totalPrice < 0.5
