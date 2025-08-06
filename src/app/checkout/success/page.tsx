@@ -23,6 +23,7 @@ import {
   MapPin
 } from "lucide-react"
 import Link from "next/link"
+import Image from "next/image"
 
 function CheckoutSuccessContent() {
   const searchParams = useSearchParams()
@@ -32,7 +33,7 @@ function CheckoutSuccessContent() {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
-  // Process order data from cart
+  // Process order data from sessionStorage
   React.useEffect(() => {
     const sessionId = searchParams.get('session_id')
     
@@ -43,51 +44,60 @@ function CheckoutSuccessContent() {
     }
 
     try {
-      // Calculate totals
-      const shippingCost = totalPrice > 50 ? 0 : 4.99
-      const tax = totalPrice * 0.2 // 20% VAT
-      const finalTotal = totalPrice + shippingCost + tax
+      // Get the real order data from sessionStorage
+      const storedOrderData = sessionStorage.getItem('checkout_order_data')
+      if (!storedOrderData) {
+        setError('Order data not found')
+        setLoading(false)
+        return
+      }
 
-      // Create order data from cart
+      const parsedOrderData = JSON.parse(storedOrderData)
+      console.log('Retrieved order data:', parsedOrderData)
+
+      // Format the order data for display
       const orderData = {
-        orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
-        orderDate: new Date().toLocaleDateString('en-GB'),
+        orderNumber: parsedOrderData.orderNumber || `MTU-${Date.now().toString().slice(-6)}`,
+        orderDate: new Date(parsedOrderData.orderDate).toLocaleDateString('en-GB'),
         estimatedDelivery: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB'),
-        email: user?.email || "customer@example.com",
+        email: parsedOrderData.customerDetails.email,
         shippingAddress: {
-          name: `${user?.customer?.first_name || 'Customer'} ${user?.customer?.last_name || ''}`,
-          address: "123 Military Avenue",
-          city: "London",
-          postcode: "SW1A 1AA",
-          country: "United Kingdom"
+          name: `${parsedOrderData.customerDetails.firstName} ${parsedOrderData.customerDetails.lastName}`,
+          address: parsedOrderData.shippingAddress.address1 + (parsedOrderData.shippingAddress.address2 ? `, ${parsedOrderData.shippingAddress.address2}` : ''),
+          city: parsedOrderData.shippingAddress.city,
+          postcode: parsedOrderData.shippingAddress.postcode,
+          country: parsedOrderData.shippingAddress.country
         },
-        items: items.map(item => ({
+        items: parsedOrderData.items.map((item: any) => ({
           id: item.id,
           name: item.name,
           size: item.size,
           color: item.color,
           quantity: item.quantity,
-          price: item.price
+          price: item.price,
+          image: item.image
         })),
-        subtotal: totalPrice,
-        shipping: shippingCost,
-        tax: tax,
-        total: finalTotal
+        subtotal: parsedOrderData.subtotal,
+        shipping: parsedOrderData.shipping,
+        tax: parsedOrderData.tax,
+        total: parsedOrderData.total
       }
 
       setOrderData(orderData)
       setLoading(false)
 
-      // Clear cart after successful order
+      // Clear the stored order data and cart after successful display
       setTimeout(() => {
+        sessionStorage.removeItem('checkout_order_data')
         clearCart()
-      }, 1000) // Small delay to show the items first
+      }, 2000) // Give time for user to see the data
 
     } catch (err) {
+      console.error('Error processing order data:', err)
       setError('Failed to process order information')
       setLoading(false)
     }
-  }, [searchParams, user, items, totalPrice, clearCart])
+  }, [searchParams, clearCart])
 
   if (loading) {
     return (
@@ -223,13 +233,24 @@ function CheckoutSuccessContent() {
                   <div className="space-y-4">
                     {orderData.items.map((item: any) => (
                       <div key={item.id} className="flex items-center gap-4 p-4 bg-muted/20 border border-border">
-                        <div className="w-16 h-16 bg-muted border border-border flex items-center justify-center">
-                          <span className="text-xs font-bold">IMG</span>
+                        <div className="relative w-16 h-16 bg-muted border border-border rounded-md overflow-hidden">
+                          {item.image ? (
+                            <Image
+                              src={item.image}
+                              alt={item.name}
+                              fill
+                              className="object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-xs font-bold">
+                              IMG
+                            </div>
+                          )}
                         </div>
                         <div className="flex-1">
                           <h4 className="font-medium mb-1">{item.name}</h4>
                           <p className="text-sm text-muted-foreground">
-                            Size: {item.size} | Color: {item.color}
+                            {item.size && `Size: ${item.size}`} {item.size && item.color && '|'} {item.color && `Color: ${item.color}`}
                           </p>
                           <p className="text-sm">Quantity: {item.quantity}</p>
                         </div>

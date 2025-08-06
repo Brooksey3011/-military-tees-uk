@@ -114,13 +114,55 @@ export default function ExpressCheckoutPage() {
         ...billingAddress
       }
 
-      // For now, redirect to success page since this is test mode
-      // In production, you'd process the payment here
-      console.log('Payment method created:', paymentMethod)
+      // Create order in database
+      const orderResponse = await fetch('/api/orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          customerDetails: customerDetails,
+          shippingAddress: shippingAddress,
+          billingAddress: finalBillingAddress,
+          items: items,
+          paymentMethodId: paymentMethod.id,
+          subtotal: totalPrice,
+          shipping: shippingCost,
+          tax: tax,
+          total: finalTotal
+        })
+      })
+
+      const orderResult = await orderResponse.json()
       
-      // Create a mock session for the success page
-      const mockSessionId = 'test_' + Date.now()
-      window.location.href = `/checkout/success?session_id=${mockSessionId}`
+      if (!orderResponse.ok) {
+        throw new Error(orderResult.error || 'Failed to create order')
+      }
+
+      // Store order data in sessionStorage for the success page
+      const orderData = {
+        orderId: orderResult.orderId,
+        orderNumber: orderResult.orderNumber,
+        paymentMethod: paymentMethod,
+        customerDetails: customerDetails,
+        shippingAddress: shippingAddress,
+        billingAddress: finalBillingAddress,
+        items: items,
+        subtotal: totalPrice,
+        shipping: shippingCost,
+        tax: tax,
+        total: finalTotal,
+        orderDate: new Date().toISOString()
+      }
+      
+      // Store in sessionStorage so success page can access it
+      sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
+      
+      console.log('Order created successfully:', orderResult)
+      console.log('Order data stored:', orderData)
+      
+      // Redirect to success page with the real order
+      window.location.href = `/checkout/success?session_id=order_${orderResult.orderId}`
       
     } catch (err) {
       console.error('Checkout error:', err)
