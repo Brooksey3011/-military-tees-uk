@@ -79,17 +79,13 @@ export default function ExpressCheckoutPage() {
   }, [items.length, authLoading])
 
   const handleExpressPayment = async (method: 'paypal' | 'googlepay' | 'applepay') => {
-    setIsProcessing(true)
     setError(null)
 
-    try {
-      // For now, show coming soon message
-      setError(`${method.charAt(0).toUpperCase() + method.slice(1)} express checkout coming soon! Please use card payment.`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Express payment failed")
-    } finally {
-      setIsProcessing(false)
-    }
+    // Show user-friendly message
+    const methodName = method === 'paypal' ? 'PayPal' : 
+                      method === 'googlepay' ? 'Google Pay' : 'Apple Pay'
+    
+    setError(`${methodName} express checkout is coming soon! Please use the card payment form below for now.`)
   }
 
   const handlePaymentSuccess = async (paymentMethod: any) => {

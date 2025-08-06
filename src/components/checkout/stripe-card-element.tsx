@@ -61,6 +61,7 @@ export function StripeCardElement({
               borderRadius: '6px',
             },
           },
+          locale: 'en-GB',
         })
         
         setElements(elementsInstance)
@@ -190,28 +191,41 @@ function StripeCardInput({
   elements: StripeElements
   onChange: (event: any) => void 
 }) {
+  const [cardElement, setCardElement] = useState<any>(null)
+
   useEffect(() => {
-    const cardElement = elements.create('card', {
-      style: {
-        base: {
-          fontSize: '16px',
-          color: '#1a1a1a',
-          '::placeholder': {
-            color: '#6b7280',
+    // Check if element already exists
+    let existingElement = elements.getElement('card')
+    
+    if (!existingElement) {
+      // Create new element only if none exists
+      existingElement = elements.create('card', {
+        style: {
+          base: {
+            fontSize: '16px',
+            color: '#1a1a1a',
+            '::placeholder': {
+              color: '#6b7280',
+            },
+          },
+          invalid: {
+            color: '#df1b41',
+            iconColor: '#df1b41',
           },
         },
-        invalid: {
-          color: '#df1b41',
-          iconColor: '#df1b41',
-        },
-      },
-    })
+        hidePostalCode: false, // Keep postcode field
+        disableLink: true,
+      })
+    }
 
-    cardElement.mount('#stripe-card-element')
-    cardElement.on('change', onChange)
+    setCardElement(existingElement)
+    existingElement.mount('#stripe-card-element')
+    existingElement.on('change', onChange)
 
     return () => {
-      cardElement.unmount()
+      if (existingElement) {
+        existingElement.unmount()
+      }
     }
   }, [elements, onChange])
 
