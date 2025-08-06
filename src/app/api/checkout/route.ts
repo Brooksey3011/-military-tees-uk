@@ -3,42 +3,7 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
 import { sendOrderConfirmation, sendOrderNotificationToAdmin } from '@/lib/email/email-service'
-import { validateRequestBody } from '@/lib/validation'
-
-// UK postcode validation regex (more flexible)
-const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s?[0-9][A-Z]{2}$/i
-
-// Comprehensive checkout validation schema
-const checkoutSchema = z.object({
-  items: z.array(z.object({
-    variantId: z.string().min(1, 'Variant ID is required'),
-    quantity: z.number().int().min(1, 'Quantity must be at least 1').max(99, 'Quantity too high')
-  })).min(1, 'At least one item is required'),
-  
-  shippingAddress: z.object({
-    firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
-    lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
-    email: z.string().email('Invalid email address'),
-    phone: z.string().min(8, 'Phone number too short').max(15, 'Phone number too long'),
-    address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
-    city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'), // More flexible postcode validation
-    country: z.string().min(1, 'Country is required')
-  }),
-  
-  billingAddress: z.object({
-    firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
-    lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
-    address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
-    city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'), // More flexible postcode validation
-    country: z.string().min(1, 'Country is required')
-  }),
-  
-  customerNotes: z.string().max(500, 'Notes too long').optional()
-})
+import { validateRequestBody, checkoutSchema } from '@/lib/validation'
 
 type CheckoutRequest = z.infer<typeof checkoutSchema>
 
@@ -431,7 +396,7 @@ export async function POST(request: NextRequest) {
       metadata: {
         order_number: orderNumber,
         customer_id: customerId,
-        user_id: user.id,
+        user_id: user?.id || 'guest',
         subtotal: subtotal.toString(),
         shipping_cost: shipping.toString(),
         tax_amount: tax.toString(),

@@ -45,8 +45,8 @@ export const categorySchema = z.object({
   sort_order: z.number().int().min(0).max(999).optional(),
 })
 
-// UK postcode validation regex
-const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]? ?[0-9][A-Z]{2}$/i
+// More flexible UK postcode validation - allows various formats
+const UK_POSTCODE_REGEX = /^[A-Z]{1,2}[0-9][A-Z0-9]?\s*[0-9][A-Z]{2}$/i
 
 // Comprehensive checkout schema that matches frontend data structure
 export const checkoutSchema = z.object({
@@ -61,9 +61,9 @@ export const checkoutSchema = z.object({
     email: z.string().email('Invalid email address'),
     phone: z.string().min(8, 'Phone number too short').max(15, 'Phone number too long'),
     address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional(),
+    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
     city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'),
     country: z.string().min(1, 'Country is required')
   }),
   
@@ -71,9 +71,9 @@ export const checkoutSchema = z.object({
     firstName: z.string().min(1, 'First name is required').max(50, 'First name too long'),
     lastName: z.string().min(1, 'Last name is required').max(50, 'Last name too long'),
     address1: z.string().min(1, 'Address line 1 is required').max(100, 'Address too long'),
-    address2: z.string().max(100, 'Address too long').optional(),
+    address2: z.string().max(100, 'Address too long').optional().or(z.literal('')),
     city: z.string().min(1, 'City is required').max(50, 'City name too long'),
-    postcode: z.string().regex(UK_POSTCODE_REGEX, 'Invalid UK postcode format'),
+    postcode: z.string().min(1, 'Postcode is required').max(10, 'Postcode too long'),
     country: z.string().min(1, 'Country is required')
   }),
   
