@@ -321,6 +321,7 @@ function CheckoutForm({
                 line2: shippingAddress.address2 || undefined,
                 city: shippingAddress.city,
                 postal_code: shippingAddress.postcode,
+                state: shippingAddress.city, // Use city as state for UK addresses
                 country: shippingAddress.country || 'GB',
               }
             }
@@ -408,6 +409,7 @@ function CheckoutForm({
                 line2: shippingAddress.address2 || undefined,
                 city: shippingAddress.city,
                 postal_code: shippingAddress.postcode,
+                state: shippingAddress.city, // Use city as state for UK addresses
                 country: shippingAddress.country || 'GB',
               }
             }
