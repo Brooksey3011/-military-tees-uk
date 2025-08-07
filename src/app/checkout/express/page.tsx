@@ -21,7 +21,7 @@ import {
   Phone,
   ArrowLeft
 } from "lucide-react"
-import ModernPaymentCheckout from "@/components/checkout/modern-payment-checkout"
+import StripeExpressCheckout from "@/components/checkout/stripe-express-checkout"
 import Link from "next/link"
 import Image from "next/image"
 
@@ -216,12 +216,13 @@ export default function ExpressCheckoutPage() {
                 />
               )}
 
-              {/* Modern Payment Checkout - Thrudark Style */}
-              <ModernPaymentCheckout
+              {/* Official Stripe Express Checkout */}
+              <StripeExpressCheckout
                 items={items.map(item => ({
                   variantId: item.variantId || item.id,
                   quantity: item.quantity,
-                  price: item.price
+                  price: item.price,
+                  name: item.name || 'Military Tee'
                 }))}
                 shippingAddress={{
                   firstName: customerDetails.firstName,
