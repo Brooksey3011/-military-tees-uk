@@ -134,6 +134,20 @@ function CheckoutForm({
         clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/checkout/success`,
+          payment_method_data: {
+            billing_details: {
+              name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+              email: shippingAddress.email,
+              phone: shippingAddress.phone,
+              address: {
+                line1: shippingAddress.address1,
+                line2: shippingAddress.address2 || undefined,
+                city: shippingAddress.city,
+                postal_code: shippingAddress.postcode,
+                country: shippingAddress.country || 'GB',
+              }
+            }
+          }
         },
         redirect: 'if_required'
       })
@@ -182,6 +196,20 @@ function CheckoutForm({
         clientSecret,
         confirmParams: {
           return_url: `${window.location.origin}/checkout/success`,
+          payment_method_data: {
+            billing_details: {
+              name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
+              email: shippingAddress.email,
+              phone: shippingAddress.phone,
+              address: {
+                line1: shippingAddress.address1,
+                line2: shippingAddress.address2 || undefined,
+                city: shippingAddress.city,
+                postal_code: shippingAddress.postcode,
+                country: shippingAddress.country || 'GB',
+              }
+            }
+          }
         },
         redirect: 'if_required'
       })
