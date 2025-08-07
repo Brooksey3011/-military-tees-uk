@@ -95,6 +95,15 @@ function CheckoutForm({
           price: item.price || 29.99
         })),
         shippingAddress,
+        billingAddress: {
+          firstName: shippingAddress.firstName,
+          lastName: shippingAddress.lastName,
+          address1: shippingAddress.address1,
+          address2: shippingAddress.address2,
+          city: shippingAddress.city,
+          postcode: shippingAddress.postcode,
+          country: shippingAddress.country
+        },
         total
       }),
     })
