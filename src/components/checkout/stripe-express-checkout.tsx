@@ -358,14 +358,17 @@ function CheckoutForm({
 
 // Main component wrapper with Elements provider
 export default function StripeExpressCheckout(props: StripeExpressCheckoutProps) {
+  // Calculate total properly
+  const calculateTotal = () => {
+    const subtotal = props.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
+    const shipping = subtotal >= 50 ? 0 : 4.99
+    const tax = subtotal * 0.2
+    return subtotal + shipping + tax
+  }
+
   const options: StripeElementsOptions = {
     mode: 'payment',
-    amount: Math.round(props.items.reduce((sum, item) => {
-      const subtotal = sum + item.price * item.quantity
-      const shipping = subtotal >= 50 ? 0 : 4.99
-      const tax = subtotal * 0.2
-      return subtotal + shipping + tax
-    }, 0) * 100),
+    amount: Math.round(calculateTotal() * 100), // Convert to pence
     currency: 'gbp',
     appearance: {
       theme: 'stripe',
@@ -395,7 +398,7 @@ export default function StripeExpressCheckout(props: StripeExpressCheckoutProps)
         }
       }
     },
-    paymentMethodTypes: ['card', 'apple_pay', 'google_pay', 'link', 'klarna', 'clearpay'],
+    // Remove paymentMethodTypes - let automatic_payment_methods handle this
   }
 
   return (
