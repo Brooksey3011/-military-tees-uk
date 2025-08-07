@@ -18,13 +18,24 @@ export default function EnhancedCheckoutPage() {
   const { user } = useAuth()
   const { items, totalItems, totalPrice, clearCart } = useSimpleCart()
   const router = useRouter()
+  const [isLoading, setIsLoading] = React.useState(true)
 
-  // Redirect if cart is empty after mount
+  // Initialize cart loading state
   React.useEffect(() => {
-    if (items.length === 0) {
+    const timer = setTimeout(() => {
+      setIsLoading(false)
+    }, 200) // Give cart time to load from localStorage
+    
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Redirect if cart is empty after loading
+  React.useEffect(() => {
+    if (!isLoading && items.length === 0) {
+      console.log('Enhanced checkout: Cart is empty, redirecting to categories')
       router.push('/categories')
     }
-  }, [items.length, router])
+  }, [items.length, router, isLoading])
 
   const handlePaymentSuccess = async (result: any) => {
     console.log('Payment successful:', result)
@@ -46,7 +57,27 @@ export default function EnhancedCheckoutPage() {
   }
 
   // Show loading state while cart loads
-  if (items.length === 0) {
+  if (isLoading) {
+    return (
+      <Layout>
+        <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-background">
+          <div className="container mx-auto px-4 py-16">
+            <div className="max-w-2xl mx-auto text-center">
+              <div className="animate-pulse space-y-4">
+                <div className="h-8 bg-green-200 rounded w-1/2 mx-auto"></div>
+                <div className="h-4 bg-green-100 rounded w-3/4 mx-auto"></div>
+                <div className="h-32 bg-green-50 rounded"></div>
+              </div>
+              <p className="text-green-600 mt-4">Loading Enhanced Checkout...</p>
+            </div>
+          </div>
+        </div>
+      </Layout>
+    )
+  }
+
+  // Show empty cart state if no items after loading
+  if (!isLoading && items.length === 0) {
     return (
       <Layout>
         <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-background">
