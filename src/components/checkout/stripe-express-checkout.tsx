@@ -79,12 +79,25 @@ function CheckoutForm({
 
   const total = calculateTotal()
 
-  // Create Payment Intent on mount
+  // Create Payment Intent on mount with minimal data
   useEffect(() => {
     if (items.length === 0) return
 
     const createPaymentIntent = async () => {
       try {
+        // Create with minimal required data so payment elements can load immediately
+        const minimalShippingAddress = {
+          firstName: shippingAddress.firstName || 'Customer',
+          lastName: shippingAddress.lastName || 'Name',
+          email: shippingAddress.email || 'customer@example.com',
+          phone: shippingAddress.phone || '+44 1234 567890',
+          address1: shippingAddress.address1 || 'TBC',
+          address2: shippingAddress.address2 || '',
+          city: shippingAddress.city || 'TBC',
+          postcode: shippingAddress.postcode || 'SW1A 1AA',
+          country: shippingAddress.country || 'GB'
+        }
+
         const response = await fetch('/api/create-payment-intent', {
           method: 'POST',
           headers: {
@@ -92,7 +105,7 @@ function CheckoutForm({
           },
           body: JSON.stringify({
             items,
-            shippingAddress,
+            shippingAddress: minimalShippingAddress,
             amount: Math.round(total * 100), // Convert to pence
             currency: 'gbp',
             automatic_payment_methods: {
@@ -116,7 +129,7 @@ function CheckoutForm({
     }
 
     createPaymentIntent()
-  }, [items, shippingAddress, total])
+  }, [items, total]) // Remove shippingAddress dependency so it only runs once
 
   // Handle express checkout (Apple Pay, Google Pay)
   const handleExpressPayment = async (event: any) => {
