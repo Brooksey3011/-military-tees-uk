@@ -287,6 +287,34 @@ function CheckoutForm({
       console.log('🔧 Development Mode: Simulating express payment success')
       
       setTimeout(() => {
+        // Store mock order data for success page
+        const orderData = {
+          orderNumber: `MTU-DEV-${Date.now().toString().slice(-6)}`,
+          orderDate: new Date().toISOString(),
+          paymentIntentId: 'pi_dev_mock_' + Date.now(),
+          customerDetails: {
+            firstName: contactInfo.firstName || 'Demo',
+            lastName: contactInfo.lastName || 'User',
+            email: contactInfo.email || 'demo@militarytees.co.uk'
+          },
+          shippingAddress: {
+            address1: shippingAddress.address1 || '123 Demo Street',
+            address2: shippingAddress.address2 || '',
+            city: shippingAddress.city || 'London',
+            postcode: shippingAddress.postcode || 'SW1A 1AA',
+            country: shippingAddress.country || 'GB'
+          },
+          items,
+          subtotal,
+          shipping: deliveryCost,
+          tax,
+          total,
+          paymentMethod: 'demo_express'
+        }
+
+        // Store for success page
+        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
+
         setIsProcessing(false)
         onSuccess({
           type: 'express',
@@ -341,6 +369,34 @@ function CheckoutForm({
         setPaymentError(confirmError.message || 'Payment failed')
         onError(confirmError.message || 'Payment failed')
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Store order data for success page
+        const orderData = {
+          orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
+          orderDate: new Date().toISOString(),
+          paymentIntentId: paymentIntent.id,
+          customerDetails: {
+            firstName: contactInfo.firstName || 'Express',
+            lastName: contactInfo.lastName || 'Checkout',
+            email: contactInfo.email || 'customer@example.com'
+          },
+          shippingAddress: {
+            address1: shippingAddress.address1 || 'Address will be collected',
+            address2: shippingAddress.address2 || '',
+            city: shippingAddress.city || 'City',
+            postcode: shippingAddress.postcode || 'Postcode',
+            country: shippingAddress.country || 'GB'
+          },
+          items,
+          subtotal,
+          shipping: deliveryCost,
+          tax,
+          total,
+          paymentMethod: 'express'
+        }
+
+        // Store for success page
+        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
+
         onSuccess({
           type: 'express',
           paymentIntent: paymentIntent.id,
@@ -376,6 +432,34 @@ function CheckoutForm({
       })
       
       setTimeout(() => {
+        // Store mock order data for success page
+        const orderData = {
+          orderNumber: `MTU-DEV-${Date.now().toString().slice(-6)}`,
+          orderDate: new Date().toISOString(),
+          paymentIntentId: 'pi_dev_mock_' + Date.now(),
+          customerDetails: {
+            firstName: contactInfo.firstName || 'Demo',
+            lastName: contactInfo.lastName || 'User',
+            email: contactInfo.email || 'demo@militarytees.co.uk'
+          },
+          shippingAddress: {
+            address1: shippingAddress.address1 || '123 Demo Street',
+            address2: shippingAddress.address2 || '',
+            city: shippingAddress.city || 'London',
+            postcode: shippingAddress.postcode || 'SW1A 1AA',
+            country: shippingAddress.country || 'GB'
+          },
+          items,
+          subtotal,
+          shipping: deliveryCost,
+          tax,
+          total,
+          paymentMethod: 'demo_card'
+        }
+
+        // Store for success page
+        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
+
         setIsProcessing(false)
         onSuccess({
           type: 'card',
@@ -429,6 +513,28 @@ function CheckoutForm({
         setPaymentError(confirmError.message || 'Payment failed')
         onError(confirmError.message || 'Payment failed')
       } else if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Store order data for success page
+        const orderData = {
+          orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
+          orderDate: new Date().toISOString(),
+          paymentIntentId: paymentIntent.id,
+          customerDetails: {
+            firstName: contactInfo.firstName,
+            lastName: contactInfo.lastName,
+            email: contactInfo.email
+          },
+          shippingAddress,
+          items,
+          subtotal,
+          shipping: deliveryCost,
+          tax,
+          total,
+          paymentMethod: 'card'
+        }
+
+        // Store for success page
+        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
+
         onSuccess({
           type: 'card',
           paymentIntent: paymentIntent.id

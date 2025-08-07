@@ -36,9 +36,10 @@ function CheckoutSuccessContent() {
   // Process order data from sessionStorage
   React.useEffect(() => {
     const sessionId = searchParams.get('session_id')
+    const paymentIntentId = searchParams.get('payment_intent')
     
-    if (!sessionId) {
-      setError('No session ID provided')
+    if (!sessionId && !paymentIntentId) {
+      setError('No payment confirmation provided')
       setLoading(false)
       return
     }

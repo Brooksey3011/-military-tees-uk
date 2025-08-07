@@ -43,7 +43,7 @@ export default function EnhancedCheckoutPage() {
     // Clear the cart
     clearCart()
     
-    // Redirect to success page
+    // Redirect to success page with payment intent ID
     router.push(`/checkout/success?payment_intent=${result.paymentIntent}`)
   }
 
