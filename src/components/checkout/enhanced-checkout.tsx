@@ -209,9 +209,9 @@ function CheckoutForm({
 
   const { subtotal, deliveryCost, discount, tax, total } = calculateTotals()
 
-  // Create Payment Intent on mount with minimal data
+  // Create Payment Intent early for express checkout
   useEffect(() => {
-    if (items.length === 0 || step !== 3) return
+    if (items.length === 0) return
 
     const createPaymentIntent = async () => {
       try {
@@ -306,27 +306,34 @@ function CheckoutForm({
     setPaymentError(null)
 
     try {
+      // For express checkout, use minimal details or let the express payment method handle it
+      const confirmParams: any = {
+        return_url: `${window.location.origin}/checkout/success`,
+      }
+
+      // Only add billing details if we have contact info (for regular form flow)
+      if (contactInfo.firstName && contactInfo.lastName && contactInfo.email) {
+        confirmParams.payment_method_data = {
+          billing_details: {
+            name: `${contactInfo.firstName} ${contactInfo.lastName}`,
+            email: contactInfo.email,
+            phone: contactInfo.phone,
+            address: {
+              line1: shippingAddress.address1,
+              line2: shippingAddress.address2 || undefined,
+              city: shippingAddress.city,
+              postal_code: shippingAddress.postcode,
+              state: shippingAddress.city || 'N/A', // Use city as state for UK addresses
+              country: shippingAddress.country || 'GB',
+            }
+          }
+        }
+      }
+
       const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
         elements,
         clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/checkout/success`,
-          payment_method_data: {
-            billing_details: {
-              name: `${contactInfo.firstName} ${contactInfo.lastName}`,
-              email: contactInfo.email,
-              phone: contactInfo.phone,
-              address: {
-                line1: shippingAddress.address1,
-                line2: shippingAddress.address2 || undefined,
-                city: shippingAddress.city,
-                postal_code: shippingAddress.postcode,
-                state: shippingAddress.city, // Use city as state for UK addresses
-                country: shippingAddress.country || 'GB',
-              }
-            }
-          }
-        },
+        confirmParams,
         redirect: 'if_required'
       })
 
@@ -554,12 +561,13 @@ function CheckoutForm({
                     <div className="flex items-center gap-2 mb-4">
                       <Smartphone className="h-5 w-5 text-green-600" />
                       <h3 className="font-semibold">Express Checkout</h3>
+                      <Badge variant="secondary" className="text-xs bg-green-100 text-green-700 border-green-200">Recommended</Badge>
                     </div>
                     <p className="text-sm text-muted-foreground mb-4">
                       Skip the forms - pay instantly with Apple Pay, Google Pay, or saved methods
                     </p>
                     
-                    {step === 3 && clientSecret && (
+                    {clientSecret && clientSecret !== 'pi_development_mode_client_secret' ? (
                       <ExpressCheckoutElement
                         onConfirm={handleExpressPayment}
                         onReady={(event) => {
@@ -576,13 +584,40 @@ function CheckoutForm({
                           height: 48,
                         }}
                       />
+                    ) : clientSecret === 'pi_development_mode_client_secret' ? (
+                      <Button
+                        onClick={handleExpressPayment}
+                        disabled={isProcessing}
+                        className="w-full h-12 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
+                      >
+                        {isProcessing ? 'Processing...' : '🔧 Demo Express Payment'}
+                      </Button>
+                    ) : (
+                      <div className="text-center py-4">
+                        <div className="animate-pulse">
+                          <div className="h-12 bg-green-200 rounded w-full"></div>
+                        </div>
+                        <p className="text-sm text-muted-foreground mt-2">Loading express payment options...</p>
+                      </div>
                     )}
                     
-                    {!expressCheckoutSupported && step === 3 && (
+                    {clientSecret && !expressCheckoutSupported && clientSecret !== 'pi_development_mode_client_secret' && (
                       <div className="text-center py-4 text-sm text-muted-foreground">
                         Express payment methods not available on this device
                       </div>
                     )}
+
+                    {/* Divider */}
+                    <div className="relative my-6">
+                      <div className="absolute inset-0 flex items-center">
+                        <div className="w-full border-t border-green-300"></div>
+                      </div>
+                      <div className="relative flex justify-center text-sm">
+                        <span className="bg-green-50 px-4 text-green-700 font-medium">
+                          Or fill in your details below
+                        </span>
+                      </div>
+                    </div>
                   </div>
 
                   {/* Contact Form */}
