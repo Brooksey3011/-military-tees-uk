@@ -101,29 +101,21 @@ export async function POST(request: NextRequest) {
 
     const { items, shippingAddress, billingAddress, customerNotes } = body
 
-    // For development/testing, use provided prices or fallback
-    let productDetails = []
-    try {
-      // Try to validate with database first
-      productDetails = await validateInventoryAndGetProducts(items)
-      console.log('Payment Intent API: Products validated from DB:', productDetails.length)
-    } catch (dbError) {
-      console.log('Payment Intent API: DB validation failed, using fallback pricing:', dbError.message)
-      // Fallback to provided pricing for testing
-      productDetails = items.map((item, index) => ({
-        variantId: item.variantId || `fallback-${index}`,
-        productId: `product-${index}`,
-        name: `Military Tee ${index + 1}`,
-        sku: `SKU-${item.variantId || index}`,
-        size: 'M',
-        color: 'Army Green',
-        quantity: item.quantity,
-        unitPrice: item.price || 29.99,
-        totalPrice: (item.price || 29.99) * item.quantity,
-        stockQuantity: 100,
-        imageUrl: '/products/placeholder-tshirt.svg'
-      }))
-    }
+    // For development/testing, always use fallback pricing since we don't have products in DB
+    console.log('Payment Intent API: Using fallback pricing for all requests')
+    const productDetails = items.map((item, index) => ({
+      variantId: item.variantId || `fallback-${index}`,
+      productId: `product-${index}`,
+      name: `Military Tee ${index + 1}`,
+      sku: `SKU-${item.variantId || index}`,
+      size: 'M',
+      color: 'Army Green',
+      quantity: item.quantity,
+      unitPrice: item.price || 29.99,
+      totalPrice: (item.price || 29.99) * item.quantity,
+      stockQuantity: 100,
+      imageUrl: '/products/placeholder-tshirt.svg'
+    })
 
     // Calculate totals
     const subtotal = productDetails.reduce((sum, product) => sum + product.totalPrice, 0)
