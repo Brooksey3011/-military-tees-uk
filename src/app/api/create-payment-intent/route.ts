@@ -117,12 +117,6 @@ export async function POST(request: NextRequest) {
         enabled: true,
         allow_redirects: 'never' // Prevent redirect-based methods for better UX
       },
-      payment_method_types: [
-        'card',
-        'klarna',
-        'clearpay',
-        'link'
-      ],
       metadata,
       shipping: {
         name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
