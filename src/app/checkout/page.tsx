@@ -229,10 +229,15 @@ export default function CheckoutPage() {
                 <h1 className="text-3xl font-display font-bold tracking-wider uppercase">
                   Secure Checkout
                 </h1>
-                <div className="mt-2">
+                <div className="mt-2 space-x-2">
                   <Link href="/checkout/express">
                     <Button variant="outline" size="sm" className="rounded-none">
-                      Try Express Checkout →
+                      Express Checkout →
+                    </Button>
+                  </Link>
+                  <Link href="/checkout/enhanced">
+                    <Button variant="outline" size="sm" className="rounded-none bg-green-50 border-green-300 text-green-700 hover:bg-green-100">
+                      ✨ Enhanced Checkout →
                     </Button>
                   </Link>
                 </div>
