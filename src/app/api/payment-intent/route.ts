@@ -115,7 +115,7 @@ export async function POST(request: NextRequest) {
       totalPrice: (item.price || 29.99) * item.quantity,
       stockQuantity: 100,
       imageUrl: '/products/placeholder-tshirt.svg'
-    })
+    }))
 
     // Calculate totals
     const subtotal = productDetails.reduce((sum, product) => sum + product.totalPrice, 0)
