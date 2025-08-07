@@ -43,10 +43,15 @@ export function middleware(request: NextRequest) {
     let limit = 100 // default: 100 requests per minute
     let windowMs = 60 * 1000 // 1 minute
     
-    // Stricter limits for auth endpoints
-    if (request.nextUrl.pathname.includes('/auth/') || 
+    // Stricter limits for auth endpoints (but not payment-intent)
+    if (request.nextUrl.pathname.includes('/auth/')) {
+      limit = 10 // 10 requests per minute for auth endpoints
+    }
+    
+    // More generous limits for payment processing
+    if (request.nextUrl.pathname.includes('/payment-intent') || 
         request.nextUrl.pathname.includes('/checkout/')) {
-      limit = 10 // 10 requests per minute for sensitive endpoints
+      limit = 30 // 30 requests per minute for payment endpoints
     }
     
     // Stricter limits for newsletter/contact
