@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmed - Military Tees UK</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .success-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 2rem 1rem;
+        }
+        
+        .success-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--background);
+            border: 2px solid var(--border);
+            padding: 3rem;
+            text-align: center;
+            box-shadow: var(--shadow-large);
+        }
+        
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            font-size: 2.5rem;
+        }
+        
+        .success-title {
+            font-family: 'Staatliches', sans-serif;
+            color: var(--military-green);
+            font-size: 2.5rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .success-message {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+        
+        .order-details {
+            background: #f8f9fa;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+        
+        .order-number {
+            font-family: 'Staatliches', sans-serif;
+            color: var(--military-green);
+            font-size: 1.3rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+        
+        .next-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .step-card {
+            background: var(--background);
+            border: 1px solid var(--border);
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .step-title {
+            font-weight: 600;
+            color: var(--military-green);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .step-description {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .success-content {
+                padding: 2rem 1rem;
+            }
+            
+            .success-title {
+                font-size: 2rem;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .next-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-content">
+            <div class="success-icon">
+                ✅
+            </div>
+            
+            <h1 class="success-title">Order Confirmed!</h1>
+            
+            <p class="success-message">
+                Thank you for your order! Your mission gear is being prepared for deployment.
+                <br>A confirmation email has been sent to <strong id="customer-email">your email address</strong>.
+            </p>
+            
+            <div class="order-details" id="order-details">
+                <div class="order-number">
+                    Order #<span id="order-number">Loading...</span>
+                </div>
+                <div class="order-info">
+                    <p><strong>Order Date:</strong> <span id="order-date">Loading...</span></p>
+                    <p><strong>Total:</strong> <span id="order-total">Loading...</span></p>
+                    <p><strong>Delivery Method:</strong> <span id="delivery-method">Loading...</span></p>
+                    <p><strong>Estimated Delivery:</strong> <span id="estimated-delivery">Loading...</span></p>
+                </div>
+            </div>
+            
+            <div class="next-steps">
+                <div class="step-card">
+                    <div class="step-icon">📧</div>
+                    <div class="step-title">Order Confirmation</div>
+                    <div class="step-description">Check your email for order confirmation and receipt</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">📦</div>
+                    <div class="step-title">Processing</div>
+                    <div class="step-description">Order packed and dispatched within 24 hours</div>
+                </div>
+                
+                <div class="step-card">
+                    <div class="step-icon">🚚</div>
+                    <div class="step-title">Delivery</div>
+                    <div class="step-description">Track your package once shipped</div>
+                </div>
+            </div>
+            
+            <div class="trust-signals">
+                <div class="trust-signal">
+                    <span class="trust-icon">🔒</span>
+                    <span>Your payment was processed securely</span>
+                </div>
+                <div class="trust-signal">
+                    <span class="trust-icon">↩️</span>
+                    <span>30-day money back guarantee</span>
+                </div>
+                <div class="trust-signal">
+                    <span class="trust-icon">📞</span>
+                    <span>Customer support available 7 days a week</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="/categories" class="btn btn-primary">Continue Shopping</a>
+                <a href="/account/orders" class="btn btn-secondary">Track Your Order</a>
+                <button onclick="window.print()" class="btn btn-outline">Print Receipt</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Parse order information from URL parameters or localStorage
+        function displayOrderInfo() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const paymentIntent = urlParams.get('payment_intent');
+            const sessionId = urlParams.get('session_id');
+            
+            // Try to get order info from localStorage (set by checkout)
+            const orderInfo = localStorage.getItem('orderConfirmation');
+            
+            if (orderInfo) {
+                try {
+                    const order = JSON.parse(orderInfo);
+                    document.getElementById('order-number').textContent = order.orderNumber;
+                    document.getElementById('order-date').textContent = order.orderDate;
+                    document.getElementById('order-total').textContent = '£' + order.total;
+                    document.getElementById('delivery-method').textContent = order.deliveryMethod;
+                    document.getElementById('estimated-delivery').textContent = order.estimatedDelivery;
+                    document.getElementById('customer-email').textContent = order.customerEmail;
+                    
+                    // Clear the stored order info
+                    localStorage.removeItem('orderConfirmation');
+                } catch (error) {
+                    console.error('Error parsing order info:', error);
+                    setDefaultOrderInfo();
+                }
+            } else {
+                setDefaultOrderInfo();
+            }
+        }
+        
+        function setDefaultOrderInfo() {
+            // Set default values if no order info available
+            document.getElementById('order-number').textContent = 'MTU-' + Date.now().toString().slice(-6);
+            document.getElementById('order-date').textContent = new Date().toLocaleDateString('en-GB');
+            document.getElementById('order-total').textContent = 'Check email';
+            document.getElementById('delivery-method').textContent = 'Standard Delivery';
+            document.getElementById('estimated-delivery').textContent = '3-5 business days';
+            document.getElementById('customer-email').textContent = 'your email address';
+        }
+        
+        // Load order info when page loads
+        document.addEventListener('DOMContentLoaded', displayOrderInfo);
+    </script>
+</body>
+</html>
