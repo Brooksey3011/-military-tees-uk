@@ -251,11 +251,26 @@ function CheckoutForm({
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
         } else {
-          onError(data.error || 'Failed to initialize payment')
+          console.warn('Payment intent creation failed, using development mode:', data.error)
+          
+          // Development fallback - simulate successful checkout for demo purposes
+          if (process.env.NODE_ENV === 'development') {
+            console.log('🔧 Development Mode: Simulating payment flow')
+            setClientSecret('pi_development_mode_client_secret')
+          } else {
+            onError(data.error || 'Failed to initialize payment')
+          }
         }
       } catch (error) {
         console.error('Error creating payment intent:', error)
-        onError('Failed to initialize payment')
+        
+        // Development fallback
+        if (process.env.NODE_ENV === 'development') {
+          console.log('🔧 Development Mode: Payment API unavailable, using mock data')
+          setClientSecret('pi_development_mode_client_secret')
+        } else {
+          onError('Failed to initialize payment')
+        }
       }
     }
 
@@ -264,6 +279,24 @@ function CheckoutForm({
 
   // Handle express checkout
   const handleExpressPayment = async (event: any) => {
+    // Development mode simulation
+    if (clientSecret === 'pi_development_mode_client_secret') {
+      setIsProcessing(true)
+      setPaymentError(null)
+      
+      console.log('🔧 Development Mode: Simulating express payment success')
+      
+      setTimeout(() => {
+        setIsProcessing(false)
+        onSuccess({
+          type: 'express',
+          paymentIntent: 'pi_dev_mock_' + Date.now(),
+          paymentMethod: 'mock_express'
+        })
+      }, 2000)
+      return
+    }
+
     if (!stripe || !elements || !clientSecret) {
       onError('Payment system not ready')
       return
@@ -318,6 +351,31 @@ function CheckoutForm({
   // Handle regular card payment
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
+
+    // Development mode simulation
+    if (clientSecret === 'pi_development_mode_client_secret') {
+      setIsProcessing(true)
+      setPaymentError(null)
+      
+      console.log('🔧 Development Mode: Simulating card payment success')
+      console.log('Order Details:', {
+        items,
+        contactInfo,
+        shippingAddress,
+        selectedDelivery,
+        appliedPromo,
+        total: total.toFixed(2)
+      })
+      
+      setTimeout(() => {
+        setIsProcessing(false)
+        onSuccess({
+          type: 'card',
+          paymentIntent: 'pi_dev_mock_' + Date.now()
+        })
+      }, 3000)
+      return
+    }
 
     if (!stripe || !elements || !clientSecret) {
       onError('Payment system not ready')
@@ -744,29 +802,59 @@ function CheckoutForm({
 
                   {clientSecret ? (
                     <>
-                      {/* Express Checkout */}
-                      <div className="space-y-4">
-                        <div className="flex items-center gap-2">
-                          <Smartphone className="h-5 w-5 text-green-600" />
-                          <h3 className="font-semibold">Express Checkout</h3>
+                      {/* Development Mode Notice */}
+                      {clientSecret === 'pi_development_mode_client_secret' && (
+                        <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6">
+                          <div className="flex items-center gap-2 text-amber-800">
+                            <AlertCircle className="h-5 w-5" />
+                            <h3 className="font-semibold">Development Mode</h3>
+                          </div>
+                          <p className="text-sm text-amber-700 mt-2">
+                            Payment processing is simulated for testing. No real charges will be made.
+                            Fill in the form and click "Complete Order" to test the flow.
+                          </p>
                         </div>
-                        <ExpressCheckoutElement
-                          onConfirm={handleExpressPayment}
-                          onReady={(event) => {
-                            setExpressCheckoutSupported(event.availablePaymentMethods ? 
-                              Object.keys(event.availablePaymentMethods).length > 0 : false
-                            )
-                          }}
-                          options={{
-                            buttonType: {
-                              applePay: 'buy',
-                              googlePay: 'buy',
-                            },
-                            layout: 'horizontal',
-                            height: 48,
-                          }}
-                        />
-                      </div>
+                      )}
+
+                      {/* Express Checkout */}
+                      {clientSecret !== 'pi_development_mode_client_secret' ? (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <Smartphone className="h-5 w-5 text-green-600" />
+                            <h3 className="font-semibold">Express Checkout</h3>
+                          </div>
+                          <ExpressCheckoutElement
+                            onConfirm={handleExpressPayment}
+                            onReady={(event) => {
+                              setExpressCheckoutSupported(event.availablePaymentMethods ? 
+                                Object.keys(event.availablePaymentMethods).length > 0 : false
+                              )
+                            }}
+                            options={{
+                              buttonType: {
+                                applePay: 'buy',
+                                googlePay: 'buy',
+                              },
+                              layout: 'horizontal',
+                              height: 48,
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <div className="flex items-center gap-2">
+                            <Smartphone className="h-5 w-5 text-amber-600" />
+                            <h3 className="font-semibold text-amber-800">Express Checkout (Demo)</h3>
+                          </div>
+                          <Button
+                            onClick={handleExpressPayment}
+                            disabled={isProcessing}
+                            className="w-full h-12 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
+                          >
+                            {isProcessing ? 'Processing...' : '🔧 Demo Express Payment'}
+                          </Button>
+                        </div>
+                      )}
 
                       {/* Divider */}
                       <div className="relative">
@@ -782,22 +870,49 @@ function CheckoutForm({
 
                       {/* Payment Form */}
                       <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="p-4 border-2 border-border rounded-lg bg-white">
-                          <PaymentElement
-                            options={{
-                              layout: 'tabs',
-                              paymentMethodOrder: ['card', 'klarna', 'clearpay', 'link'],
-                              fields: {
-                                billingDetails: {
-                                  name: 'never',
-                                  email: 'never',
-                                  phone: 'never',
-                                  address: 'never'
+                        {clientSecret !== 'pi_development_mode_client_secret' ? (
+                          <div className="p-4 border-2 border-border rounded-lg bg-white">
+                            <PaymentElement
+                              options={{
+                                layout: 'tabs',
+                                paymentMethodOrder: ['card', 'klarna', 'clearpay', 'link'],
+                                fields: {
+                                  billingDetails: {
+                                    name: 'never',
+                                    email: 'never',
+                                    phone: 'never',
+                                    address: 'never'
+                                  }
                                 }
-                              }
-                            }}
-                          />
-                        </div>
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="p-6 border-2 border-amber-200 rounded-lg bg-amber-50">
+                            <div className="text-center space-y-4">
+                              <CreditCard className="h-12 w-12 mx-auto text-amber-600" />
+                              <h3 className="font-semibold text-amber-800">Demo Payment Form</h3>
+                              <p className="text-sm text-amber-700">
+                                In development mode, payment processing is simulated.
+                                Click "Complete Order" below to test the checkout flow.
+                              </p>
+                              <div className="grid grid-cols-2 gap-4 text-xs text-amber-600">
+                                <div className="text-left">
+                                  <p><strong>Accepted:</strong></p>
+                                  <p>• All major cards</p>
+                                  <p>• Apple Pay</p>
+                                  <p>• Google Pay</p>
+                                </div>
+                                <div className="text-left">
+                                  <p><strong>BNPL Options:</strong></p>
+                                  <p>• Klarna</p>
+                                  <p>• Clearpay</p>
+                                  <p>• Link by Stripe</p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
 
                         {paymentError && (
                           <ErrorDisplay 
