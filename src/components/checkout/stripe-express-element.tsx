@@ -258,11 +258,11 @@ export function StripeExpressCheckout({ items, shippingAddress, onSuccess, onErr
           <Elements 
             stripe={stripePromise}
             options={{
-              mode: 'payment',
-              amount: totalAmount,
-              currency: 'gbp',
               appearance: {
-                theme: 'stripe'
+                theme: 'stripe',
+                variables: {
+                  colorPrimary: '#16a34a' // Military green
+                }
               }
             }}
           >
