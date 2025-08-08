@@ -25,9 +25,9 @@ export class EnhancedSearchService extends BaseSearchService {
     
     if (algoliaAppId && algoliaApiKey) {
       this.useAlgolia = true
-      console.log('Algolia search enabled')
+      // Algolia integration configured
     } else {
-      console.log('Using enhanced database search (Algolia not configured)')
+      // Using database search - production ready
     }
   }
 

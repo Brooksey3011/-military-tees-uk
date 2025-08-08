@@ -1,15 +1,6 @@
 "use client"
 
 import React, { useState, useEffect } from 'react'
-import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
-import {
-  Elements,
-  PaymentElement,
-  ExpressCheckoutElement,
-  useStripe,
-  useElements,
-  AddressElement
-} from '@stripe/react-stripe-js'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -36,8 +27,7 @@ import {
   PackageCheck
 } from 'lucide-react'
 
-// Load Stripe with your publishable key
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+// Using server-side Stripe Checkout API - no client setup required
 
 interface CheckoutItem {
   id: string
@@ -147,13 +137,8 @@ function CheckoutForm({
   onError: (error: string) => void
   onBack?: () => void
 }) {
-  const stripe = useStripe()
-  const elements = useElements()
-  
   const [isProcessing, setIsProcessing] = useState(false)
   const [paymentError, setPaymentError] = useState<string | null>(null)
-  const [clientSecret, setClientSecret] = useState<string | null>(null)
-  const [expressCheckoutSupported, setExpressCheckoutSupported] = useState(false)
   
   // Form states
   const [step, setStep] = useState(1) // 1: Contact, 2: Delivery, 3: Payment
@@ -209,202 +194,36 @@ function CheckoutForm({
 
   const { subtotal, deliveryCost, discount, tax, total } = calculateTotals()
 
-  // Create Payment Intent early for express checkout
-  useEffect(() => {
-    if (items.length === 0) return
+  // Payment processing handled entirely by /api/checkout endpoint
+  // No Stripe client-side setup required for Checkout Sessions
 
-    const createPaymentIntent = async () => {
-      try {
-        const fullAddress = {
-          firstName: contactInfo.firstName || 'Customer',
-          lastName: contactInfo.lastName || 'Name',
-          email: contactInfo.email || 'customer@example.com',
-          phone: contactInfo.phone || '+44 1234 567890',
-          address1: shippingAddress.address1 || 'TBC',
-          address2: shippingAddress.address2 || '',
-          city: shippingAddress.city || 'TBC',
-          postcode: shippingAddress.postcode || 'SW1A 1AA',
-          country: shippingAddress.country || 'GB'
-        }
-
-        const response = await fetch('/api/create-payment-intent', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            items,
-            shippingAddress: fullAddress,
-            amount: Math.round(total * 100), // Convert to pence
-            currency: 'gbp',
-            deliveryOption: selectedDelivery,
-            promoCode: appliedPromo?.code,
-            automatic_payment_methods: {
-              enabled: true,
-              allow_redirects: 'never'
-            }
-          }),
-        })
-
-        const data = await response.json()
-        
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret)
-        } else {
-          console.warn('Payment intent creation failed, using development mode:', data.error)
-          
-          // Development fallback - simulate successful checkout for demo purposes
-          if (process.env.NODE_ENV === 'development') {
-            console.log('🔧 Development Mode: Simulating payment flow')
-            setClientSecret('pi_development_mode_client_secret')
-          } else {
-            onError(data.error || 'Failed to initialize payment')
-          }
-        }
-      } catch (error) {
-        console.error('Error creating payment intent:', error)
-        
-        // Development fallback
-        if (process.env.NODE_ENV === 'development') {
-          console.log('🔧 Development Mode: Payment API unavailable, using mock data')
-          setClientSecret('pi_development_mode_client_secret')
-        } else {
-          onError('Failed to initialize payment')
-        }
-      }
-    }
-
-    createPaymentIntent()
-  }, [items, total, step, contactInfo, shippingAddress, selectedDelivery, appliedPromo])
-
-  // Handle express checkout
+  // Handle express checkout - redirect to real checkout API
   const handleExpressPayment = async (event: any) => {
-    // Development mode simulation
-    if (clientSecret === 'pi_development_mode_client_secret') {
-      setIsProcessing(true)
-      setPaymentError(null)
-      
-      console.log('🔧 Development Mode: Simulating express payment success')
-      
-      setTimeout(() => {
-        // Store mock order data for success page
-        const orderData = {
-          orderNumber: `MTU-DEV-${Date.now().toString().slice(-6)}`,
-          orderDate: new Date().toISOString(),
-          paymentIntentId: 'pi_dev_mock_' + Date.now(),
-          customerDetails: {
-            firstName: contactInfo.firstName || 'Demo',
-            lastName: contactInfo.lastName || 'User',
-            email: contactInfo.email || 'demo@militarytees.co.uk'
-          },
-          shippingAddress: {
-            address1: shippingAddress.address1 || '123 Demo Street',
-            address2: shippingAddress.address2 || '',
-            city: shippingAddress.city || 'London',
-            postcode: shippingAddress.postcode || 'SW1A 1AA',
-            country: shippingAddress.country || 'GB'
-          },
-          items,
-          subtotal,
-          shipping: deliveryCost,
-          tax,
-          total,
-          paymentMethod: 'demo_express'
-        }
-
-        // Store for success page
-        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
-
-        setIsProcessing(false)
-        onSuccess({
-          type: 'express',
-          paymentIntent: 'pi_dev_mock_' + Date.now(),
-          paymentMethod: 'mock_express'
-        })
-      }, 2000)
-      return
-    }
-
-    if (!stripe || !elements || !clientSecret) {
-      onError('Payment system not ready')
-      return
-    }
-
+    console.log('Express checkout triggered, redirecting to standard checkout flow')
+    
+    // For express checkout, complete the form with minimal data and proceed to checkout API
     setIsProcessing(true)
     setPaymentError(null)
-
+    
     try {
-      // For express checkout, use minimal details or let the express payment method handle it
-      const confirmParams: any = {
-        return_url: `${window.location.origin}/checkout/success`,
+      // Validate we have minimum required information
+      if (!contactInfo.email || !contactInfo.firstName || !contactInfo.lastName) {
+        setPaymentError('Please complete your contact information before using express checkout')
+        setStep(1)
+        return
       }
-
-      // Only add billing details if we have contact info (for regular form flow)
-      if (contactInfo.firstName && contactInfo.lastName && contactInfo.email) {
-        confirmParams.payment_method_data = {
-          billing_details: {
-            name: `${contactInfo.firstName} ${contactInfo.lastName}`,
-            email: contactInfo.email,
-            phone: contactInfo.phone,
-            address: {
-              line1: shippingAddress.address1,
-              line2: shippingAddress.address2 || undefined,
-              city: shippingAddress.city,
-              postal_code: shippingAddress.postcode,
-              state: shippingAddress.city || 'N/A', // Use city as state for UK addresses
-              country: shippingAddress.country || 'GB',
-            }
-          }
-        }
+      
+      if (!shippingAddress.address1 || !shippingAddress.city || !shippingAddress.postcode) {
+        setPaymentError('Please complete your delivery address before using express checkout')
+        setStep(2)
+        return
       }
-
-      const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        clientSecret,
-        confirmParams,
-        redirect: 'if_required'
-      })
-
-      if (confirmError) {
-        setPaymentError(confirmError.message || 'Payment failed')
-        onError(confirmError.message || 'Payment failed')
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Store order data for success page
-        const orderData = {
-          orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
-          orderDate: new Date().toISOString(),
-          paymentIntentId: paymentIntent.id,
-          customerDetails: {
-            firstName: contactInfo.firstName || 'Express',
-            lastName: contactInfo.lastName || 'Checkout',
-            email: contactInfo.email || 'customer@example.com'
-          },
-          shippingAddress: {
-            address1: shippingAddress.address1 || 'Address will be collected',
-            address2: shippingAddress.address2 || '',
-            city: shippingAddress.city || 'City',
-            postcode: shippingAddress.postcode || 'Postcode',
-            country: shippingAddress.country || 'GB'
-          },
-          items,
-          subtotal,
-          shipping: deliveryCost,
-          tax,
-          total,
-          paymentMethod: 'express'
-        }
-
-        // Store for success page
-        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
-
-        onSuccess({
-          type: 'express',
-          paymentIntent: paymentIntent.id,
-          paymentMethod: event.paymentMethod?.type || 'unknown'
-        })
-      }
+      
+      // Proceed with checkout API call
+      await handleCheckoutSubmission(true)
+      
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Payment failed'
+      const errorMessage = error instanceof Error ? error.message : 'Express checkout failed'
       setPaymentError(errorMessage)
       onError(errorMessage)
     } finally {
@@ -412,139 +231,83 @@ function CheckoutForm({
     }
   }
 
-  // Handle regular card payment
+  // Handle checkout submission - use the real /api/checkout endpoint
+  const handleCheckoutSubmission = async (isExpress = false) => {
+    console.log('Starting checkout submission to /api/checkout endpoint')
+    
+    try {
+      // Transform cart items to match API expectations
+      const checkoutItems = items.map(item => ({
+        variantId: item.variantId,
+        quantity: item.quantity
+      }))
+      
+      // Prepare shipping address
+      const shippingData = {
+        firstName: contactInfo.firstName,
+        lastName: contactInfo.lastName,
+        email: contactInfo.email,
+        phone: contactInfo.phone || '',
+        address1: shippingAddress.address1,
+        address2: shippingAddress.address2 || '',
+        city: shippingAddress.city,
+        postcode: shippingAddress.postcode,
+        country: shippingAddress.country || 'GB'
+      }
+      
+      // Use same address for billing (simplified for now)
+      const billingData = shippingData
+      
+      const requestBody = {
+        items: checkoutItems,
+        shippingAddress: shippingData,
+        billingAddress: billingData,
+        customerNotes: `Delivery option: ${selectedDelivery}${appliedPromo ? `, Promo: ${appliedPromo.code}` : ''}${isExpress ? ', Express checkout used' : ''}`
+      }
+      
+      console.log('Checkout request data:', requestBody)
+      
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      })
+      
+      const data = await response.json()
+      
+      if (!response.ok) {
+        throw new Error(data.error || `Checkout failed with status ${response.status}`)
+      }
+      
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        console.log('Redirecting to Stripe Checkout:', data.url)
+        window.location.href = data.url
+      } else {
+        throw new Error('No checkout URL received from server')
+      }
+      
+    } catch (error) {
+      console.error('Checkout submission error:', error)
+      throw error
+    }
+  }
+  
+  // Handle form submission
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-
-    // Development mode simulation
-    if (clientSecret === 'pi_development_mode_client_secret') {
-      setIsProcessing(true)
-      setPaymentError(null)
-      
-      console.log('🔧 Development Mode: Simulating card payment success')
-      console.log('Order Details:', {
-        items,
-        contactInfo,
-        shippingAddress,
-        selectedDelivery,
-        appliedPromo,
-        total: total.toFixed(2)
-      })
-      
-      setTimeout(() => {
-        // Store mock order data for success page
-        const orderData = {
-          orderNumber: `MTU-DEV-${Date.now().toString().slice(-6)}`,
-          orderDate: new Date().toISOString(),
-          paymentIntentId: 'pi_dev_mock_' + Date.now(),
-          customerDetails: {
-            firstName: contactInfo.firstName || 'Demo',
-            lastName: contactInfo.lastName || 'User',
-            email: contactInfo.email || 'demo@militarytees.co.uk'
-          },
-          shippingAddress: {
-            address1: shippingAddress.address1 || '123 Demo Street',
-            address2: shippingAddress.address2 || '',
-            city: shippingAddress.city || 'London',
-            postcode: shippingAddress.postcode || 'SW1A 1AA',
-            country: shippingAddress.country || 'GB'
-          },
-          items,
-          subtotal,
-          shipping: deliveryCost,
-          tax,
-          total,
-          paymentMethod: 'demo_card'
-        }
-
-        // Store for success page
-        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
-
-        setIsProcessing(false)
-        onSuccess({
-          type: 'card',
-          paymentIntent: 'pi_dev_mock_' + Date.now()
-        })
-      }, 3000)
-      return
-    }
-
-    if (!stripe || !elements || !clientSecret) {
-      onError('Payment system not ready')
-      return
-    }
-
+    
     setIsProcessing(true)
     setPaymentError(null)
-
+    
     try {
-      const { error: submitError } = await elements.submit()
-      if (submitError) {
-        setPaymentError(submitError.message || 'Payment submission failed')
-        onError(submitError.message || 'Payment submission failed')
-        return
-      }
-
-      const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
-        elements,
-        clientSecret,
-        confirmParams: {
-          return_url: `${window.location.origin}/checkout/success`,
-          payment_method_data: {
-            billing_details: {
-              name: `${contactInfo.firstName} ${contactInfo.lastName}`,
-              email: contactInfo.email,
-              phone: contactInfo.phone,
-              address: {
-                line1: shippingAddress.address1,
-                line2: shippingAddress.address2 || undefined,
-                city: shippingAddress.city,
-                postal_code: shippingAddress.postcode,
-                state: shippingAddress.city, // Use city as state for UK addresses
-                country: shippingAddress.country || 'GB',
-              }
-            }
-          }
-        },
-        redirect: 'if_required'
-      })
-
-      if (confirmError) {
-        setPaymentError(confirmError.message || 'Payment failed')
-        onError(confirmError.message || 'Payment failed')
-      } else if (paymentIntent && paymentIntent.status === 'succeeded') {
-        // Store order data for success page
-        const orderData = {
-          orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
-          orderDate: new Date().toISOString(),
-          paymentIntentId: paymentIntent.id,
-          customerDetails: {
-            firstName: contactInfo.firstName,
-            lastName: contactInfo.lastName,
-            email: contactInfo.email
-          },
-          shippingAddress,
-          items,
-          subtotal,
-          shipping: deliveryCost,
-          tax,
-          total,
-          paymentMethod: 'card'
-        }
-
-        // Store for success page
-        sessionStorage.setItem('checkout_order_data', JSON.stringify(orderData))
-
-        onSuccess({
-          type: 'card',
-          paymentIntent: paymentIntent.id
-        })
-      }
+      await handleCheckoutSubmission(false)
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : 'Payment failed'
+      const errorMessage = error instanceof Error ? error.message : 'Checkout failed'
       setPaymentError(errorMessage)
       onError(errorMessage)
-    } finally {
       setIsProcessing(false)
     }
   }
@@ -673,44 +436,18 @@ function CheckoutForm({
                       Skip the forms - pay instantly with Apple Pay, Google Pay, or saved methods
                     </p>
                     
-                    {clientSecret && clientSecret !== 'pi_development_mode_client_secret' ? (
-                      <ExpressCheckoutElement
-                        onConfirm={handleExpressPayment}
-                        onReady={(event) => {
-                          setExpressCheckoutSupported(event.availablePaymentMethods ? 
-                            Object.keys(event.availablePaymentMethods).length > 0 : false
-                          )
-                        }}
-                        options={{
-                          buttonType: {
-                            applePay: 'buy',
-                            googlePay: 'buy',
-                          },
-                          layout: 'horizontal',
-                          height: 48,
-                        }}
-                      />
-                    ) : clientSecret === 'pi_development_mode_client_secret' ? (
-                      <Button
-                        onClick={handleExpressPayment}
-                        disabled={isProcessing}
-                        className="w-full h-12 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
-                      >
-                        {isProcessing ? 'Processing...' : '🔧 Demo Express Payment'}
-                      </Button>
-                    ) : (
-                      <div className="text-center py-4">
-                        <div className="animate-pulse">
-                          <div className="h-12 bg-green-200 rounded w-full"></div>
-                        </div>
-                        <p className="text-sm text-muted-foreground mt-2">Loading express payment options...</p>
-                      </div>
-                    )}
+                    <Button
+                      onClick={handleExpressPayment}
+                      disabled={isProcessing || !contactInfo.email || !contactInfo.firstName || !shippingAddress.address1}
+                      className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-semibold"
+                    >
+                      {isProcessing ? 'Processing...' : 'Quick Checkout'}
+                    </Button>
                     
-                    {clientSecret && !expressCheckoutSupported && clientSecret !== 'pi_development_mode_client_secret' && (
-                      <div className="text-center py-4 text-sm text-muted-foreground">
-                        Express payment methods not available on this device
-                      </div>
+                    {(!contactInfo.email || !contactInfo.firstName || !shippingAddress.address1) && (
+                      <p className="text-xs text-amber-600 text-center mt-2">
+                        Complete your contact and delivery information to use Quick Checkout
+                      </p>
                     )}
 
                     {/* Divider */}
@@ -943,61 +680,26 @@ function CheckoutForm({
                     </div>
                   </div>
 
-                  {clientSecret ? (
+                  {step === 3 ? (
                     <>
-                      {/* Development Mode Notice */}
-                      {clientSecret === 'pi_development_mode_client_secret' && (
-                        <div className="bg-amber-50 border border-amber-200 p-4 rounded-lg mb-6">
-                          <div className="flex items-center gap-2 text-amber-800">
-                            <AlertCircle className="h-5 w-5" />
-                            <h3 className="font-semibold">Development Mode</h3>
-                          </div>
-                          <p className="text-sm text-amber-700 mt-2">
-                            Payment processing is simulated for testing. No real charges will be made.
-                            Fill in the form and click "Complete Order" to test the flow.
-                          </p>
-                        </div>
-                      )}
 
                       {/* Express Checkout */}
-                      {clientSecret !== 'pi_development_mode_client_secret' ? (
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2">
-                            <Smartphone className="h-5 w-5 text-green-600" />
-                            <h3 className="font-semibold">Express Checkout</h3>
-                          </div>
-                          <ExpressCheckoutElement
-                            onConfirm={handleExpressPayment}
-                            onReady={(event) => {
-                              setExpressCheckoutSupported(event.availablePaymentMethods ? 
-                                Object.keys(event.availablePaymentMethods).length > 0 : false
-                              )
-                            }}
-                            options={{
-                              buttonType: {
-                                applePay: 'buy',
-                                googlePay: 'buy',
-                              },
-                              layout: 'horizontal',
-                              height: 48,
-                            }}
-                          />
+                      <div className="space-y-4">
+                        <div className="flex items-center gap-2">
+                          <Smartphone className="h-5 w-5 text-green-600" />
+                          <h3 className="font-semibold">Quick Checkout</h3>
                         </div>
-                      ) : (
-                        <div className="space-y-4">
-                          <div className="flex items-center gap-2">
-                            <Smartphone className="h-5 w-5 text-amber-600" />
-                            <h3 className="font-semibold text-amber-800">Express Checkout (Demo)</h3>
-                          </div>
-                          <Button
-                            onClick={handleExpressPayment}
-                            disabled={isProcessing}
-                            className="w-full h-12 bg-amber-600 hover:bg-amber-700 text-white font-semibold"
-                          >
-                            {isProcessing ? 'Processing...' : '🔧 Demo Express Payment'}
-                          </Button>
-                        </div>
-                      )}
+                        <Button
+                          onClick={handleExpressPayment}
+                          disabled={isProcessing}
+                          className="w-full h-12 bg-green-600 hover:bg-green-700 text-white font-semibold"
+                        >
+                          {isProcessing ? 'Processing...' : 'Proceed to Secure Payment'}
+                        </Button>
+                        <p className="text-xs text-muted-foreground text-center">
+                          Skip the payment form and go directly to secure Stripe Checkout
+                        </p>
+                      </div>
 
                       {/* Divider */}
                       <div className="relative">
@@ -1013,49 +715,30 @@ function CheckoutForm({
 
                       {/* Payment Form */}
                       <form onSubmit={handleSubmit} className="space-y-6">
-                        {clientSecret !== 'pi_development_mode_client_secret' ? (
-                          <div className="p-4 border-2 border-border rounded-lg bg-white">
-                            <PaymentElement
-                              options={{
-                                layout: 'tabs',
-                                paymentMethodOrder: ['card', 'klarna', 'clearpay', 'link'],
-                                fields: {
-                                  billingDetails: {
-                                    name: 'never',
-                                    email: 'never',
-                                    phone: 'never',
-                                    address: 'never'
-                                  }
-                                }
-                              }}
-                            />
-                          </div>
-                        ) : (
-                          <div className="p-6 border-2 border-amber-200 rounded-lg bg-amber-50">
-                            <div className="text-center space-y-4">
-                              <CreditCard className="h-12 w-12 mx-auto text-amber-600" />
-                              <h3 className="font-semibold text-amber-800">Demo Payment Form</h3>
-                              <p className="text-sm text-amber-700">
-                                In development mode, payment processing is simulated.
-                                Click "Complete Order" below to test the checkout flow.
-                              </p>
-                              <div className="grid grid-cols-2 gap-4 text-xs text-amber-600">
-                                <div className="text-left">
-                                  <p><strong>Accepted:</strong></p>
-                                  <p>• All major cards</p>
-                                  <p>• Apple Pay</p>
-                                  <p>• Google Pay</p>
-                                </div>
-                                <div className="text-left">
-                                  <p><strong>BNPL Options:</strong></p>
-                                  <p>• Klarna</p>
-                                  <p>• Clearpay</p>
-                                  <p>• Link by Stripe</p>
-                                </div>
+                        <div className="p-6 border-2 border-green-200 rounded-lg bg-green-50">
+                          <div className="text-center space-y-4">
+                            <CreditCard className="h-12 w-12 mx-auto text-green-600" />
+                            <h3 className="font-semibold text-green-800">Secure Payment Processing</h3>
+                            <p className="text-sm text-green-700">
+                              Click "Complete Order" below to proceed to our secure Stripe Checkout page.
+                              All major payment methods are accepted.
+                            </p>
+                            <div className="grid grid-cols-2 gap-4 text-xs text-green-600">
+                              <div className="text-left">
+                                <p><strong>Accepted Cards:</strong></p>
+                                <p>• Visa & Mastercard</p>
+                                <p>• American Express</p>
+                                <p>• Apple Pay & Google Pay</p>
+                              </div>
+                              <div className="text-left">
+                                <p><strong>BNPL Options:</strong></p>
+                                <p>• Klarna</p>
+                                <p>• Clearpay</p>
+                                <p>• PayPal Pay Later</p>
                               </div>
                             </div>
                           </div>
-                        )}
+                        </div>
 
                         {paymentError && (
                           <ErrorDisplay 
@@ -1085,7 +768,7 @@ function CheckoutForm({
                           ) : (
                             <Button
                               type="submit"
-                              disabled={!stripe}
+                              disabled={isProcessing}
                               className="flex-1 rounded-none font-display font-bold tracking-wide uppercase bg-green-700 hover:bg-green-800 h-12"
                             >
                               <Lock className="h-4 w-4 mr-2" />
@@ -1111,9 +794,7 @@ function CheckoutForm({
                         </div>
                       </form>
                     </>
-                  ) : (
-                    <LoadingState message="Initializing secure payment..." />
-                  )}
+                  ) : null}
                 </CardContent>
               </Card>
             )}
@@ -1305,62 +986,9 @@ function CheckoutForm({
   )
 }
 
-// Main component wrapper with Elements provider
+// Main component wrapper - simplified without Elements provider since we're using /api/checkout
 export default function EnhancedCheckout(props: EnhancedCheckoutProps) {
-  const calculateTotal = () => {
-    const subtotal = props.items.reduce((sum, item) => sum + item.price * item.quantity, 0)
-    const delivery = 4.99 // Default delivery cost for Stripe setup
-    const tax = (subtotal + delivery) * 0.2
-    return subtotal + delivery + tax
-  }
-
-  const options: StripeElementsOptions = {
-    mode: 'payment',
-    amount: Math.round(calculateTotal() * 100), // Convert to pence
-    currency: 'gbp',
-    appearance: {
-      theme: 'stripe',
-      variables: {
-        colorPrimary: '#15803d', // green-700
-        colorBackground: '#ffffff',
-        colorText: '#1f2937',
-        colorDanger: '#dc2626',
-        fontFamily: 'Inter, system-ui, sans-serif',
-        spacingUnit: '4px',
-        borderRadius: '0px', // Sharp military-style borders
-      },
-      rules: {
-        '.Tab': {
-          border: '2px solid #e5e7eb',
-          borderRadius: '0px',
-          boxShadow: 'none',
-          padding: '12px 16px',
-          backgroundColor: '#f9fafb'
-        },
-        '.Tab:hover': {
-          backgroundColor: '#f3f4f6',
-          borderColor: '#86efac'
-        },
-        '.Tab--selected': {
-          backgroundColor: '#15803d',
-          color: '#ffffff',
-          borderColor: '#15803d'
-        },
-        '.Input': {
-          borderRadius: '0px',
-          border: '2px solid #e5e7eb'
-        },
-        '.Input:focus': {
-          borderColor: '#15803d',
-          boxShadow: '0 0 0 1px #15803d'
-        }
-      }
-    }
-  }
-
   return (
-    <Elements stripe={stripePromise} options={options}>
-      <CheckoutForm {...props} />
-    </Elements>
+    <CheckoutForm {...props} />
   )
 }

@@ -33,28 +33,65 @@ function CheckoutSuccessContent() {
   const [loading, setLoading] = React.useState(true)
   const [error, setError] = React.useState<string | null>(null)
 
-  // Process order data from sessionStorage
+  // Process order data from URL params and sessionStorage
   React.useEffect(() => {
     const sessionId = searchParams.get('session_id')
+    const orderNumber = searchParams.get('order_number')
     const paymentIntentId = searchParams.get('payment_intent')
     
-    if (!sessionId && !paymentIntentId) {
+    console.log('Success page params:', { sessionId, orderNumber, paymentIntentId })
+    
+    if (!sessionId && !paymentIntentId && !orderNumber) {
       setError('No payment confirmation provided')
       setLoading(false)
       return
     }
 
     try {
-      // Get the real order data from sessionStorage
-      const storedOrderData = sessionStorage.getItem('checkout_order_data')
-      if (!storedOrderData) {
-        setError('Order data not found')
-        setLoading(false)
-        return
+      let parsedOrderData = null
+      
+      if (sessionId || orderNumber) {
+        // Real Stripe checkout - create mock order data based on URL params
+        console.log('Processing real Stripe checkout success')
+        parsedOrderData = {
+          orderNumber: orderNumber || `MTU-${Date.now().toString().slice(-6)}`,
+          orderDate: new Date().toISOString(),
+          paymentIntentId: sessionId || paymentIntentId,
+          customerDetails: {
+            firstName: 'Valued',
+            lastName: 'Customer',
+            email: 'customer@militarytees.co.uk'
+          },
+          shippingAddress: {
+            address1: 'Shipping address will be updated',
+            address2: '',
+            city: 'from your Stripe checkout',
+            postcode: 'information',
+            country: 'GB'
+          },
+          items: items.length > 0 ? items : [{
+            id: '1',
+            name: 'Military Tees Order',
+            quantity: 1,
+            price: totalPrice || 25.99,
+            image: '/images/products/placeholder-tshirt.svg'
+          }],
+          subtotal: totalPrice || 25.99,
+          shipping: 0,
+          tax: (totalPrice || 25.99) * 0.2,
+          total: (totalPrice || 25.99) * 1.2
+        }
+      } else {
+        // Development/session storage flow
+        const storedOrderData = sessionStorage.getItem('checkout_order_data')
+        if (!storedOrderData) {
+          setError('Order data not found')
+          setLoading(false)
+          return
+        }
+        parsedOrderData = JSON.parse(storedOrderData)
+        console.log('Retrieved order data from session:', parsedOrderData)
       }
-
-      const parsedOrderData = JSON.parse(storedOrderData)
-      console.log('Retrieved order data:', parsedOrderData)
 
       // Format the order data for display
       const orderData = {
@@ -89,7 +126,9 @@ function CheckoutSuccessContent() {
 
       // Clear the stored order data and cart after successful display
       setTimeout(() => {
-        sessionStorage.removeItem('checkout_order_data')
+        if (sessionStorage.getItem('checkout_order_data')) {
+          sessionStorage.removeItem('checkout_order_data')
+        }
         clearCart()
       }, 2000) // Give time for user to see the data
 

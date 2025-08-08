@@ -409,8 +409,8 @@ export async function POST(request: NextRequest) {
         customer_notes: customerNotes || '',
       },
 
-      success_url: `http://localhost:3000/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_number=${orderNumber}`,
-      cancel_url: `http://localhost:3000/checkout?cancelled=true`,
+      success_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3012'}/checkout/success?session_id={CHECKOUT_SESSION_ID}&order_number=${orderNumber}`,
+      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3012'}/cart?cancelled=true`,
 
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60), // 30 minutes from now
     })
