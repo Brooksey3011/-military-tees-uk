@@ -3,7 +3,7 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
 
-// Checkout request schema - using live data validation
+// Simplified checkout schema
 const checkoutSchema = z.object({
   items: z.array(z.object({
     variantId: z.string().min(1, 'Variant ID is required'),
@@ -49,17 +49,17 @@ function generateOrderNumber(): string {
   return `MT${timestamp.slice(-6)}${random}`
 }
 
-// Get product details from live Supabase data
+// Get product details from Supabase
 async function getProductDetails(items: CheckoutRequest['items']) {
   const supabase = createSupabaseAdmin()
   const productDetails = []
 
-  console.log(`🔍 Looking up ${items.length} product variants from live Supabase data...`)
+  console.log(`🔍 Looking up ${items.length} product variants...`)
 
   for (const item of items) {
-    console.log(`📦 Processing live variant: ${item.variantId}`)
+    console.log(`📦 Processing variant: ${item.variantId}`)
 
-    // Get product variant with product details from real database
+    // Get product variant with product details
     const { data: variant, error: variantError } = await supabase
       .from('product_variants')
       .select(`
@@ -82,11 +82,11 @@ async function getProductDetails(items: CheckoutRequest['items']) {
       .single()
 
     if (variantError || !variant) {
-      console.error(`❌ Live variant ${item.variantId} not found:`, variantError)
+      console.error(`❌ Variant ${item.variantId} not found:`, variantError)
       throw new Error(`Product variant not found: ${item.variantId}`)
     }
 
-    console.log(`✅ Found live variant: ${variant.sku}`)
+    console.log(`✅ Found variant: ${variant.sku}`)
 
     // Cast products to any to handle the nested relation
     const product = variant.products as any
@@ -94,12 +94,12 @@ async function getProductDetails(items: CheckoutRequest['items']) {
       throw new Error(`Product not found for variant: ${item.variantId}`)
     }
 
-    // Check real stock from database
+    // Check stock
     if (variant.stock_quantity < item.quantity) {
       throw new Error(`Insufficient stock for ${product.name} (${variant.size} ${variant.color}). Available: ${variant.stock_quantity}, Requested: ${item.quantity}`)
     }
 
-    // Calculate pricing using real product price
+    // Calculate pricing (use product price as base, variant price is typically 0 for size/color variants)
     const unitPrice = product.price
     const totalPrice = unitPrice * item.quantity
 
@@ -118,7 +118,7 @@ async function getProductDetails(items: CheckoutRequest['items']) {
     })
   }
 
-  console.log(`✅ All ${productDetails.length} live variants validated`)
+  console.log(`✅ All ${productDetails.length} variants validated`)
   return productDetails
 }
 
@@ -126,18 +126,17 @@ async function getProductDetails(items: CheckoutRequest['items']) {
 export async function GET() {
   return NextResponse.json({
     status: 'ok',
-    service: 'checkout-api',
+    service: 'checkout-simple-api',
     timestamp: new Date().toISOString(),
     stripe_configured: !!process.env.STRIPE_SECRET_KEY,
-    supabase_configured: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-    using_live_data: true
+    supabase_configured: !!process.env.SUPABASE_SERVICE_ROLE_KEY
   });
 }
 
-// Main checkout processing with live data
+// Main checkout processing
 export async function POST(request: NextRequest) {
   try {
-    console.log('🚀 Checkout API called - USING LIVE DATA')
+    console.log('🚀 Simple Checkout API called')
 
     // Parse and validate request body
     const body = await request.json()
@@ -151,17 +150,17 @@ export async function POST(request: NextRequest) {
     const validatedData = checkoutSchema.parse(body)
     console.log('✅ Request validation passed')
 
-    // Get product details from live Supabase database
+    // Get product details from your real Supabase data
     const productDetails = await getProductDetails(validatedData.items)
-    console.log('✅ Live product details retrieved')
+    console.log('✅ Product details retrieved')
 
-    // Calculate totals with real pricing
+    // Calculate totals
     const subtotal = productDetails.reduce((sum, item) => sum + item.totalPrice, 0)
     const shipping = calculateShipping(subtotal)
     const vat = calculateVAT(subtotal, shipping)
     const total = subtotal + shipping + vat
 
-    console.log('💰 Order totals calculated from live data:', { subtotal, shipping, vat, total })
+    console.log('💰 Order totals calculated:', { subtotal, shipping, vat, total })
 
     // Verify Stripe configuration
     if (!process.env.STRIPE_SECRET_KEY) {
@@ -172,8 +171,8 @@ export async function POST(request: NextRequest) {
     const orderNumber = generateOrderNumber()
     console.log('🔢 Order number generated:', orderNumber)
 
-    // Create Stripe Checkout Session with live product data
-    console.log('🔄 Creating Stripe Checkout Session with live data...')
+    // Create Stripe Checkout Session with your real product data
+    console.log('🔄 Creating Stripe Checkout Session...')
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
@@ -184,7 +183,7 @@ export async function POST(request: NextRequest) {
         orderNumber,
         customerEmail: validatedData.shippingAddress.email,
         customerNotes: validatedData.customerNotes || '',
-        source: 'military_tees_uk_live_data'
+        source: 'military_tees_uk'
       },
       shipping_address_collection: {
         allowed_countries: ['GB', 'US', 'CA', 'AU', 'DE', 'FR', 'ES', 'IT', 'NL', 'BE', 'IE']
@@ -195,15 +194,14 @@ export async function POST(request: NextRequest) {
           currency: 'gbp',
           product_data: {
             name: `${item.name} - ${item.size} ${item.color}`,
-            description: `SKU: ${item.sku} | Live Data`,
+            description: `SKU: ${item.sku}`,
             images: item.imageUrl ? [`${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'}${item.imageUrl}`] : [],
             metadata: {
               sku: item.sku,
               variant_id: item.variantId,
               product_id: item.productId,
               size: item.size,
-              color: item.color,
-              data_source: 'live_supabase'
+              color: item.color
             }
           },
           unit_amount: Math.round(item.unitPrice * 100) // Convert to pence
@@ -231,9 +229,9 @@ export async function POST(request: NextRequest) {
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60) // 30 minutes
     })
 
-    console.log('✅ Stripe Checkout Session created with live data:', session.id)
+    console.log('✅ Stripe Checkout Session created:', session.id)
 
-    // Return success response with live data confirmation
+    // Return success response with checkout URL
     return NextResponse.json({
       success: true,
       url: session.url,
@@ -257,14 +255,12 @@ export async function POST(request: NextRequest) {
       debug: {
         timestamp: new Date().toISOString(),
         environment: process.env.NODE_ENV,
-        stripeMode: 'test',
-        dataSource: 'live_supabase',
-        variantsProcessed: productDetails.length
+        stripeMode: 'test'
       }
     })
 
   } catch (error) {
-    console.error('❌ Live Checkout API error:', error)
+    console.error('❌ Simple Checkout API error:', error)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
