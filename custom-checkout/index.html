@@ -43,15 +43,14 @@
                 </div>
 
                 <form id="checkout-form" class="checkout-form">
-                    <!-- Express Checkout Section -->
-                    <div class="express-checkout-section">
-                        <h3>Express Checkout</h3>
-                        <div id="express-checkout-element">
-                            <!-- Express checkout buttons will be inserted here -->
+                    <!-- Information Section -->
+                    <div class="checkout-info-section">
+                        <div class="security-badges-checkout">
+                            <div class="security-badge">🔒 SSL Encrypted</div>
+                            <div class="security-badge">💳 PCI Compliant</div>
+                            <div class="security-badge">↩️ Money Back Guarantee</div>
                         </div>
-                        <div class="divider">
-                            <span>OR</span>
-                        </div>
+                        <p class="checkout-description">Complete your secure checkout in 3 simple steps. All payment methods including Apple Pay and Google Pay are available on the next page.</p>
                     </div>
 
                     <!-- Step 1: Contact Information -->
@@ -188,30 +187,23 @@
                     <div class="form-step" id="step-3">
                         <h3>Payment Information</h3>
 
-                        <!-- Promo Code Section -->
-                        <div class="promo-code-section">
-                            <div class="promo-toggle" onclick="togglePromoCode()">
-                                <span>Have a promo code?</span>
-                                <span class="toggle-icon">+</span>
-                            </div>
-                            <div class="promo-input-container" id="promo-input">
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <input type="text" id="promoCode" name="promoCode" placeholder="Enter promo code">
-                                        <button type="button" class="btn btn-outline apply-promo-btn" onclick="applyPromoCode()">
-                                            Apply
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="promo-message" id="promo-message"></div>
-                            </div>
-                        </div>
+                        <!-- Note: Promo codes will be handled on the Stripe Checkout page -->
 
                         <!-- Payment Method -->
                         <div class="payment-method">
                             <h4>Payment Method</h4>
-                            <div id="payment-element">
-                                <!-- Stripe Payment Element will be inserted here -->
+                            <div class="payment-info">
+                                <p>You'll be redirected to our secure payment page where you can pay with:</p>
+                                <ul class="payment-methods-list">
+                                    <li>💳 Credit or Debit Card</li>
+                                    <li>🍎 Apple Pay</li>
+                                    <li>🟢 Google Pay</li>
+                                    <li>🔗 Link (Save payment info for next time)</li>
+                                </ul>
+                                <div class="security-note">
+                                    <span class="security-icon">🔒</span>
+                                    <span>Your payment information is secured with 256-bit SSL encryption</span>
+                                </div>
                             </div>
                             <div id="payment-errors" class="field-error"></div>
                         </div>

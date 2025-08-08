@@ -38,8 +38,7 @@ class MilitaryCheckout {
             // Setup form event listeners
             this.setupEventListeners();
             
-            // Setup express checkout
-            await this.setupExpressCheckout();
+            // Note: Express checkout removed - using Stripe Checkout which includes express payment methods
             
             console.log('Checkout initialized successfully');
             
@@ -111,33 +110,24 @@ class MilitaryCheckout {
     
     loadCart() {
         try {
-            // Load cart from localStorage or cookie
-            const stored = localStorage.getItem('militaryTees_cart');
+            // Load cart from localStorage using the same key as the main site
+            const stored = localStorage.getItem('military-tees-cart');
             if (stored) {
-                return JSON.parse(stored);
+                const cartData = JSON.parse(stored);
+                
+                // Handle both cart data formats (with or without state wrapper)
+                if (cartData.state && cartData.state.items) {
+                    return cartData.state.items;
+                } else if (Array.isArray(cartData)) {
+                    return cartData;
+                } else if (cartData.items && Array.isArray(cartData.items)) {
+                    return cartData.items;
+                }
             }
             
-            // Mock cart data for demo - replace with your cart system
-            return [
-                {
-                    id: '1',
-                    name: 'Royal Marines Commando T-Shirt',
-                    size: 'Large',
-                    color: 'Olive Green',
-                    quantity: 1,
-                    price: 24.99,
-                    image: '/images/products/royal-marines-tee.jpg'
-                },
-                {
-                    id: '2',
-                    name: 'SAS Wings Cap',
-                    size: 'One Size',
-                    color: 'Black',
-                    quantity: 1,
-                    price: 19.99,
-                    image: '/images/products/sas-cap.jpg'
-                }
-            ];
+            // If no cart data found, return empty array
+            console.log('No cart data found - cart is empty');
+            return [];
         } catch (error) {
             console.error('Error loading cart:', error);
             return [];
@@ -148,23 +138,18 @@ class MilitaryCheckout {
         // Calculate subtotal
         this.subtotal = this.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         
-        // Apply discount if promo code is active
-        let discountedSubtotal = this.subtotal;
-        if (this.appliedPromo) {
-            if (this.appliedPromo.type === 'percentage') {
-                this.discount = (this.subtotal * this.appliedPromo.discount) / 100;
-            } else if (this.appliedPromo.type === 'fixed') {
-                this.discount = Math.min(this.appliedPromo.discount, this.subtotal);
-            }
-            discountedSubtotal = this.subtotal - this.discount;
-        }
+        // Calculate shipping (free over £50, otherwise £4.99)
+        this.shipping = this.subtotal >= 50 ? 0 : 4.99;
         
-        // Calculate tax (20% VAT on subtotal + shipping, minus discount)
-        const taxableAmount = discountedSubtotal + this.shipping;
+        // No discount calculation here - handled by backend API
+        this.discount = 0;
+        
+        // Calculate tax (20% VAT on subtotal + shipping)
+        const taxableAmount = this.subtotal + this.shipping;
         this.tax = taxableAmount * 0.2;
         
         // Calculate total
-        this.total = discountedSubtotal + this.shipping + this.tax;
+        this.total = this.subtotal + this.shipping + this.tax;
         
         // Ensure minimum total
         this.total = Math.max(this.total, 0.50); // Minimum 50p
@@ -352,38 +337,91 @@ class MilitaryCheckout {
         }
     }
     
-    async createPaymentIntent() {
+    async createCheckoutSession() {
         try {
             const shippingAddress = this.getShippingAddress();
-            const response = await fetch('/api/create-payment-intent', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
+            const billingAddress = this.getBillingAddress(); // We'll add this method
+            const email = document.getElementById('email')?.value;
+            
+            if (!email) {
+                throw new Error('Email address is required');
+            }
+            
+            // Format items for the real API (uses variantId instead of id)
+            const formattedItems = this.cart.map(item => ({
+                variantId: item.variantId || item.id, // Use variantId if available, fallback to id
+                quantity: item.quantity,
+                price: item.price
+            }));
+            
+            // Prepare headers
+            const headers = {
+                'Content-Type': 'application/json'
+            };
+            
+            // Add authentication if user is logged in (check if supabase is available)
+            if (typeof window !== 'undefined' && window.supabase) {
+                try {
+                    const { data: { session } } = await window.supabase.auth.getSession();
+                    if (session?.access_token) {
+                        headers['Authorization'] = `Bearer ${session.access_token}`;
+                    }
+                } catch (error) {
+                    console.log('No authentication available, proceeding as guest');
+                }
+            }
+            
+            const orderData = {
+                items: formattedItems,
+                shippingAddress: {
+                    firstName: shippingAddress.firstName,
+                    lastName: shippingAddress.lastName,
+                    email: email,
+                    phone: shippingAddress.phone || '07000000000', // Provide default if empty
+                    address1: shippingAddress.address1,
+                    address2: shippingAddress.address2 || null,
+                    city: shippingAddress.city,
+                    postcode: shippingAddress.postcode,
+                    country: shippingAddress.country
                 },
-                body: JSON.stringify({
-                    items: this.cart,
-                    amount: Math.round(this.total * 100), // Convert to pence
-                    currency: 'gbp',
-                    shippingAddress: {
-                        ...shippingAddress,
-                        email: document.getElementById('email')?.value || 'customer@example.com'
-                    },
-                    deliveryOption: this.getSelectedShipping(),
-                    promoCode: this.appliedPromo?.code
-                })
+                billingAddress: {
+                    firstName: billingAddress.firstName || shippingAddress.firstName,
+                    lastName: billingAddress.lastName || shippingAddress.lastName,
+                    address1: billingAddress.address1 || shippingAddress.address1,
+                    address2: billingAddress.address2 || shippingAddress.address2 || null,
+                    city: billingAddress.city || shippingAddress.city,
+                    postcode: billingAddress.postcode || shippingAddress.postcode,
+                    country: billingAddress.country || shippingAddress.country
+                },
+                customerNotes: this.getCustomerNotes() || null
+            };
+            
+            console.log('Creating checkout session with real API:', orderData);
+            
+            const response = await fetch('/api/checkout', {
+                method: 'POST',
+                headers,
+                body: JSON.stringify(orderData)
             });
             
             const data = await response.json();
             
             if (!response.ok) {
-                throw new Error(data.error || 'Failed to create payment intent');
+                throw new Error(data.error || `Checkout failed: ${response.status}`);
             }
             
-            this.clientSecret = data.clientSecret;
-            console.log('Payment intent created:', data.paymentIntentId);
+            // Store checkout session info
+            this.checkoutSession = {
+                sessionId: data.sessionId,
+                url: data.url,
+                orderNumber: data.orderNumber
+            };
+            
+            console.log('Checkout session created:', data.orderNumber);
+            return data;
             
         } catch (error) {
-            console.error('Error creating payment intent:', error);
+            console.error('Error creating checkout session:', error);
             throw error;
         }
     }
@@ -474,9 +512,19 @@ class MilitaryCheckout {
             address2: document.getElementById('address2')?.value || '',
             city: document.getElementById('city')?.value || '',
             postcode: document.getElementById('postcode')?.value || '',
-            country: document.getElementById('country')?.value || 'GB',
+            country: document.getElementById('country')?.value || 'United Kingdom',
             phone: document.getElementById('phone')?.value || ''
         };
+    }
+    
+    getBillingAddress() {
+        // For now, use same as shipping address
+        // In a full implementation, you'd have separate billing address fields
+        return this.getShippingAddress();
+    }
+    
+    getCustomerNotes() {
+        return document.getElementById('customerNotes')?.value || '';
     }
     
     getSelectedShipping() {
@@ -500,22 +548,12 @@ class MilitaryCheckout {
     }
     
     handleShippingChange(event) {
-        const shippingRates = {
-            'standard': 4.99,
-            'express': 8.99,
-            'premium': 12.99
-        };
+        // Note: Shipping calculation is handled by the backend API
+        // This is just for display purposes - final calculation done server-side
+        console.log('Shipping method changed to:', event.target.value);
         
-        const selectedMethod = event.target.value;
-        this.shipping = shippingRates[selectedMethod] || 4.99;
-        
-        // Update totals and summary
+        // Update display only - real calculation will be done by API
         this.updateOrderSummary();
-        
-        // If payment intent exists, update it with new amount
-        if (this.clientSecret) {
-            this.updatePaymentIntent();
-        }
     }
     
     async updatePaymentIntent() {
@@ -588,16 +626,12 @@ class MilitaryCheckout {
             
             this.showLoading(true);
             
-            // Ensure payment intent exists
-            if (!this.clientSecret) {
-                await this.createPaymentIntent();
-            }
+            // Create checkout session using the real API
+            const checkoutData = await this.createCheckoutSession();
             
-            const shippingAddress = this.getShippingAddress();
-            
-            // Store order data for success page
+            // Store order information for potential success page use
             const orderData = {
-                orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
+                orderNumber: checkoutData.orderNumber,
                 orderDate: new Date().toLocaleDateString('en-GB'),
                 customerEmail: document.getElementById('email').value,
                 deliveryMethod: this.getSelectedShipping(),
@@ -608,114 +642,30 @@ class MilitaryCheckout {
                 discount: this.discount.toFixed(2),
                 total: this.total.toFixed(2),
                 appliedPromo: this.appliedPromo,
-                shippingAddress: shippingAddress,
+                shippingAddress: this.getShippingAddress(),
                 estimatedDelivery: this.getEstimatedDelivery()
             };
             
-            // Store for success page
+            // Store for potential success page use
             localStorage.setItem('orderConfirmation', JSON.stringify(orderData));
             
-            // Confirm payment
-            const {error} = await this.stripe.confirmPayment({
-                elements: this.elements,
-                confirmParams: {
-                    return_url: `${window.location.origin}/success.html`,
-                    payment_method_data: {
-                        billing_details: {
-                            name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-                            email: document.getElementById('email').value,
-                            phone: shippingAddress.phone,
-                            address: {
-                                line1: shippingAddress.address1,
-                                line2: shippingAddress.address2,
-                                city: shippingAddress.city,
-                                postal_code: shippingAddress.postcode,
-                                country: shippingAddress.country,
-                                state: shippingAddress.city // Required for some countries
-                            }
-                        }
-                    }
-                },
-                redirect: 'if_required'
-            });
+            console.log('Redirecting to Stripe Checkout:', checkoutData.url);
             
-            if (error) {
-                console.error('Payment confirmation error:', error);
-                this.showError(error.message);
-            } else {
-                console.log('Payment confirmed successfully');
-                // Clear cart and redirect to success page
-                this.clearCart();
-                window.location.href = '/success.html';
-            }
+            // Redirect to Stripe Checkout
+            window.location.href = checkoutData.url;
             
         } catch (error) {
-            console.error('Form submission error:', error);
-            this.showError('Payment failed. Please try again.');
+            console.error('Checkout submission error:', error);
+            this.showError(error.message || 'Checkout failed. Please try again.');
         } finally {
             this.showLoading(false);
         }
     }
     
+    // Promo codes are handled by the Stripe Checkout page
+    // This method is kept for compatibility but does nothing
     async applyPromoCode() {
-        const codeInput = document.getElementById('promoCode');
-        const messageElement = document.getElementById('promo-message');
-        
-        if (!codeInput || !messageElement) return;
-        
-        const code = codeInput.value.trim().toUpperCase();
-        if (!code) {
-            this.showPromoMessage('Please enter a promo code', 'error');
-            return;
-        }
-        
-        try {
-            // Validate promo code with API
-            const response = await fetch('/api/validate-promo', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    code: code,
-                    subtotal: this.subtotal
-                })
-            });
-            
-            const data = await response.json();
-            
-            if (response.ok && data.valid) {
-                this.appliedPromo = {
-                    code: code,
-                    discount: data.discount,
-                    type: data.type,
-                    description: data.description
-                };
-                
-                this.updateOrderSummary();
-                this.showPromoMessage(`Promo applied: ${data.description}`, 'success');
-                
-                // Update payment intent if exists
-                if (this.clientSecret) {
-                    this.updatePaymentIntent();
-                }
-                
-            } else {
-                this.showPromoMessage(data.error || 'Invalid promo code', 'error');
-            }
-            
-        } catch (error) {
-            console.error('Promo validation error:', error);
-            this.showPromoMessage('Failed to validate promo code', 'error');
-        }
-    }
-    
-    showPromoMessage(message, type) {
-        const messageElement = document.getElementById('promo-message');
-        if (messageElement) {
-            messageElement.textContent = message;
-            messageElement.className = `promo-message ${type}`;
-        }
+        console.log('Promo codes are handled on the Stripe Checkout page');
     }
     
     showError(message) {
@@ -745,7 +695,16 @@ class MilitaryCheckout {
     
     clearCart() {
         this.cart = [];
-        localStorage.removeItem('militaryTees_cart');
+        // Clear using the same key as the main site
+        localStorage.removeItem('military-tees-cart');
+        
+        // Also trigger a storage event to notify other parts of the site
+        window.dispatchEvent(new StorageEvent('storage', {
+            key: 'military-tees-cart',
+            oldValue: null,
+            newValue: null,
+            storageArea: localStorage
+        }));
     }
 }
 
@@ -805,10 +764,7 @@ MilitaryCheckout.prototype.goToStep = function(step) {
         el.classList.toggle('completed', stepNumber < step);
     });
     
-    // Setup payment element when reaching step 3
-    if (step === 3 && !this.paymentElement) {
-        this.setupPaymentElement();
-    }
+    // No payment element needed - using Stripe Checkout redirect
     
     this.currentStep = step;
     

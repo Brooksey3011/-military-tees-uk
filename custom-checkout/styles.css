@@ -242,47 +242,81 @@ body {
     min-height: 1.2rem;
 }
 
-/* Express Checkout */
-.express-checkout-section {
+/* Checkout Info Section */
+.checkout-info-section {
     margin-bottom: 2rem;
+    text-align: center;
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
 }
 
-.express-checkout-section h3 {
-    font-family: 'Staatliches', sans-serif;
-    color: var(--military-green);
-    font-size: 1.3rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    margin-bottom: 1rem;
-}
-
-#express-checkout-element {
-    margin-bottom: 1rem;
-}
-
-.divider {
+.security-badges-checkout {
     display: flex;
-    align-items: center;
-    margin: 1.5rem 0;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.security-badge {
+    background: var(--military-green);
+    color: white;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.checkout-description {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    margin: 0;
+    line-height: 1.6;
+}
+
+/* Payment Info */
+.payment-info {
+    padding: 1.5rem;
+    background: #f8f9fa;
+    border: 1px solid var(--border);
     text-align: center;
 }
 
-.divider::before,
-.divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
+.payment-methods-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.5rem 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
 }
 
-.divider span {
-    padding: 0 1rem;
-    color: var(--text-muted);
-    font-weight: 500;
+.payment-methods-list li {
+    padding: 0.75rem;
+    background: white;
+    border: 1px solid var(--border);
     font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+    font-weight: 500;
+}
+
+.security-note {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: #e8f5e8;
+    border: 1px solid #c3e6c3;
+    color: var(--military-green);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.security-icon {
+    font-size: 1.2rem;
 }
 
 /* Checkboxes and Radio Buttons */
