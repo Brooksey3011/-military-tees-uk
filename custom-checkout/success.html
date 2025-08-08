@@ -211,14 +211,32 @@
             if (orderInfo) {
                 try {
                     const order = JSON.parse(orderInfo);
-                    document.getElementById('order-number').textContent = order.orderNumber;
-                    document.getElementById('order-date').textContent = order.orderDate;
-                    document.getElementById('order-total').textContent = '£' + order.total;
-                    document.getElementById('delivery-method').textContent = order.deliveryMethod;
-                    document.getElementById('estimated-delivery').textContent = order.estimatedDelivery;
-                    document.getElementById('customer-email').textContent = order.customerEmail;
                     
-                    // Clear the stored order info
+                    // Basic order info
+                    document.getElementById('order-number').textContent = order.orderNumber || 'MTU-' + Date.now().toString().slice(-6);
+                    document.getElementById('order-date').textContent = order.orderDate || new Date().toLocaleDateString('en-GB');
+                    document.getElementById('order-total').textContent = '£' + (order.total || '0.00');
+                    document.getElementById('customer-email').textContent = order.customerEmail || 'your email address';
+                    
+                    // Delivery information
+                    const deliveryNames = {
+                        'standard': 'Standard Delivery (3-5 business days)',
+                        'express': 'Express Delivery (1 business day)',
+                        'premium': 'Premium Delivery (1-2 business days)'
+                    };
+                    document.getElementById('delivery-method').textContent = deliveryNames[order.deliveryMethod] || 'Standard Delivery';
+                    document.getElementById('estimated-delivery').textContent = order.estimatedDelivery || calculateEstimatedDelivery('standard');
+                    
+                    // Add detailed order breakdown if available
+                    if (order.items && order.items.length > 0) {
+                        displayOrderItems(order);
+                    }
+                    
+                    if (order.shippingAddress) {
+                        displayShippingAddress(order.shippingAddress);
+                    }
+                    
+                    // Clear the stored order info after displaying
                     localStorage.removeItem('orderConfirmation');
                 } catch (error) {
                     console.error('Error parsing order info:', error);
@@ -227,6 +245,89 @@
             } else {
                 setDefaultOrderInfo();
             }
+        }
+        
+        function displayOrderItems(order) {
+            const orderDetailsDiv = document.getElementById('order-details');
+            if (!orderDetailsDiv) return;
+            
+            // Create items section
+            const itemsHTML = `
+                <div class="order-items-section" style="margin-top: 2rem; padding: 1.5rem; background: #f8f9fa; border: 1px solid var(--border);">
+                    <h3 style="color: var(--military-green); margin-bottom: 1rem; font-family: 'Staatliches', sans-serif; text-transform: uppercase; letter-spacing: 1px;">Order Items</h3>
+                    <div class="items-list">
+                        ${order.items.map(item => `
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #ddd;">
+                                <div>
+                                    <div style="font-weight: 600; color: var(--text);">${item.name}</div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">
+                                        ${item.size ? `Size: ${item.size}` : ''} 
+                                        ${item.size && item.color ? ' • ' : ''}
+                                        ${item.color ? `Color: ${item.color}` : ''}
+                                    </div>
+                                    <div style="font-size: 0.85rem; color: var(--text-muted);">Quantity: ${item.quantity}</div>
+                                </div>
+                                <div style="font-weight: 700; color: var(--military-green);">£${(item.price * item.quantity).toFixed(2)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    
+                    <div style="margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border);">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Subtotal:</span>
+                            <span>£${order.subtotal}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>Shipping:</span>
+                            <span>£${order.shipping}</span>
+                        </div>
+                        ${order.discount && parseFloat(order.discount) > 0 ? `
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; color: #28a745;">
+                            <span>Discount ${order.appliedPromo ? `(${order.appliedPromo.code})` : ''}:</span>
+                            <span>-£${order.discount}</span>
+                        </div>
+                        ` : ''}
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span>VAT (20%):</span>
+                            <span>£${order.tax}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 1.1rem; color: var(--military-green); border-top: 2px solid var(--military-green); padding-top: 0.5rem; margin-top: 0.5rem;">
+                            <span>Total:</span>
+                            <span>£${order.total}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            orderDetailsDiv.insertAdjacentHTML('beforeend', itemsHTML);
+        }
+        
+        function displayShippingAddress(address) {
+            const orderDetailsDiv = document.getElementById('order-details');
+            if (!orderDetailsDiv) return;
+            
+            const addressHTML = `
+                <div class="shipping-address-section" style="margin-top: 2rem; padding: 1.5rem; background: #e8f5e8; border: 1px solid #c3e6c3;">
+                    <h3 style="color: var(--military-green); margin-bottom: 1rem; font-family: 'Staatliches', sans-serif; text-transform: uppercase; letter-spacing: 1px;">Shipping Address</h3>
+                    <div style="line-height: 1.6;">
+                        <div style="font-weight: 600;">${address.firstName} ${address.lastName}</div>
+                        <div>${address.address1}</div>
+                        ${address.address2 ? `<div>${address.address2}</div>` : ''}
+                        <div>${address.city}, ${address.postcode}</div>
+                        <div style="text-transform: uppercase;">${address.country || 'GB'}</div>
+                        ${address.phone ? `<div style="margin-top: 0.5rem; color: var(--text-muted);">Phone: ${address.phone}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            
+            orderDetailsDiv.insertAdjacentHTML('beforeend', addressHTML);
+        }
+        
+        function calculateEstimatedDelivery(method) {
+            const days = method === 'express' ? 1 : method === 'premium' ? 2 : 5;
+            const date = new Date();
+            date.setDate(date.getDate() + days);
+            return date.toLocaleDateString('en-GB');
         }
         
         function setDefaultOrderInfo() {

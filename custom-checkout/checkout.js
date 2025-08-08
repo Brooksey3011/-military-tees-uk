@@ -50,59 +50,62 @@ class MilitaryCheckout {
     }
     
     async initializeStripe() {
-        // Get publishable key from environment or API
-        const publishableKey = await this.getStripePublishableKey();
-        
-        if (!publishableKey) {
-            throw new Error('Stripe publishable key not found');
-        }
-        
-        this.stripe = Stripe(publishableKey);
-        
-        // Initialize Elements with custom styling
-        this.elements = this.stripe.elements({
-            appearance: {
-                theme: 'stripe',
-                variables: {
-                    colorPrimary: '#4a5d23',
-                    colorBackground: '#ffffff',
-                    colorText: '#1a1a1a',
-                    colorDanger: '#dc3545',
-                    fontFamily: 'Inter, system-ui, sans-serif',
-                    spacingUnit: '4px',
-                    borderRadius: '0px',
-                },
-                rules: {
-                    '.Input': {
-                        border: '2px solid #e1e5e9',
-                        padding: '12px',
-                    },
-                    '.Input:focus': {
-                        border: '2px solid #4a5d23',
-                        boxShadow: '0 0 0 3px rgba(74, 93, 35, 0.1)',
-                    },
-                    '.Label': {
-                        fontWeight: '600',
-                        textTransform: 'uppercase',
-                        letterSpacing: '0.5px',
-                        fontSize: '0.9rem',
-                        marginBottom: '0.5rem',
-                    }
-                }
+        try {
+            // Get publishable key from environment or API
+            const publishableKey = await this.getStripePublishableKey();
+            
+            if (!publishableKey || !publishableKey.startsWith('pk_')) {
+                throw new Error('Invalid Stripe publishable key format');
             }
-        });
+            
+            // Initialize Stripe
+            if (typeof Stripe === 'undefined') {
+                throw new Error('Stripe.js library not loaded. Please ensure the Stripe script tag is included.');
+            }
+            
+            this.stripe = Stripe(publishableKey);
+            
+            // Wait for Stripe to be fully initialized
+            await new Promise(resolve => {
+                if (this.stripe) {
+                    resolve();
+                } else {
+                    setTimeout(resolve, 100);
+                }
+            });
+            
+            console.log('Stripe initialized successfully');
+            
+        } catch (error) {
+            console.error('Stripe initialization error:', error);
+            throw error;
+        }
     }
     
     async getStripePublishableKey() {
         try {
             // Try to get from environment variable or API endpoint
             const response = await fetch('/api/config/stripe');
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}`);
+            }
             const data = await response.json();
+            
+            if (!data.publishableKey) {
+                throw new Error('No publishable key in response');
+            }
+            
             return data.publishableKey;
         } catch (error) {
-            // Fallback - in production, this should be set via environment
-            console.warn('Using fallback Stripe key - ensure proper configuration in production');
-            return 'pk_test_your_publishable_key_here'; // Replace with actual key
+            console.error('Error getting Stripe key:', error);
+            
+            // Try to get from window/environment as fallback
+            if (typeof window !== 'undefined' && window.STRIPE_PUBLISHABLE_KEY) {
+                return window.STRIPE_PUBLISHABLE_KEY;
+            }
+            
+            // Final fallback - this needs to be replaced with your actual key
+            throw new Error('Stripe publishable key not found. Please configure NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY in your environment.');
         }
     }
     
@@ -387,6 +390,49 @@ class MilitaryCheckout {
     
     async setupPaymentElement() {
         try {
+            console.log('Setting up payment element...');
+            
+            // Ensure Stripe and elements are initialized
+            if (!this.stripe) {
+                await this.initializeStripe();
+            }
+            
+            // Initialize Elements if not already done
+            if (!this.elements) {
+                this.elements = this.stripe.elements({
+                    appearance: {
+                        theme: 'stripe',
+                        variables: {
+                            colorPrimary: '#4a5d23',
+                            colorBackground: '#ffffff',
+                            colorText: '#1a1a1a',
+                            colorDanger: '#dc3545',
+                            fontFamily: 'Inter, system-ui, sans-serif',
+                            spacingUnit: '4px',
+                            borderRadius: '0px',
+                        },
+                        rules: {
+                            '.Input': {
+                                border: '2px solid #e1e5e9',
+                                padding: '12px',
+                            },
+                            '.Input:focus': {
+                                border: '2px solid #4a5d23',
+                                boxShadow: '0 0 0 3px rgba(74, 93, 35, 0.1)',
+                            },
+                            '.Label': {
+                                fontWeight: '600',
+                                textTransform: 'uppercase',
+                                letterSpacing: '0.5px',
+                                fontSize: '0.9rem',
+                                marginBottom: '0.5rem',
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // Create payment intent if not exists
             if (!this.clientSecret) {
                 await this.createPaymentIntent();
             }
@@ -411,7 +457,8 @@ class MilitaryCheckout {
             });
             
             // Mount payment element
-            this.paymentElement.mount('#payment-element');
+            await this.paymentElement.mount('#payment-element');
+            console.log('Payment element mounted successfully');
             
         } catch (error) {
             console.error('Error setting up payment element:', error);
@@ -435,6 +482,21 @@ class MilitaryCheckout {
     getSelectedShipping() {
         const selected = document.querySelector('input[name=\"shipping\"]:checked');
         return selected ? selected.value : 'standard';
+    }
+    
+    getEstimatedDelivery() {
+        const deliveryDays = {
+            'standard': 5,
+            'express': 1,
+            'premium': 2
+        };
+        
+        const selectedMethod = this.getSelectedShipping();
+        const days = deliveryDays[selectedMethod] || 5;
+        const deliveryDate = new Date();
+        deliveryDate.setDate(deliveryDate.getDate() + days);
+        
+        return deliveryDate.toLocaleDateString('en-GB');
     }
     
     handleShippingChange(event) {
@@ -533,11 +595,31 @@ class MilitaryCheckout {
             
             const shippingAddress = this.getShippingAddress();
             
+            // Store order data for success page
+            const orderData = {
+                orderNumber: `MTU-${Date.now().toString().slice(-6)}`,
+                orderDate: new Date().toLocaleDateString('en-GB'),
+                customerEmail: document.getElementById('email').value,
+                deliveryMethod: this.getSelectedShipping(),
+                items: this.cart,
+                subtotal: this.subtotal.toFixed(2),
+                shipping: this.shipping.toFixed(2),
+                tax: this.tax.toFixed(2),
+                discount: this.discount.toFixed(2),
+                total: this.total.toFixed(2),
+                appliedPromo: this.appliedPromo,
+                shippingAddress: shippingAddress,
+                estimatedDelivery: this.getEstimatedDelivery()
+            };
+            
+            // Store for success page
+            localStorage.setItem('orderConfirmation', JSON.stringify(orderData));
+            
             // Confirm payment
             const {error} = await this.stripe.confirmPayment({
                 elements: this.elements,
                 confirmParams: {
-                    return_url: `${window.location.origin}/checkout/success`,
+                    return_url: `${window.location.origin}/success.html`,
                     payment_method_data: {
                         billing_details: {
                             name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
@@ -564,7 +646,7 @@ class MilitaryCheckout {
                 console.log('Payment confirmed successfully');
                 // Clear cart and redirect to success page
                 this.clearCart();
-                window.location.href = '/checkout/success';
+                window.location.href = '/success.html';
             }
             
         } catch (error) {
