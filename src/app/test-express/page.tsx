@@ -5,6 +5,7 @@ import { useSimpleCart } from '@/hooks/use-simple-cart'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { StripeExpressCheckout, PaymentMethodDetector } from '@/components/checkout/stripe-express-element'
+import { StripeDebugInfo } from '@/components/debug/stripe-debug'
 import { Smartphone, Zap, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
@@ -158,6 +159,9 @@ export default function TestExpressPage() {
                 <PaymentMethodDetector />
               </CardContent>
             </Card>
+
+            {/* Stripe Debug Info */}
+            <StripeDebugInfo />
           </div>
 
           {/* Right Column - Express Checkout Demo */}
