@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useEffect } from 'react'
-import { SmartPaymentCheckout } from '@/components/checkout/smart-payment-checkout'
+import React from 'react'
 import { useSimpleCart } from '@/hooks/use-simple-cart'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import Link from 'next/link'
 
 export default function TestExpressPage() {
   const { items, addItem, clearCart } = useSimpleCart()
@@ -25,24 +25,12 @@ export default function TestExpressPage() {
     addItem(testProduct)
   }
 
-  const testShippingAddress = {
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'test@example.com',
-    phone: '01234567890',
-    address1: '123 Test Street',
-    address2: '',
-    city: 'London',
-    postcode: 'SW1A 1AA',
-    country: 'GB'
-  }
-
   return (
     <div className="min-h-screen bg-background p-8">
       <div className="max-w-2xl mx-auto space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle>Express Checkout Test</CardTitle>
+            <CardTitle>Checkout Test</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex gap-2">
@@ -55,62 +43,33 @@ export default function TestExpressPage() {
             </div>
             <p>Cart items: {items.length}</p>
             {items.length > 0 && (
-              <div className="text-sm">
+              <div className="text-sm space-y-2">
                 {items.map(item => (
-                  <div key={item.id}>
+                  <div key={item.id} className="p-2 border rounded">
                     {item.name} - £{item.price} x {item.quantity}
                   </div>
                 ))}
+                <Link href="/checkout">
+                  <Button className="w-full bg-green-600 hover:bg-green-700">
+                    Go to Checkout
+                  </Button>
+                </Link>
               </div>
             )}
           </CardContent>
         </Card>
 
-        {items.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle>Smart Payment Checkout Component</CardTitle>
-              <p className="text-sm text-muted-foreground">
-                The system will automatically detect your device capabilities and show appropriate payment methods.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <SmartPaymentCheckout
-                items={items.map(item => ({
-                  variantId: item.variantId || item.id,
-                  quantity: item.quantity,
-                  price: item.price
-                }))}
-                shippingAddress={testShippingAddress}
-                customerNotes="Test order for Smart Payment Checkout verification"
-                onPaymentSuccess={(result) => {
-                  console.log('Payment success:', result)
-                  alert('Payment successful! Check console for details.')
-                }}
-                onPaymentError={(error) => {
-                  console.error('Payment error:', error)
-                  // Don't show alert for initialization errors, just log them
-                  if (!error.includes('initialization')) {
-                    alert(`Payment error: ${error}`)
-                  }
-                }}
-              />
-            </CardContent>
-          </Card>
-        )}
-
         <Card>
           <CardHeader>
-            <CardTitle>Testing Instructions</CardTitle>
+            <CardTitle>Simplified Checkout</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2 text-sm">
-            <p><strong>Device Detection:</strong> The component automatically detects your device and browser capabilities</p>
-            <p><strong>Apple Pay:</strong> Available on Safari (iOS/macOS) and Chrome (macOS only)</p>
-            <p><strong>Google Pay:</strong> Available on Chrome, Edge, and Android browsers</p>
-            <p><strong>Card Payments:</strong> Universal fallback always available</p>
-            <p><strong>Payment Restrictions:</strong> Klarna, Link, and other unwanted methods are blocked</p>
+            <p><strong>Single Checkout:</strong> One streamlined checkout experience</p>
+            <p><strong>ThruDark-Style:</strong> Simple, effective, conversion-focused design</p>
+            <p><strong>Stripe Integration:</strong> Secure payment processing with all methods</p>
+            <p><strong>Mobile Optimized:</strong> Works perfectly on all devices</p>
             <p className="text-muted-foreground">
-              The system will show personalized recommendations based on your current setup.
+              Clean, simple checkout that just works.
             </p>
           </CardContent>
         </Card>

@@ -1,7 +1,7 @@
 "use client"
 
 import { Button } from '@/components/ui/button'
-import { CreditCard } from 'lucide-react'
+import { Lock } from 'lucide-react'
 import { useSimpleCart } from '@/hooks/use-simple-cart'
 import { formatPrice } from '@/lib/utils'
 import { cn } from '@/lib/utils'
@@ -16,72 +16,60 @@ interface CheckoutButtonProps {
 
 export function CheckoutButton({
   variant = 'military',
-  size = 'default',
+  size = 'lg',
   className,
-  fullWidth = false,
+  fullWidth = true,
   customerEmail
 }: CheckoutButtonProps) {
   const { items, totalPrice } = useSimpleCart()
 
   const handleCheckout = () => {
     if (items.length === 0) return
-
-    // Redirect to express checkout page for better UX
-    window.location.href = '/checkout/express'
+    window.location.href = '/checkout'
   }
 
   const isDisabled = items.length === 0 || totalPrice < 0.5
 
+  // Calculate totals for display
+  const subtotal = totalPrice
+  const shipping = subtotal >= 50 ? 0 : 4.99
+  const tax = Math.round((subtotal + shipping) * 0.2 * 100) / 100
+  const total = subtotal + shipping + tax
+
   return (
-    <div className="space-y-3">
-      {/* Enhanced Checkout Button */}
+    <div className="space-y-4">
+      {/* Single Checkout Button */}
       <Button
-        onClick={() => window.location.href = '/checkout/enhanced'}
+        onClick={handleCheckout}
         disabled={isDisabled}
-        variant={variant}
-        size="lg"
+        size={size}
         className={cn(
-          "relative transition-all duration-200 bg-green-700 hover:bg-green-800 border-0",
+          "bg-green-600 hover:bg-green-700 text-white font-semibold tracking-wide uppercase h-12",
           fullWidth && "w-full",
           className
         )}
       >
         <div className="flex items-center gap-2">
-          <CreditCard className="h-5 w-5" />
-          <span className="font-semibold font-display tracking-wide uppercase">
-            ✨ Enhanced Checkout - {formatPrice(totalPrice)}
+          <Lock className="h-5 w-5" />
+          <span>
+            Secure Checkout • {formatPrice(total)}
           </span>
         </div>
       </Button>
 
-      {/* Alternative Checkout Options */}
-      <div className="flex gap-2">
-        <Button
-          onClick={handleCheckout}
-          disabled={isDisabled}
-          variant="outline"
-          size="sm"
-          className={cn(
-            "flex-1 rounded-none border-2",
-            "text-xs font-medium"
-          )}
-        >
-          Express Checkout
-        </Button>
-        <Button
-          onClick={() => window.location.href = '/checkout'}
-          disabled={isDisabled}
-          variant="outline"
-          size="sm"
-          className={cn(
-            "flex-1 rounded-none border-2",
-            "text-xs font-medium"
-          )}
-        >
-          Standard Checkout
-        </Button>
+      {/* Quick Info */}
+      <div className="text-center space-y-1">
+        {shipping === 0 && subtotal >= 50 && (
+          <p className="text-sm text-green-600 font-medium">
+            🚚 Free shipping applied!
+          </p>
+        )}
+        <p className="text-xs text-muted-foreground">
+          Secure payment by Stripe • All payment methods accepted
+        </p>
       </div>
 
+      {/* Error states */}
       {items.length === 0 && (
         <p className="text-xs text-muted-foreground text-center">
           Add items to cart to checkout
