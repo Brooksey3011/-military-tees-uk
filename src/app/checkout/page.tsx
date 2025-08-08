@@ -23,6 +23,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import Image from "next/image"
+import { StripeExpressCheckout, PaymentMethodDetector } from "@/components/checkout/stripe-express-element"
 
 // Force dynamic rendering for this auth-dependent page
 export const dynamic = 'force-dynamic'
@@ -236,6 +237,46 @@ export default function CheckoutPage() {
                   showRetry={false}
                 />
               )}
+
+              {/* Express Checkout */}
+              <StripeExpressCheckout
+                items={items.map(item => ({
+                  variantId: item.variantId,
+                  quantity: item.quantity
+                }))}
+                shippingAddress={formData.firstName && formData.address1 ? {
+                  firstName: formData.firstName,
+                  lastName: formData.lastName,
+                  email: formData.email,
+                  phone: formData.phone,
+                  address1: formData.address1,
+                  address2: formData.address2,
+                  city: formData.city,
+                  postcode: formData.postcode,
+                  country: formData.country
+                } : undefined}
+                totalAmount={total * 100} // Convert to pence
+                onSuccess={(result) => {
+                  console.log('Express checkout success:', result)
+                  // The component handles the redirect to Stripe
+                }}
+                onError={(error) => {
+                  console.error('Express checkout error:', error)
+                  setError(`Express checkout failed: ${error}`)
+                }}
+              />
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-border"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-4 text-muted-foreground font-medium">
+                    Or fill in your details below
+                  </span>
+                </div>
+              </div>
 
               {/* Contact Information */}
               <Card className="border border-border rounded-lg">
@@ -593,8 +634,16 @@ export default function CheckoutPage() {
                     <p>✓ Visa & Mastercard</p>
                     <p>✓ American Express</p>
                     <p>✓ Apple Pay & Google Pay</p>
-                    <p>✓ PayPal & Klarna</p>
+                    <p>✓ Link & Digital Wallets</p>
                   </div>
+                </CardContent>
+              </Card>
+
+              {/* Device Detection Info */}
+              <Card className="border border-green-200 rounded-lg">
+                <CardContent className="pt-6 space-y-3">
+                  <h3 className="text-sm font-semibold text-green-800">Your Device Payment Options</h3>
+                  <PaymentMethodDetector />
                 </CardContent>
               </Card>
 
