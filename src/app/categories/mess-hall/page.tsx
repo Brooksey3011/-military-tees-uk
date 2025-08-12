@@ -1,8 +1,7 @@
 import { Metadata } from "next"
 import { Utensils } from "lucide-react"
 import { Layout } from "@/components/layout"
-import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
-import { ClientOnly } from "@/components/ui/client-only"
+import { CategoryProductsServer } from "@/components/pages/category-products-server"
 
 export const metadata: Metadata = {
   title: "Mess Hall - Military Dining & Camaraderie | Military Tees UK",
@@ -37,18 +36,10 @@ export default function MessHallPage() {
         </section>
 
         <section className="container mx-auto px-4 py-16">
-          <ClientOnly fallback={
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {[...Array(8)].map((_, i) => (
-                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
-              ))}
-            </div>
-          }>
-            <CategoryProductsSafe 
-              categorySlug="mess-hall"
-              categoryName="Mess Hall"
-            />
-          </ClientOnly>
+          <CategoryProductsServer 
+            categorySlug="mess-hall"
+            categoryName="Mess Hall"
+          />
         </section>
       </div>
     </Layout>
