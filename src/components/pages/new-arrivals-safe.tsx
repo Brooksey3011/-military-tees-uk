@@ -20,7 +20,11 @@ export function NewArrivalsSafe() {
     async function fetchProducts() {
       try {
         setLoading(true)
-        const response = await fetch('/api/products?limit=12&sortBy=created_at&sortOrder=desc')
+        const response = await fetch('/api/products?limit=12', {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
         
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`)
