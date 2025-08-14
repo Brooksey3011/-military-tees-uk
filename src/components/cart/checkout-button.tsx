@@ -25,7 +25,7 @@ export function CheckoutButton({
 
   const handleCheckout = () => {
     if (items.length === 0) return
-    window.location.href = '/checkout'
+    window.location.href = '/checkout/professional'
   }
 
   const isDisabled = items.length === 0 || totalPrice < 0.5

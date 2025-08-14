@@ -1,4 +1,5 @@
 import { Resend } from 'resend'
+import { generateOrderConfirmationHTML } from './email-templates/order-confirmation-professional'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
@@ -48,6 +49,66 @@ export class EmailService {
       
     } catch (error) {
       console.error('❌ Failed to send order confirmation email:', error)
+      throw error
+    }
+  }
+
+  async sendProfessionalOrderConfirmation(data: OrderConfirmationData & {
+    customerName: string
+    shippingMethod: string
+    estimatedDelivery: string
+    shippingAddress: any
+  }): Promise<void> {
+    try {
+      console.log('📧 Preparing professional order confirmation email for:', data.customerEmail)
+
+      // Transform data to match professional template format
+      const orderData = {
+        orderNumber: data.orderNumber,
+        customerName: data.customerName,
+        customerEmail: data.customerEmail,
+        items: data.orderItems.map(item => ({
+          name: item.product_name || 'Military Tees Product',
+          price: item.price_at_purchase,
+          quantity: item.quantity,
+          size: item.size,
+          color: item.color,
+          image: undefined // Would need to be fetched from product data
+        })),
+        subtotal: data.orderItems.reduce((sum, item) => sum + (item.price_at_purchase * item.quantity), 0),
+        shipping: data.totalAmount > 50 ? 0 : 4.99,
+        tax: data.totalAmount * 0.2 / 1.2, // Extract VAT from total
+        total: data.totalAmount,
+        shippingAddress: data.shippingAddress || {
+          firstName: 'Customer',
+          lastName: '',
+          address1: 'Address not provided',
+          city: '',
+          postcode: '',
+          country: 'United Kingdom'
+        },
+        shippingMethod: data.shippingMethod || 'Standard Delivery',
+        estimatedDelivery: data.estimatedDelivery || '3-5 business days'
+      }
+
+      const emailHtml = generateOrderConfirmationHTML(orderData)
+      const emailText = this.generateOrderConfirmationText(data)
+
+      const result = await resend.emails.send({
+        from: process.env.EMAIL_FROM || 'Military Tees UK <orders@militarytees.co.uk>',
+        to: [data.customerEmail],
+        subject: `Order Confirmation - ${data.orderNumber} - Military Tees UK`,
+        html: emailHtml,
+        text: emailText
+      })
+
+      console.log('✅ Professional order confirmation email sent:', result.data?.id)
+      
+      // Send admin notification
+      await this.sendAdminOrderNotification(data)
+      
+    } catch (error) {
+      console.error('❌ Failed to send professional order confirmation email:', error)
       throw error
     }
   }
