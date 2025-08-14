@@ -20,20 +20,37 @@ export function NewArrivalsSafe() {
     async function fetchProducts() {
       try {
         setLoading(true)
-        const response = await fetch('/api/products?limit=12', {
+        const timestamp = Date.now()
+        const response = await fetch(`/api/products?limit=12&t=${timestamp}`, {
           headers: {
             'Content-Type': 'application/json',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
           },
+          cache: 'no-store',
         })
         
         if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`)
+          const errorText = await response.text()
+          console.error('API Error Response:', {
+            status: response.status,
+            statusText: response.statusText,
+            headers: Object.fromEntries(response.headers.entries()),
+            body: errorText
+          })
+          throw new Error(`HTTP error! status: ${response.status} - ${errorText}`)
         }
         
         const data = await response.json()
+        console.log('✅ Successfully fetched products:', data.products?.length || 0)
         setProducts(data.products || [])
       } catch (err) {
         console.error('Error fetching new arrivals:', err)
+        console.error('Full error details:', {
+          message: err instanceof Error ? err.message : 'Unknown error',
+          stack: err instanceof Error ? err.stack : undefined,
+          name: err instanceof Error ? err.name : undefined
+        })
         setError(err instanceof Error ? err.message : 'Failed to load products')
       } finally {
         setLoading(false)
