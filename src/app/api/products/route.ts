@@ -81,14 +81,24 @@ export async function GET(request: NextRequest) {
       query = query.eq('featured', true);
     }
 
-    // Add sorting
-    query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    // Add sorting with error handling
+    try {
+      console.log(`🔄 Applying sorting: ${sortBy} ${sortOrder}`);
+      query = query.order(sortBy, { ascending: sortOrder === 'asc' });
+    } catch (sortError) {
+      console.error('❌ Sorting error:', sortError);
+      // Fallback to default sorting
+      query = query.order('created_at', { ascending: false });
+    }
 
+    console.log('🚀 Executing database query...');
     const { data: products, error, count } = await query;
 
     if (error) {
-      console.error('Database error:', error);
-      return NextResponse.json({ error: 'Failed to fetch products' }, { status: 500 });
+      console.error('❌ Database error details:', error);
+      console.error('❌ Database error message:', error.message);
+      console.error('❌ Database error code:', error.code);
+      return NextResponse.json({ error: 'Failed to fetch products', details: error.message }, { status: 500 });
     }
 
     // Calculate if there are more products
@@ -101,8 +111,13 @@ export async function GET(request: NextRequest) {
       total 
     });
   } catch (error) {
-    console.error('Server error:', error);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    console.error('💥 Server error details:', error);
+    console.error('💥 Server error message:', error instanceof Error ? error.message : 'Unknown error');
+    console.error('💥 Server error stack:', error instanceof Error ? error.stack : 'No stack trace');
+    return NextResponse.json({ 
+      error: 'Internal server error', 
+      details: error instanceof Error ? error.message : 'Unknown error' 
+    }, { status: 500 });
   }
 }
 
