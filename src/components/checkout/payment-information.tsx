@@ -16,9 +16,11 @@ import {
   AlertCircle,
   Smartphone,
   Wallet,
-  Building
+  Building,
+  Zap
 } from "lucide-react"
 import { useSimpleCart } from "@/hooks/use-simple-cart"
+import { StripeExpressCheckout } from "@/components/checkout/stripe-express-element"
 
 interface PaymentMethod {
   id: string
@@ -54,6 +56,7 @@ interface PaymentInformationProps {
   onBack: () => void
   initialData?: Partial<PaymentData>
   shippingAddress?: any
+  customerData?: any
 }
 
 const paymentMethods: PaymentMethod[] = [
@@ -63,27 +66,6 @@ const paymentMethods: PaymentMethod[] = [
     description: 'Visa, Mastercard, Amex - Powered by Stripe',
     icon: <CreditCard className="h-4 w-4" />,
     popular: true
-  },
-  {
-    id: 'apple-pay',
-    name: 'Apple Pay',
-    description: 'Touch ID or Face ID',
-    icon: <Smartphone className="h-4 w-4" />,
-    comingSoon: true
-  },
-  {
-    id: 'google-pay',
-    name: 'Google Pay',
-    description: 'One-touch payments',
-    icon: <Wallet className="h-4 w-4" />,
-    comingSoon: true
-  },
-  {
-    id: 'paypal',
-    name: 'PayPal',
-    description: 'Pay with your PayPal account',
-    icon: <Building className="h-4 w-4" />,
-    comingSoon: true
   }
 ]
 
@@ -91,9 +73,10 @@ export function PaymentInformation({
   onSubmit, 
   onBack, 
   initialData = {},
-  shippingAddress 
+  shippingAddress,
+  customerData 
 }: PaymentInformationProps) {
-  const { totalPrice } = useSimpleCart()
+  const { items, totalPrice } = useSimpleCart()
   const [selectedMethod, setSelectedMethod] = useState(initialData.method || 'stripe-redirect')
   const [paymentData, setPaymentData] = useState<PaymentData>({
     method: selectedMethod,
@@ -208,6 +191,45 @@ export function PaymentInformation({
 
   return (
     <div className="space-y-6">
+      
+      {/* Express Checkout Options */}
+      <StripeExpressCheckout
+        items={items.map(item => ({
+          variantId: item.variantId,
+          quantity: item.quantity
+        }))}
+        totalAmount={finalTotal}
+        shippingAddress={shippingAddress ? {
+          firstName: shippingAddress.firstName,
+          lastName: shippingAddress.lastName,
+          email: customerData?.email || 'customer@example.com',
+          phone: customerData?.phone || '',
+          address1: shippingAddress.address1,
+          address2: shippingAddress.address2,
+          city: shippingAddress.city,
+          postcode: shippingAddress.postcode,
+          country: shippingAddress.country
+        } : undefined}
+        onSuccess={(result) => {
+          console.log('Express checkout success:', result)
+          // Handle successful express checkout
+        }}
+        onError={(error) => {
+          console.error('Express checkout error:', error)
+          // Handle express checkout error
+        }}
+      />
+
+      {/* Divider */}
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <div className="w-full border-t border-border"></div>
+        </div>
+        <div className="relative flex justify-center text-sm">
+          <span className="bg-background px-4 text-muted-foreground">Or pay with card</span>
+        </div>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-6">
         
         {/* Payment Methods */}

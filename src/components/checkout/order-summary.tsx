@@ -4,14 +4,24 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Truck, Shield, CreditCard } from "lucide-react"
 import { useSimpleCart } from "@/hooks/use-simple-cart"
+import { StripeExpressCheckout } from "@/components/checkout/stripe-express-element"
 import Image from "next/image"
 
 interface OrderSummaryProps {
   showItems?: boolean
   compact?: boolean
+  showExpressCheckout?: boolean
+  shippingAddress?: any
+  customerData?: any
 }
 
-export function OrderSummary({ showItems = true, compact = false }: OrderSummaryProps) {
+export function OrderSummary({ 
+  showItems = true, 
+  compact = false, 
+  showExpressCheckout = false,
+  shippingAddress,
+  customerData 
+}: OrderSummaryProps) {
   const { items, totalItems, totalPrice } = useSimpleCart()
   
   const shippingCost = totalPrice > 50 ? 0 : 4.99
@@ -130,6 +140,38 @@ export function OrderSummary({ showItems = true, compact = false }: OrderSummary
               <Truck className="h-4 w-4" />
               <span className="font-medium">Free shipping included!</span>
             </div>
+          </div>
+        )}
+
+        {/* Express Checkout */}
+        {showExpressCheckout && items.length > 0 && (
+          <div className="border-t pt-4">
+            <StripeExpressCheckout
+              items={items.map(item => ({
+                variantId: item.variantId,
+                quantity: item.quantity
+              }))}
+              totalAmount={finalTotal}
+              shippingAddress={shippingAddress ? {
+                firstName: shippingAddress.firstName,
+                lastName: shippingAddress.lastName,
+                email: customerData?.email || 'customer@example.com',
+                phone: customerData?.phone || '',
+                address1: shippingAddress.address1,
+                address2: shippingAddress.address2,
+                city: shippingAddress.city,
+                postcode: shippingAddress.postcode,
+                country: shippingAddress.country
+              } : undefined}
+              onSuccess={(result) => {
+                console.log('Express checkout success:', result)
+                // Handle successful express checkout
+              }}
+              onError={(error) => {
+                console.error('Express checkout error:', error)
+                // Handle express checkout error
+              }}
+            />
           </div>
         )}
 

@@ -210,6 +210,7 @@ export function CheckoutFlow() {
             onBack={handleBack}
             initialData={paymentData || {}}
             shippingAddress={shippingData?.address}
+            customerData={customerData}
           />
         )
 
@@ -268,7 +269,12 @@ export function CheckoutFlow() {
 
             {/* Order Summary Sidebar */}
             <div className="space-y-6">
-              <OrderSummary showItems={true} />
+              <OrderSummary 
+                showItems={true} 
+                showExpressCheckout={currentStep >= 3} // Show express checkout after shipping info is collected
+                shippingAddress={shippingData?.address}
+                customerData={customerData}
+              />
               
               {/* Customer Information Summary */}
               {customerData && (

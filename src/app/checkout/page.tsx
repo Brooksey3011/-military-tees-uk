@@ -598,14 +598,18 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Coming Soon */}
+              {/* Express Checkout Available */}
               <Card className="border border-green-200 rounded-lg">
                 <CardContent className="pt-6 space-y-3">
-                  <h3 className="text-sm font-semibold text-green-800">Express Checkout Coming Soon</h3>
+                  <h3 className="text-sm font-semibold text-green-800">Try Our Professional Checkout</h3>
                   <p className="text-xs text-muted-foreground">
-                    Apple Pay, Google Pay, and Link checkout options will be available here soon.
-                    For now, use the secure checkout form above.
+                    Experience our new professional checkout flow with express payment options including Apple Pay, Google Pay, and more.
                   </p>
+                  <Link href="/checkout/professional">
+                    <Button variant="outline" size="sm" className="w-full">
+                      Use Professional Checkout
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
 
