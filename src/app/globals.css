@@ -136,10 +136,63 @@ input, textarea, select {
   font-family: inherit;
 }
 
-/* Focus styles for accessibility */
+/* Enhanced Focus styles for accessibility */
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 2px;
+}
+
+/* Keyboard navigation styling */
+.keyboard-navigation *:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Skip link styles */
+.sr-only:not(:focus):not(:active) {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: #ffffff;
+    --background: #000000;
+    --foreground: #ffffff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  
+  .animate-marquee {
+    animation: none;
+  }
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: white !important;
+    color: black !important;
+    box-shadow: none !important;
+  }
+  
+  .no-print {
+    display: none !important;
+  }
 }
 
 /* Custom scrollbar */

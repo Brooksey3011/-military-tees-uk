@@ -1,10 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { Star, Heart, Share2, Shield, Truck, RotateCcw } from "lucide-react"
+import { Star, Heart, Share2, Shield, Truck, RotateCcw, Ruler } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AddToCartButton } from "@/components/cart/add-to-cart-wrapper"
+import { ComprehensiveSizeGuide } from "@/components/product/comprehensive-size-guide"
 import { cn, formatPrice } from "@/lib/utils"
 
 interface ProductDetailsClientProps {
@@ -178,9 +179,19 @@ export function ProductDetailsClient({ product }: ProductDetailsClientProps) {
       {/* Size & Color Selection */}
       <div className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-foreground mb-2">
-            Size {selectedSize && `(${selectedSize} selected)`}
-          </label>
+          <div className="flex items-center justify-between mb-2">
+            <label className="text-sm font-medium text-foreground">
+              Size {selectedSize && `(${selectedSize} selected)`}
+            </label>
+            <ComprehensiveSizeGuide
+              trigger={
+                <Button variant="ghost" size="sm" className="text-xs h-auto p-1 text-muted-foreground hover:text-primary">
+                  <Ruler className="h-3 w-3 mr-1" />
+                  Size Guide
+                </Button>
+              }
+            />
+          </div>
           <div className="flex gap-2">
             {availableSizes.map((size) => {
               const hasStock = selectedColor 

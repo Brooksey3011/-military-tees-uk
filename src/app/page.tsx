@@ -6,6 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { PromoBanner } from "@/components/ui/promo-banner"
 import { PaymentOptions } from "@/components/ui/payment-options"
+import { OptimizedImage } from "@/components/ui/optimized-image"
+import { TestimonialsSection } from "@/components/testimonials/testimonials-section"
+import { NewsletterSignup } from "@/components/marketing/newsletter-signup"
+import { SocialProof, InstagramFeed } from "@/components/social/social-integration"
 import { Truck, Award, Users, Check } from "lucide-react"
 
 export const metadata: Metadata = {
@@ -45,9 +49,12 @@ export default function Home() {
         <section className="relative bg-gradient-to-b from-muted/20 to-background py-8 border-b-2 border-border overflow-hidden">
           {/* Background Logo */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <img 
+            <OptimizedImage
               src="/logowhite.png" 
               alt="Military Tees UK Background Logo" 
+              width={1200}
+              height={800}
+              priority={true}
               className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] opacity-12 object-contain select-none"
             />
           </div>
@@ -106,8 +113,11 @@ export default function Home() {
           </div>
         </section>
 
+        {/* Customer Testimonials */}
+        <TestimonialsSection />
+
         {/* Why Choose Us - Complementing About Page */}
-        <section className="py-16 bg-background">
+        <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-display font-bold mb-6">
               Why Choose Military Tees UK?
@@ -119,28 +129,28 @@ export default function Home() {
             
             {/* Enhanced Guarantees & Features */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors">
+              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Check className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <span className="font-bold text-sm uppercase tracking-wide">30-Day Returns</span>
                 <span className="text-xs text-muted-foreground text-center">No questions asked money back guarantee</span>
               </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors">
+              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Award className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <span className="font-bold text-sm uppercase tracking-wide">Premium Quality</span>
                 <span className="text-xs text-muted-foreground text-center">Military-grade materials and printing</span>
               </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors">
+              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Truck className="h-6 w-6 text-primary-foreground" />
                 </div>
                 <span className="font-bold text-sm uppercase tracking-wide">Fast Shipping</span>
                 <span className="text-xs text-muted-foreground text-center">Free UK delivery on orders over £50</span>
               </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors">
+              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
                   <Users className="h-6 w-6 text-primary-foreground" />
                 </div>
@@ -160,8 +170,39 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Payment Options & Trust */}
+        {/* Newsletter Signup & Social Proof */}
+        <section className="py-16 bg-background">
+          <div className="container mx-auto px-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+              <NewsletterSignup 
+                variant="inline" 
+                showDiscount={true}
+                className="h-fit"
+              />
+              <SocialProof />
+            </div>
+          </div>
+        </section>
+
+        {/* Instagram Feed */}
         <section className="py-16 bg-muted/30">
+          <div className="container mx-auto px-4">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-display font-bold mb-4">
+                Follow Our Story
+              </h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">
+                Behind-the-scenes content, new design previews, and stories from the military community
+              </p>
+            </div>
+            <div className="max-w-2xl mx-auto">
+              <InstagramFeed />
+            </div>
+          </div>
+        </section>
+
+        {/* Payment Options & Trust */}
+        <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
             <PaymentOptions variant="grid" showSecurity={true} />
           </div>
