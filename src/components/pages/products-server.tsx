@@ -28,37 +28,56 @@ async function getProducts(): Promise<Product[]> {
   try {
     console.log('🔍 Server-side products fetch starting...')
     
-    // During build time, skip API calls and return empty array
-    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
-      console.log('⏭️ Skipping API call during build...')
+    // Use direct Supabase query instead of API endpoints
+    const { createClient } = require('@supabase/supabase-js')
+    
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error('❌ Missing Supabase credentials')
       return []
     }
     
-    // Use the working API endpoint instead of direct Supabase queries
-    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
-    const response = await fetch(`${baseUrl}/api/products?limit=24`, {
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      next: { revalidate: 60 }, // Cache for 1 minute
-      // Add timeout for build process
-      signal: AbortSignal.timeout(5000) // 5 second timeout
-    })
-
-    if (!response.ok) {
-      console.error('❌ API response error:', response.status, response.statusText)
-      return []
-    }
-
-    const data = await response.json()
+    const supabase = createClient(supabaseUrl, supabaseServiceKey)
     
-    if (data.error) {
-      console.error('❌ API error:', data.error)
+    // Query products directly from database
+    const { data: products, error } = await supabase
+      .from('products')
+      .select(`
+        id,
+        name,
+        price,
+        sale_price,
+        main_image_url,
+        description,
+        slug,
+        category:categories(id, name, slug),
+        variants:product_variants(
+          id,
+          sku,
+          name,
+          size,
+          color,
+          price,
+          stock_quantity
+        )
+      `)
+      .eq('is_active', true)
+      .order('created_at', { ascending: false })
+      .limit(24)
+
+    if (error) {
+      console.error('❌ Supabase error:', error)
       return []
     }
 
-    const products = data.products || []
-    console.log(`✅ Server-side fetch successful: ${products.length} products`)
+    if (!products || products.length === 0) {
+      console.log('⚠️ No products found')
+      return []
+    }
+
+    console.log(`✅ Server-side Supabase fetch successful: ${products.length} products`)
     return products
   } catch (error) {
     console.error('💥 Server-side fetch error:', error)
