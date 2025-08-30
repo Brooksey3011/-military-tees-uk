@@ -237,6 +237,73 @@ export default function CheckoutPage() {
                 />
               )}
 
+              {/* FEATURED EXPRESS CHECKOUT - Available Immediately */}
+              <Card className="border-2 border-blue-400 bg-gradient-to-r from-blue-50 via-blue-100 to-indigo-100 rounded-xl shadow-lg">
+                <CardContent className="pt-8 pb-8 space-y-6">
+                  <div className="text-center">
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                      <div className="p-3 bg-blue-600 rounded-full">
+                        <CreditCard className="h-6 w-6 text-white" />
+                      </div>
+                      <h2 className="text-2xl font-bold text-blue-900">⚡ Express Checkout</h2>
+                      <span className="bg-blue-600 text-white text-sm px-3 py-1 rounded-full font-bold animate-pulse">
+                        FASTEST
+                      </span>
+                    </div>
+                    
+                    <p className="text-lg text-blue-800 font-semibold mb-6">
+                      Pay instantly with Apple Pay, Google Pay, or Link - no forms needed!
+                    </p>
+                    
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-blue-700 mb-6">
+                      <div className="flex items-center justify-center gap-2 bg-white/80 rounded-lg p-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="font-medium">One-tap pay</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 bg-white/80 rounded-lg p-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="font-medium">Auto-fill details</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 bg-white/80 rounded-lg p-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="font-medium">Secure payment</span>
+                      </div>
+                      <div className="flex items-center justify-center gap-2 bg-white/80 rounded-lg p-3">
+                        <CheckCircle className="h-4 w-4 text-green-600" />
+                        <span className="font-medium">No registration</span>
+                      </div>
+                    </div>
+                    
+                    <Link href="/checkout/express">
+                      <Button 
+                        size="lg" 
+                        className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg px-12 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all"
+                      >
+                        <CreditCard className="h-5 w-5 mr-3" />
+                        Use Express Checkout ⚡
+                        <ArrowRight className="h-5 w-5 ml-3" />
+                      </Button>
+                    </Link>
+                    
+                    <p className="text-xs text-blue-600 mt-4 font-medium">
+                      ✨ Skip all forms • Complete in under 30 seconds • Works on all devices
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Divider */}
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300"></div>
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="bg-white px-6 text-gray-500 font-medium">
+                    Or continue with standard checkout
+                  </span>
+                </div>
+              </div>
+
               {/* Contact Information */}
               <Card className="border border-border rounded-lg">
                 <CardHeader>

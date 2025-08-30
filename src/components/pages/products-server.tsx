@@ -28,13 +28,21 @@ async function getProducts(): Promise<Product[]> {
   try {
     console.log('🔍 Server-side products fetch starting...')
     
+    // During build time, skip API calls and return empty array
+    if (process.env.NODE_ENV === 'production' && !process.env.VERCEL) {
+      console.log('⏭️ Skipping API call during build...')
+      return []
+    }
+    
     // Use the working API endpoint instead of direct Supabase queries
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3001'
     const response = await fetch(`${baseUrl}/api/products?limit=24`, {
       headers: {
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 60 } // Cache for 1 minute
+      next: { revalidate: 60 }, // Cache for 1 minute
+      // Add timeout for build process
+      signal: AbortSignal.timeout(5000) // 5 second timeout
     })
 
     if (!response.ok) {
