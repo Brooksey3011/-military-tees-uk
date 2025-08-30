@@ -115,9 +115,9 @@ function ExpressCheckoutSection({
         })
         
         const data = await response.json()
-        if (data.clientSecret) {
-          setClientSecret(data.clientSecret)
-          setPaymentIntentId(data.paymentIntentId)
+        if (data.client_secret || data.clientSecret) {
+          setClientSecret(data.client_secret || data.clientSecret)
+          setPaymentIntentId(data.payment_intent_id || data.paymentIntentId)
         }
       } catch (error) {
         console.error('Payment intent creation failed:', error)
