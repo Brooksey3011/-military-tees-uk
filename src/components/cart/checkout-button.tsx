@@ -25,7 +25,12 @@ export function CheckoutButton({
 
   const handleCheckout = () => {
     if (items.length === 0) return
-    window.location.href = '/checkout/professional'
+    window.location.href = '/checkout'
+  }
+
+  const handleExpressCheckout = () => {
+    if (items.length === 0) return
+    window.location.href = '/checkout/express'
   }
 
   const isDisabled = items.length === 0 || totalPrice < 0.5
@@ -37,22 +42,41 @@ export function CheckoutButton({
   const total = subtotal + shipping + tax
 
   return (
-    <div className="space-y-4">
-      {/* Single Checkout Button */}
+    <div className="space-y-3">
+      {/* EXPRESS CHECKOUT BUTTON - FEATURED */}
       <Button
-        onClick={handleCheckout}
+        onClick={handleExpressCheckout}
         disabled={isDisabled}
         size={size}
         className={cn(
-          "bg-green-600 hover:bg-green-700 text-white font-semibold tracking-wide uppercase h-12",
+          "bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold tracking-wide h-12 transition-all transform hover:scale-105",
           fullWidth && "w-full",
           className
         )}
       >
         <div className="flex items-center gap-2">
-          <Lock className="h-5 w-5" />
+          <span className="text-lg">⚡</span>
           <span>
-            Secure Checkout • {formatPrice(total)}
+            EXPRESS CHECKOUT • {formatPrice(total)}
+          </span>
+        </div>
+      </Button>
+
+      {/* Standard Checkout Button */}
+      <Button
+        onClick={handleCheckout}
+        disabled={isDisabled}
+        size="default"
+        variant="outline"
+        className={cn(
+          "border-green-600 text-green-600 hover:bg-green-50 font-semibold tracking-wide h-10",
+          fullWidth && "w-full"
+        )}
+      >
+        <div className="flex items-center gap-2">
+          <Lock className="h-4 w-4" />
+          <span>
+            Standard Checkout
           </span>
         </div>
       </Button>
@@ -65,7 +89,7 @@ export function CheckoutButton({
           </p>
         )}
         <p className="text-xs text-muted-foreground">
-          Secure payment by Stripe • All payment methods accepted
+          ⚡ Express: Apple Pay, Google Pay, Link • Standard: All cards accepted
         </p>
       </div>
 

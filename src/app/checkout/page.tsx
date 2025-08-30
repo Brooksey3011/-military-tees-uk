@@ -187,8 +187,36 @@ export default function CheckoutPage() {
   const tax = Math.round((subtotal + shipping) * 0.2 * 100) / 100 // 20% VAT
   const total = subtotal + shipping + tax
 
+  // Show loading state instead of hiding completely
   if (items.length === 0) {
-    return null // Will redirect
+    return (
+      <Layout>
+        <div className="min-h-screen bg-gradient-to-b from-green-50/30 to-background">
+          <section className="py-8 border-b border-border bg-white">
+            <div className="container mx-auto px-4">
+              <div className="text-center">
+                <h1 className="text-3xl font-display font-bold tracking-wider uppercase text-green-800 mb-4">
+                  Checkout
+                </h1>
+                <div className="max-w-md mx-auto">
+                  <Card className="border-2 border-yellow-400 bg-gradient-to-r from-yellow-50 to-orange-100 rounded-xl shadow-lg">
+                    <CardContent className="pt-6 pb-6">
+                      <h2 className="text-xl font-bold text-yellow-800 mb-4">Your cart appears to be empty</h2>
+                      <p className="text-yellow-700 mb-6">Add some items to your cart to proceed with checkout.</p>
+                      <Link href="/categories">
+                        <Button className="bg-green-600 hover:bg-green-700 text-white font-bold">
+                          Shop Now
+                        </Button>
+                      </Link>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      </Layout>
+    )
   }
 
   return (
@@ -238,8 +266,8 @@ export default function CheckoutPage() {
               )}
 
               {/* FEATURED EXPRESS CHECKOUT - Available Immediately */}
-              <Card className="border-2 border-blue-400 bg-gradient-to-r from-blue-50 via-blue-100 to-indigo-100 rounded-xl shadow-lg">
-                <CardContent className="pt-8 pb-8 space-y-6">
+              <Card className="border-4 border-blue-500 bg-gradient-to-r from-blue-100 via-indigo-100 to-purple-100 rounded-2xl shadow-2xl mb-8">
+                <CardContent className="pt-10 pb-10 space-y-8">
                   <div className="text-center">
                     <div className="flex items-center justify-center gap-3 mb-4">
                       <div className="p-3 bg-blue-600 rounded-full">
@@ -277,11 +305,11 @@ export default function CheckoutPage() {
                     <Link href="/checkout/express">
                       <Button 
                         size="lg" 
-                        className="w-full md:w-auto bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-lg px-12 py-4 rounded-xl shadow-lg transform hover:scale-105 transition-all"
+                        className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 text-white font-black text-xl px-16 py-6 rounded-2xl shadow-xl transform hover:scale-110 transition-all duration-300 animate-pulse"
                       >
-                        <CreditCard className="h-5 w-5 mr-3" />
-                        Use Express Checkout ⚡
-                        <ArrowRight className="h-5 w-5 ml-3" />
+                        <CreditCard className="h-6 w-6 mr-4" />
+                        🚀 USE EXPRESS CHECKOUT ⚡
+                        <ArrowRight className="h-6 w-6 ml-4" />
                       </Button>
                     </Link>
                     
