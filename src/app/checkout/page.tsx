@@ -598,18 +598,93 @@ export default function CheckoutPage() {
                 </CardContent>
               </Card>
 
-              {/* Express Checkout Available */}
-              <Card className="border border-green-200 rounded-lg">
-                <CardContent className="pt-6 space-y-3">
-                  <h3 className="text-sm font-semibold text-green-800">Try Our Professional Checkout</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Experience our new professional checkout flow with express payment options including Apple Pay, Google Pay, and more.
+              {/* Express Checkout - FEATURED */}
+              <Card className="border-2 border-blue-300 bg-gradient-to-r from-blue-50 to-indigo-100 rounded-xl shadow-lg">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="flex items-center justify-center gap-2">
+                    <div className="p-2 bg-blue-600 rounded-full">
+                      <CreditCard className="h-5 w-5 text-white" />
+                    </div>
+                    <h3 className="text-lg font-bold text-blue-900">⚡ Express Checkout</h3>
+                    <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full font-medium">RECOMMENDED</span>
+                  </div>
+                  <p className="text-sm text-blue-800 font-medium text-center">
+                    Pay instantly with Apple Pay, Google Pay, or Link - no forms needed!
                   </p>
-                  <Link href="/checkout/professional">
-                    <Button variant="outline" size="sm" className="w-full">
-                      Use Professional Checkout
+                  <div className="grid grid-cols-2 gap-2 text-xs text-blue-700">
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>One-tap payments</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Auto-fill details</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Fastest checkout</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Maximum security</span>
+                    </div>
+                  </div>
+                  <Link href="/checkout/express">
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold h-12">
+                      <CreditCard className="h-4 w-4 mr-2" />
+                      Use Express Checkout ⚡
                     </Button>
                   </Link>
+                </CardContent>
+              </Card>
+
+              {/* ThruDark-Inspired Professional Checkout */}
+              <Card className="border border-green-200 bg-gradient-to-r from-green-50 to-green-100/50 rounded-lg">
+                <CardContent className="pt-6 space-y-4">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-5 w-5 text-green-600" />
+                    <h3 className="text-sm font-semibold text-green-800">Multi-Step Professional Checkout</h3>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Experience our enhanced professional checkout with multi-step progress tracking, express payment options (Apple Pay, Google Pay), advanced shipping options, and ThruDark-inspired design for maximum security and convenience.
+                  </p>
+                  <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Step-by-step progress</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Express payments</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Enhanced security</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <CheckCircle className="h-3 w-3 text-green-600" />
+                      <span>Professional design</span>
+                    </div>
+                  </div>
+                  <Link href="/checkout/thrudark">
+                    <Button variant="outline" className="w-full border-green-600 text-green-700 hover:bg-green-50">
+                      <Shield className="h-4 w-4 mr-2" />
+                      Use Multi-Step Checkout
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+
+              {/* Express Checkout Available */}
+              <Card className="border border-blue-200 rounded-lg">
+                <CardContent className="pt-6 space-y-3">
+                  <h3 className="text-sm font-semibold text-blue-800">Quick Checkout (Current)</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Continue with our standard checkout flow - reliable and secure.
+                  </p>
+                  <div className="text-xs text-muted-foreground">
+                    ✓ Secure Stripe integration • ✓ Apple Pay & Google Pay • ✓ All major cards accepted
+                  </div>
                 </CardContent>
               </Card>
 
