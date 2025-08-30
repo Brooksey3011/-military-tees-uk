@@ -2,23 +2,13 @@
 
 import React, { useState, useEffect } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
-import { Elements } from '@stripe/react-stripe-js'
-import { ExpressCheckoutElement, useStripe, useElements } from '@stripe/react-stripe-js'
+import { Elements, ExpressCheckoutElement, useStripe, useElements } from '@stripe/react-stripe-js'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Smartphone, Zap } from 'lucide-react'
+import { Smartphone, Zap, CreditCard, Apple, Chrome } from 'lucide-react'
 
 // Initialize Stripe
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!, {
-  stripeAccount: undefined, // Use your default account
-})
-
-// Debug Stripe loading
-stripePromise.then((stripe) => {
-  console.log('Stripe loaded successfully:', !!stripe)
-}).catch((error) => {
-  console.error('Failed to load Stripe:', error)
-})
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
 
 interface ExpressCheckoutProps {
   items: Array<{
@@ -45,325 +35,243 @@ function ExpressCheckoutForm({ items, shippingAddress, onSuccess, onError, total
   const stripe = useStripe()
   const elements = useElements()
   const [isLoading, setIsLoading] = useState(false)
-  const [isReady, setIsReady] = useState(false)
-  const [hasExpressMethods, setHasExpressMethods] = useState(false)
-  const [debugInfo, setDebugInfo] = useState<string[]>([])
-
-  useEffect(() => {
-    console.log('ExpressCheckoutForm: Stripe loaded:', !!stripe)
-    console.log('ExpressCheckoutForm: Elements loaded:', !!elements)
-  }, [stripe, elements])
+  const [canMakePayment, setCanMakePayment] = useState(false)
+  const [availablePaymentTypes, setAvailablePaymentTypes] = useState<string[]>([])
 
   const handleExpressPayment = async (event: any) => {
-    console.log('Express payment initiated:', event)
+    console.log('🚀 Express payment initiated:', event.expressPaymentType)
     
     if (!stripe || !elements) {
-      const error = 'Payment system not ready'
-      console.error(error)
-      onError?.(error)
+      onError?.('Payment system not ready')
       return
     }
 
     setIsLoading(true)
 
     try {
-      // Use existing shipping address if provided, otherwise extract from event
-      const finalShippingAddress = shippingAddress || {
-        firstName: event.shippingAddress?.recipient?.split(' ')[0] || 'Customer',
-        lastName: event.shippingAddress?.recipient?.split(' ').slice(1).join(' ') || '',
-        email: event.billingDetails?.email || 'customer@example.com',
-        phone: event.billingDetails?.phone || '',
-        address1: event.shippingAddress?.addressLine?.[0] || '',
-        address2: event.shippingAddress?.addressLine?.[1] || '',
-        city: event.shippingAddress?.city || '',
-        postcode: event.shippingAddress?.postalCode || '',
-        country: event.shippingAddress?.country || 'GB'
-      }
-
-      const billingAddress = {
-        firstName: event.billingDetails?.name?.split(' ')[0] || finalShippingAddress.firstName,
-        lastName: event.billingDetails?.name?.split(' ').slice(1).join(' ') || finalShippingAddress.lastName,
-        address1: event.billingDetails?.address?.line1 || finalShippingAddress.address1,
-        address2: event.billingDetails?.address?.line2 || finalShippingAddress.address2,
-        city: event.billingDetails?.address?.city || finalShippingAddress.city,
-        postcode: event.billingDetails?.address?.postal_code || finalShippingAddress.postcode,
-        country: event.billingDetails?.address?.country || finalShippingAddress.country
-      }
-
-      console.log('Calling checkout API with:', {
-        items: items.length,
-        shippingAddress: finalShippingAddress,
-        billingAddress
-      })
-
-      // Call your checkout API
+      // Create checkout session for express payment
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          items,
-          shippingAddress: finalShippingAddress,
-          billingAddress,
-          customerNotes: 'Express checkout payment'
+          items: items.map(item => ({
+            variantId: item.variantId,
+            quantity: item.quantity
+          })),
+          shippingAddress: shippingAddress || {
+            firstName: event.shippingAddress?.recipient?.split(' ')[0] || 'Customer',
+            lastName: event.shippingAddress?.recipient?.split(' ').slice(1).join(' ') || '',
+            email: event.billingDetails?.email || 'customer@militarytees.co.uk',
+            phone: event.billingDetails?.phone || '',
+            address1: event.shippingAddress?.addressLine?.[0] || '',
+            address2: event.shippingAddress?.addressLine?.[1] || '',
+            city: event.shippingAddress?.city || '',
+            postcode: event.shippingAddress?.postalCode || '',
+            country: event.shippingAddress?.country || 'GB'
+          },
+          billingAddress: {
+            firstName: event.billingDetails?.name?.split(' ')[0] || 'Customer',
+            lastName: event.billingDetails?.name?.split(' ').slice(1).join(' ') || '',
+            address1: event.billingDetails?.address?.line1 || '',
+            address2: event.billingDetails?.address?.line2 || '',
+            city: event.billingDetails?.address?.city || '',
+            postcode: event.billingDetails?.address?.postal_code || '',
+            country: event.billingDetails?.address?.country || 'GB'
+          },
+          paymentMethod: 'express',
+          expressPaymentType: event.expressPaymentType
         })
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Checkout failed')
-      }
-
-      const { url } = await response.json()
-      console.log('Checkout API response:', { url })
-
-      // Complete the express payment
-      if (url) {
-        // For express checkout, we redirect to Stripe
-        window.location.href = url
+      const data = await response.json()
+      
+      if (data.url) {
+        console.log('✅ Redirecting to Stripe Checkout:', data.url)
+        window.location.href = data.url
       } else {
-        throw new Error('No checkout URL received from server')
+        throw new Error(data.error || 'Failed to create checkout session')
       }
-
-      onSuccess?.(event)
+      
     } catch (error) {
-      console.error('Express checkout error:', error)
+      console.error('❌ Express checkout error:', error)
       onError?.(error instanceof Error ? error.message : 'Express checkout failed')
     } finally {
       setIsLoading(false)
     }
   }
 
-  if (!stripe) {
+  const handleCanMakePayment = (event: any) => {
+    console.log('🔍 Can make payment check:', event)
+    setCanMakePayment(event.canMakePayment)
+    
+    if (event.applePay) setAvailablePaymentTypes(prev => [...prev, 'Apple Pay'])
+    if (event.googlePay) setAvailablePaymentTypes(prev => [...prev, 'Google Pay'])
+    if (event.link) setAvailablePaymentTypes(prev => [...prev, 'Link'])
+  }
+
+  const handleReady = (event: any) => {
+    console.log('✅ ExpressCheckoutElement ready:', event)
+  }
+
+  const options = {
+    // Set up express payment options
+    paymentMethods: {
+      applePay: 'always',
+      googlePay: 'always', 
+      link: 'auto'
+    },
+    // Customize button appearance
+    buttonTheme: {
+      applePay: 'black',
+      googlePay: 'black'
+    },
+    // Set the layout
+    layout: {
+      maxColumns: 1,
+      maxRows: 4
+    }
+  }
+
+  if (!canMakePayment && availablePaymentTypes.length === 0) {
     return (
-      <div className="text-center p-4 bg-muted/20 rounded-lg">
-        <p className="text-sm text-muted-foreground">Loading payment options...</p>
+      <div className="text-center p-4 text-sm text-muted-foreground">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <CreditCard className="h-4 w-4" />
+          <span>Express checkout not available</span>
+        </div>
+        <p className="text-xs">Use the standard checkout form below</p>
       </div>
     )
   }
 
-  const options = {
-    buttonType: {
-      applePay: 'buy' as const,
-      googlePay: 'buy' as const,
-    },
-    paymentMethods: {
-      applePay: 'always' as const,
-      googlePay: 'always' as const,
-      link: 'auto' as const,
-      paypal: 'never' as const, // Disable PayPal as requested
-      klarna: 'never' as const, // Disable Klarna as requested
-    },
-  }
-
-  const handleReady = (event: any) => {
-    console.log('ExpressCheckoutElement ready:', event)
-    setIsReady(true)
-    setHasExpressMethods(event.availablePaymentMethods?.length > 0)
-    setDebugInfo(prev => [...prev, `Ready: ${event.availablePaymentMethods?.length || 0} methods available`])
-  }
-
-  const handleLoadError = (error: any) => {
-    console.error('ExpressCheckoutElement load error:', error)
-    setDebugInfo(prev => [...prev, `Error: ${error.message || error}`])
-  }
-
-  const handleClick = (event: any) => {
-    console.log('ExpressCheckoutElement clicked:', event)
-    setDebugInfo(prev => [...prev, `Clicked: ${event.expressPaymentType}`])
-  }
-
   return (
-    <div className="w-full space-y-3">
-      {/* Debug info in development */}
-      {process.env.NODE_ENV === 'development' && debugInfo.length > 0 && (
-        <div className="text-xs text-muted-foreground bg-yellow-50 p-2 rounded">
-          <div className="font-medium mb-1">Debug Info:</div>
-          {debugInfo.map((info, i) => (
-            <div key={i}>• {info}</div>
-          ))}
+    <div className="space-y-4">
+      <div className="text-center">
+        <div className="flex items-center justify-center gap-2 mb-2">
+          <Zap className="h-5 w-5 text-green-600" />
+          <span className="font-medium text-green-800">Express Checkout</span>
         </div>
-      )}
-      
-      <div className="min-h-[50px] flex items-center justify-center">
-        <ExpressCheckoutElement 
+        {availablePaymentTypes.length > 0 && (
+          <p className="text-xs text-muted-foreground">
+            Available: {availablePaymentTypes.join(', ')}
+          </p>
+        )}
+      </div>
+
+      <div className="relative">
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/80 flex items-center justify-center z-10 rounded-lg">
+            <div className="text-sm text-muted-foreground">Processing...</div>
+          </div>
+        )}
+        
+        <ExpressCheckoutElement
           options={options}
           onConfirm={handleExpressPayment}
+          onCanMakePayment={handleCanMakePayment}
           onReady={handleReady}
-          onLoadError={handleLoadError}
-          onClick={handleClick}
         />
       </div>
-      
-      {isLoading && (
-        <div className="text-center text-sm text-muted-foreground">
-          <div className="animate-pulse">Processing your payment...</div>
+
+      <div className="text-center">
+        <div className="text-xs text-muted-foreground">
+          Secure payment powered by Stripe
         </div>
-      )}
-      
-      {isReady && !hasExpressMethods && (
-        <div className="text-center text-xs text-muted-foreground">
-          No express payment methods available on this device
-        </div>
-      )}
+      </div>
     </div>
   )
 }
 
-export function StripeExpressCheckout({ items, shippingAddress, onSuccess, onError, totalAmount }: ExpressCheckoutProps) {
-  const [showExpressCheckout, setShowExpressCheckout] = useState(true)
-  const [stripeError, setStripeError] = useState<string | null>(null)
-
-  // Don't show if we don't have the required data
-  if (!items || items.length === 0) {
+export function StripeExpressCheckout(props: ExpressCheckoutProps) {
+  if (!props.items || props.items.length === 0) {
     return null
   }
 
-  // Check for Stripe key
-  if (!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY) {
-    console.error('Missing NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY')
-    return (
-      <div className="text-center p-4 bg-red-50 border border-red-200 rounded-lg">
-        <p className="text-sm text-red-600">Payment system configuration error</p>
-      </div>
-    )
+  const elementsOptions = {
+    mode: 'payment' as const,
+    amount: Math.round(props.totalAmount * 100), // Convert to pence
+    currency: 'gbp',
+    appearance: {
+      theme: 'stripe' as const,
+      variables: {
+        colorPrimary: '#16a34a', // Green theme
+        colorBackground: '#ffffff',
+        colorText: '#374151',
+        colorDanger: '#dc2626',
+        fontFamily: 'Inter, system-ui, sans-serif',
+        spacingUnit: '4px',
+        borderRadius: '8px'
+      }
+    }
   }
 
-  console.log('StripeExpressCheckout: Rendering with', {
-    itemCount: items.length,
-    totalAmount,
-    hasShippingAddress: !!shippingAddress
-  })
-
   return (
-    <Card className="border border-green-200 rounded-lg bg-gradient-to-r from-green-50/50 to-blue-50/50">
-      <CardContent className="p-4 space-y-3">
-        <div className="flex items-center gap-2">
-          <Zap className="h-5 w-5 text-green-600" />
-          <h3 className="font-semibold text-green-800">Express Checkout</h3>
-          <div className="ml-auto">
-            <div className="flex items-center gap-1">
-              <Smartphone className="h-4 w-4 text-green-600" />
-              <span className="text-xs text-green-700">Smart Detection</span>
-            </div>
-          </div>
-        </div>
-        
-        <p className="text-sm text-muted-foreground">
-          One-click payment with your device's available methods
-        </p>
-        
-        {showExpressCheckout ? (
-          <Elements 
-            stripe={stripePromise}
-            options={{
-              appearance: {
-                theme: 'stripe',
-                variables: {
-                  colorPrimary: '#16a34a' // Military green
-                }
-              }
-            }}
-          >
-            <ExpressCheckoutForm
-              items={items}
-              shippingAddress={shippingAddress}
-              onSuccess={onSuccess}
-              onError={onError}
-              totalAmount={totalAmount}
-            />
-          </Elements>
-        ) : (
-          <div className="text-center py-4">
-            <p className="text-sm text-muted-foreground">
-              Express checkout not available on this device
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => setShowExpressCheckout(true)}
-              className="mt-2"
-            >
-              Try Again
-            </Button>
-          </div>
-        )}
-        
-        <div className="text-xs text-center text-muted-foreground">
-          <div className="flex items-center justify-center gap-4">
-            <span>Secure • Instant • Convenient</span>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <Elements stripe={stripePromise} options={elementsOptions}>
+      <Card className="border border-green-200">
+        <CardContent className="p-4">
+          <ExpressCheckoutForm {...props} />
+        </CardContent>
+      </Card>
+    </Elements>
   )
 }
 
-// Utility component for detecting available payment methods
 export function PaymentMethodDetector() {
-  const [availableMethods, setAvailableMethods] = useState<string[]>([])
-  
+  const [deviceInfo, setDeviceInfo] = useState<{
+    userAgent: string
+    isAppleDevice: boolean
+    isAndroid: boolean
+    browser: string
+  } | null>(null)
+
   useEffect(() => {
-    const detectMethods = async () => {
-      const methods: string[] = []
-      
-      // Apple Pay detection
-      if (window.ApplePaySession) {
-        if (window.ApplePaySession.canMakePayments()) {
-          methods.push('Apple Pay Available')
-          try {
-            const canMakeActiveCard = await window.ApplePaySession.canMakePaymentsWithActiveCard()
-            if (canMakeActiveCard) {
-              methods.push('Apple Pay Ready')
-            }
-          } catch (e) {
-            methods.push('Apple Pay (Setup Required)')
-          }
-        }
-      }
-      
-      // Google Pay detection (basic)
-      if ('google' in window && 'payments' in (window as any).google) {
-        methods.push('Google Pay Available')
-      }
-      
-      // Browser/OS detection
-      const userAgent = navigator.userAgent
-      if (/iPad|iPhone|iPod/.test(userAgent)) {
-        methods.push('iOS Device')
-      } else if (/Android/.test(userAgent)) {
-        methods.push('Android Device')
-      } else if (/Mac/.test(userAgent)) {
-        methods.push('Mac Device')
-      }
-      
-      // Payment Request API support
-      if (window.PaymentRequest) {
-        methods.push('Payment Request API')
-      }
-      
-      setAvailableMethods(methods)
-    }
-    
-    detectMethods()
+    const userAgent = navigator.userAgent
+    const isAppleDevice = /Mac|iPhone|iPad|iPod/.test(userAgent)
+    const isAndroid = /Android/.test(userAgent)
+    const browser = /Safari/.test(userAgent) && !/Chrome/.test(userAgent) ? 'Safari' :
+                   /Chrome/.test(userAgent) ? 'Chrome' :
+                   /Firefox/.test(userAgent) ? 'Firefox' : 'Other'
+
+    setDeviceInfo({
+      userAgent,
+      isAppleDevice,
+      isAndroid,
+      browser
+    })
   }, [])
-  
+
+  if (!deviceInfo) return <div className="animate-pulse">Detecting device...</div>
+
   return (
-    <div className="text-xs text-muted-foreground">
-      <div className="font-medium mb-1">Detected Payment Options:</div>
-      {availableMethods.length > 0 ? (
-        <div className="space-y-1">
-          {availableMethods.map((method, i) => (
-            <div key={i} className="flex items-center gap-1">
-              <span className="text-green-600">✓</span>
-              <span>{method}</span>
-            </div>
-          ))}
+    <div className="space-y-3 text-sm">
+      <div className="grid grid-cols-2 gap-3">
+        <div className={`p-3 rounded-lg border ${deviceInfo.isAppleDevice ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+          <div className="flex items-center gap-2">
+            <Apple className="h-4 w-4" />
+            <span className="font-medium">Apple Pay</span>
+          </div>
+          <p className="text-xs mt-1">
+            {deviceInfo.isAppleDevice ? '✅ Available' : '❌ Not available'}
+          </p>
         </div>
-      ) : (
-        <span>Standard card payments available</span>
-      )}
+        
+        <div className={`p-3 rounded-lg border ${deviceInfo.browser === 'Chrome' || deviceInfo.isAndroid ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'}`}>
+          <div className="flex items-center gap-2">
+            <Chrome className="h-4 w-4" />
+            <span className="font-medium">Google Pay</span>
+          </div>
+          <p className="text-xs mt-1">
+            {deviceInfo.browser === 'Chrome' || deviceInfo.isAndroid ? '✅ Available' : '❌ Not available'}
+          </p>
+        </div>
+      </div>
+      
+      <div className="text-xs text-muted-foreground">
+        <p><strong>Device:</strong> {deviceInfo.isAppleDevice ? 'Apple' : deviceInfo.isAndroid ? 'Android' : 'Other'}</p>
+        <p><strong>Browser:</strong> {deviceInfo.browser}</p>
+      </div>
     </div>
   )
 }

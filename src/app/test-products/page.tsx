@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 import { Layout } from "@/components/layout/layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { TestCartButton } from "./test-cart-button"
 
 async function getTestProducts() {
   try {
@@ -131,15 +131,11 @@ export default async function TestProductsPage() {
                   
                   {product.variants && product.variants.length > 0 && (
                     <div className="mt-4 pt-4 border-t">
-                      <Button 
-                        className="bg-green-600 hover:bg-green-700"
-                        onClick={() => {
-                          // This would add to cart in a real implementation
-                          alert(`Would add to cart:\nProduct: ${product.name}\nVariant ID: ${product.variants[0].id}\nPrice: £${product.variants[0].price}`)
-                        }}
-                      >
-                        🧪 Test Add to Cart
-                      </Button>
+                      <TestCartButton 
+                        productName={product.name}
+                        variantId={product.variants[0].id}
+                        price={product.variants[0].price}
+                      />
                     </div>
                   )}
                 </CardContent>
