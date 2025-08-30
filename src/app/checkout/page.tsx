@@ -19,6 +19,7 @@ import {
   Mail, 
   Phone,
   ArrowLeft,
+  ArrowRight,
   CheckCircle
 } from "lucide-react"
 import Link from "next/link"

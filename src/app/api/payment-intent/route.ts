@@ -75,6 +75,8 @@ async function validateInventoryAndGetProducts(items: PaymentIntentRequest['item
 }
 
 export async function POST(request: NextRequest) {
+  let items: any, shippingAddress: any, billingAddress: any, customerNotes: any
+  
   try {
     console.log('Payment Intent API: Processing request')
 
@@ -99,7 +101,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    const { items, shippingAddress, billingAddress, customerNotes } = body
+    // Extract variables for use in catch block if needed
+    items = body.items
+    shippingAddress = body.shippingAddress
+    billingAddress = body.billingAddress
+    customerNotes = body.customerNotes
 
     // For development/testing, always use fallback pricing since we don't have products in DB
     console.log('Payment Intent API: Using fallback pricing for all requests')
