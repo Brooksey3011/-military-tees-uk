@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, createSupabaseAdmin } from './supabase'
 import type { User } from '@supabase/supabase-js'
 import type { Database } from '@/types/database'
 
@@ -134,7 +134,9 @@ export class AuthService {
     first_name?: string | null
     last_name?: string | null
   }) {
-    const { data, error } = await supabase
+    // Use admin client to bypass RLS issues
+    const supabaseAdmin = createSupabaseAdmin()
+    const { data, error } = await supabaseAdmin
       .from('customers')
       .insert({
         user_id: userId,
@@ -156,18 +158,19 @@ export class AuthService {
   // Get customer profile
   static async getCustomerProfile(userId: string): Promise<Customer | null> {
     try {
-      const { data, error } = await supabase
+      // Use admin client to bypass RLS issues
+      const supabaseAdmin = createSupabaseAdmin()
+      const { data, error } = await supabaseAdmin
         .from('customers')
         .select('*')
         .eq('user_id', userId)
-        .maybeSingle() // Use maybeSingle instead of single to handle no rows gracefully
+        .maybeSingle()
 
       if (error) {
         console.error('Error fetching customer profile:', error)
         return null
       }
 
-      // maybeSingle returns null if no rows found, which is normal for new users
       return data
     } catch (error) {
       console.error('Unexpected error fetching customer profile:', error)
