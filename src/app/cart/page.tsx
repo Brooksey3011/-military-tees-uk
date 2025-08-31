@@ -24,8 +24,8 @@ export default function CartPage() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem } = useSimpleCart()
 
   const shippingCost = totalPrice > 50 ? 0 : 4.99
-  const tax = totalPrice * 0.2 // 20% VAT
-  const finalTotal = totalPrice + shippingCost + tax
+  // No VAT applied - not VAT registered  
+  const finalTotal = totalPrice + shippingCost
 
   return (
     <Layout>
@@ -175,9 +175,9 @@ export default function CartPage() {
                         {shippingCost === 0 ? 'FREE' : `£${shippingCost.toFixed(2)}`}
                       </span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>VAT (20%)</span>
-                      <span>£{tax.toFixed(2)}</span>
+                    <div className="flex justify-between text-sm text-muted-foreground">
+                      <span>VAT</span>
+                      <span>Not applicable</span>
                     </div>
                     
                     <div className="border-t pt-4">

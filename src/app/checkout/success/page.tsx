@@ -341,9 +341,9 @@ function CheckoutSuccessContent() {
                     <span>Shipping</span>
                     <span className="text-green-600 font-medium">FREE</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span>VAT (20%)</span>
-                    <span>£{orderData.tax.toFixed(2)}</span>
+                  <div className="flex justify-between text-sm text-muted-foreground">
+                    <span>VAT</span>
+                    <span>Not applicable</span>
                   </div>
                   <div className="border-t pt-4">
                     <div className="flex justify-between text-lg font-bold">

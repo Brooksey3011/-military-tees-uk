@@ -18,8 +18,8 @@ export function CartSummary({ showItems = true, className }: CartSummaryProps) {
   const subtotal = totalPrice
   const shippingThreshold = 50
   const shipping = totalPrice >= shippingThreshold ? 0 : 4.99
-  const tax = totalPrice * 0.2 // 20% VAT
-  const finalTotal = subtotal + shipping + tax
+  // No VAT applied - not VAT registered
+  const finalTotal = subtotal + shipping
 
   if (items.length === 0) {
     return (
@@ -111,9 +111,9 @@ export function CartSummary({ showItems = true, className }: CartSummaryProps) {
             <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
           </div>
 
-          <div className="flex justify-between text-sm">
-            <span>VAT (20%)</span>
-            <span>{formatPrice(tax)}</span>
+          <div className="flex justify-between text-sm text-muted-foreground">
+            <span>VAT</span>
+            <span>Not applicable</span>
           </div>
 
           <div className="flex justify-between text-base font-semibold pt-2 border-t">
@@ -148,7 +148,7 @@ export function CartSummary({ showItems = true, className }: CartSummaryProps) {
 
         {/* Additional Info */}
         <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
-          <div>• Prices include VAT</div>
+          <div>• VAT not applicable</div>
           <div>• Free returns within 30 days</div>
           <div>• Secure payment with SSL encryption</div>
         </div>
