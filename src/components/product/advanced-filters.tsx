@@ -175,7 +175,17 @@ function ActiveFilters({
     if (filters.newArrivals) count += 1
     if (filters.veteranDesigned) count += 1
     return count
-  }, [filters])
+  }, [
+    filters.categories,
+    filters.sizes, 
+    filters.colors,
+    filters.priceRange,
+    filters.rating,
+    filters.inStock,
+    filters.onSale,
+    filters.newArrivals,
+    filters.veteranDesigned
+  ])
 
   if (activeFiltersCount === 0) return null
 

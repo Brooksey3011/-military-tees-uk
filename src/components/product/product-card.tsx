@@ -67,7 +67,7 @@ export function ProductCard({
       })
     }
     return images.length > 0 ? images : ['/images/products/placeholder-tshirt.svg']
-  }, [product.main_image_url, selectedVariant])
+  }, [product.main_image_url, selectedVariant?.id, selectedVariant?.imageUrls, selectedVariant?.image_urls])
   
   // Auto-cycle images on hover - only on client side
   React.useEffect(() => {
