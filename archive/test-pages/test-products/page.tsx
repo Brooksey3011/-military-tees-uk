@@ -4,6 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { TestCartButton } from "./test-cart-button"
 
+// Force dynamic rendering for test pages
+export const dynamic = 'force-dynamic'
+
 async function getTestProducts() {
   try {
     const supabase = createClient(

@@ -1,7 +1,7 @@
 "use client"
 
 import Script from 'next/script'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 import { usePathname, useSearchParams } from 'next/navigation'
 
 declare global {
@@ -15,17 +15,22 @@ interface PlausibleProviderProps {
   children: React.ReactNode
 }
 
-export function PlausibleProvider({ domain, children }: PlausibleProviderProps) {
+// Internal tracking component that uses useSearchParams
+function PlausibleTracker() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   useEffect(() => {
     // Track page views on route changes
-    if (window.plausible) {
+    if (typeof window !== 'undefined' && window.plausible) {
       window.plausible('pageview')
     }
   }, [pathname, searchParams])
 
+  return null
+}
+
+export function PlausibleProvider({ domain, children }: PlausibleProviderProps) {
   return (
     <>
       <Script
@@ -34,6 +39,9 @@ export function PlausibleProvider({ domain, children }: PlausibleProviderProps) 
         src="https://plausible.io/js/script.js"
         strategy="afterInteractive"
       />
+      <Suspense fallback={null}>
+        <PlausibleTracker />
+      </Suspense>
       {children}
     </>
   )

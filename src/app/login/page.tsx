@@ -5,24 +5,41 @@ import { LoginForm } from "@/components/auth/login-form"
 import { Badge } from "@/components/ui/badge"
 import { Shield, CheckCircle } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic'
 
-export default function LoginPage() {
-  const { signIn, user, loading } = useAuth()
+// Component that uses useSearchParams
+function LoginSuccessMessage() {
   const searchParams = useSearchParams()
   const [showSuccess, setShowSuccess] = useState(false)
 
-  // Check for registration success message
   useEffect(() => {
     if (searchParams?.get('message') === 'registration-success') {
       setShowSuccess(true)
     }
   }, [searchParams])
+
+  if (!showSuccess) return null
+
+  return (
+    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+      <div className="flex items-center gap-2 text-green-800">
+        <CheckCircle className="h-5 w-5" />
+        <div>
+          <p className="font-medium">Registration Successful!</p>
+          <p className="text-sm">Please sign in with your new account.</p>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LoginPageContent() {
+  const { signIn, user, loading } = useAuth()
 
   // Redirect if already logged in
   useEffect(() => {
@@ -66,18 +83,10 @@ export default function LoginPage() {
           <div className="container mx-auto px-4 flex justify-center">
             <div className="w-full max-w-md space-y-6">
               
-              {/* Registration Success Message */}
-              {showSuccess && (
-                <div className="p-4 bg-green-50 border-2 border-green-200 rounded text-green-800 text-sm">
-                  <div className="flex items-center gap-2">
-                    <CheckCircle className="h-5 w-5 text-green-600" />
-                    <div>
-                      <p className="font-semibold">Registration Successful!</p>
-                      <p>You can now sign in with your new account.</p>
-                    </div>
-                  </div>
-                </div>
-              )}
+              {/* Registration Success Message with Suspense */}
+              <Suspense fallback={null}>
+                <LoginSuccessMessage />
+              </Suspense>
 
               <LoginForm
                 onSubmit={handleLogin}
@@ -167,4 +176,8 @@ export default function LoginPage() {
       </div>
     </Layout>
   )
+}
+
+export default function LoginPage() {
+  return <LoginPageContent />
 }

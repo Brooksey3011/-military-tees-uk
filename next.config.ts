@@ -10,6 +10,31 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   skipTrailingSlashRedirect: true,
+  // Exclude test pages from production builds
+  async redirects() {
+    return process.env.NODE_ENV === 'production' ? [
+      {
+        source: '/test-:path*',
+        destination: '/404',
+        permanent: false,
+      },
+      {
+        source: '/multi-shipping-test',
+        destination: '/404', 
+        permanent: false,
+      },
+      {
+        source: '/direct-checkout-test',
+        destination: '/404',
+        permanent: false,
+      },
+      {
+        source: '/size-guide-test',
+        destination: '/404',
+        permanent: false,
+      },
+    ] : []
+  },
   images: {
     remotePatterns: [
       {

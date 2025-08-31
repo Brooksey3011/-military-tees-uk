@@ -1,6 +1,9 @@
 "use client"
 
 import { useState, useEffect } from 'react'
+
+// Force dynamic rendering for test pages
+export const dynamic = 'force-dynamic'
 import { VercelExpressCheckout, ExpressCheckoutDeviceTest } from '@/components/checkout/vercel-express-checkout'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
