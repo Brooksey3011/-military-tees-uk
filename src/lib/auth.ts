@@ -141,22 +141,24 @@ export class AuthService {
 
   // Get customer profile
   static async getCustomerProfile(userId: string): Promise<Customer | null> {
-    const { data, error } = await supabase
-      .from('customers')
-      .select('*')
-      .eq('user_id', userId)
-      .single()
+    try {
+      const { data, error } = await supabase
+        .from('customers')
+        .select('*')
+        .eq('user_id', userId)
+        .maybeSingle() // Use maybeSingle instead of single to handle no rows gracefully
 
-    if (error) {
-      if (error.code === 'PGRST116') {
-        // No profile found, this is normal for new users
+      if (error) {
+        console.error('Error fetching customer profile:', error)
         return null
       }
-      console.error('Error fetching customer profile:', error)
+
+      // maybeSingle returns null if no rows found, which is normal for new users
+      return data
+    } catch (error) {
+      console.error('Unexpected error fetching customer profile:', error)
       return null
     }
-
-    return data
   }
 
   // Update customer profile

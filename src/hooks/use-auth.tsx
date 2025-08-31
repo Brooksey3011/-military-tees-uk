@@ -11,8 +11,17 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
+  const [mounted, setMounted] = useState(false)
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
+    // Only run auth checks after component is mounted
+    if (!mounted) return
+
     // Get initial session
     const getInitialSession = async () => {
       try {
@@ -50,7 +59,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     )
 
     return () => subscription.unsubscribe()
-  }, [])
+  }, [mounted])
 
   const signIn = async (email: string, password: string) => {
     setLoading(true)
