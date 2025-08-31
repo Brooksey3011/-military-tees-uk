@@ -91,7 +91,21 @@ export class AuthService {
     }
 
     // Get customer profile
-    const customer = await this.getCustomerProfile(user.id)
+    let customer = await this.getCustomerProfile(user.id)
+    
+    // If no customer profile exists, create one automatically
+    if (!customer) {
+      try {
+        customer = await this.createCustomerProfile(user.id, {
+          first_name: user.user_metadata?.first_name || null,
+          last_name: user.user_metadata?.last_name || null
+        })
+        console.log('✅ Auto-created customer profile for user:', user.id)
+      } catch (error) {
+        console.error('❌ Failed to auto-create customer profile:', error)
+        // Continue without customer profile - don't fail auth
+      }
+    }
     
     return {
       ...user,
@@ -116,7 +130,7 @@ export class AuthService {
   }
 
   // Create customer profile
-  private static async createCustomerProfile(userId: string, profile: {
+  static async createCustomerProfile(userId: string, profile: {
     first_name?: string | null
     last_name?: string | null
   }) {
