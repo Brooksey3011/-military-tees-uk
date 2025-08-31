@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     }
   }, [items, isHydrated])
 
-  const addItem = (newItem: Omit<CartItem, 'id' | 'quantity'>) => {
+  const addItem = React.useCallback((newItem: Omit<CartItem, 'id' | 'quantity'>) => {
     if (!isHydrated) return
 
     setItems(currentItems => {
@@ -98,14 +98,14 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       }
     })
     setIsOpen(true) // Open cart when item is added
-  }
+  }, [isHydrated])
 
-  const removeItem = (id: string) => {
+  const removeItem = React.useCallback((id: string) => {
     if (!isHydrated) return
     setItems(currentItems => currentItems.filter(item => item.id !== id))
-  }
+  }, [isHydrated])
 
-  const updateQuantity = (id: string, quantity: number) => {
+  const updateQuantity = React.useCallback((id: string, quantity: number) => {
     if (!isHydrated) return
 
     if (quantity <= 0) {
@@ -121,17 +121,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return item
       })
     )
-  }
+  }, [isHydrated, removeItem])
 
-  const clearCart = () => {
+  const clearCart = React.useCallback(() => {
     if (!isHydrated) return
     setItems([])
     setIsOpen(false)
-  }
+  }, [isHydrated])
 
-  const openCart = () => setIsOpen(true)
-  const closeCart = () => setIsOpen(false)
-  const toggleCart = () => setIsOpen(prev => !prev)
+  const openCart = React.useCallback(() => setIsOpen(true), [])
+  const closeCart = React.useCallback(() => setIsOpen(false), [])
+  const toggleCart = React.useCallback(() => setIsOpen(prev => !prev), [])
 
   // Don't provide cart functionality until hydrated
   const value: CartContextType = {

@@ -28,14 +28,14 @@ export function CartDrawer({ className }: CartDrawerProps) {
   } = useSimpleCart()
 
 
-  // Handle backdrop click - Improved version
+  // Handle backdrop click
   const handleBackdropClick = React.useCallback((e: React.MouseEvent) => {
     e.preventDefault()
     e.stopPropagation()
     closeCart()
-  }, []) // Remove closeCart dependency to prevent infinite loop
+  }, [closeCart])
 
-  // Handle escape key - Fixed version
+  // Handle escape key
   React.useEffect(() => {
     if (!isOpen) return
 
@@ -50,7 +50,7 @@ export function CartDrawer({ className }: CartDrawerProps) {
     return () => {
       document.removeEventListener("keydown", handleEscape)
     }
-  }, [isOpen]) // Remove closeCart dependency to prevent infinite loop
+  }, [isOpen, closeCart])
 
   // Handle body scroll separately to avoid conflicts
   React.useEffect(() => {
@@ -67,7 +67,7 @@ export function CartDrawer({ className }: CartDrawerProps) {
 
   const handleQuantityUpdate = React.useCallback((itemId: string, newQuantity: number) => {
     updateQuantity(itemId, newQuantity)
-  }, []) // Remove updateQuantity dependency to prevent infinite loop
+  }, [updateQuantity])
 
   const handleRemoveItem = React.useCallback((itemId: string) => {
     removeItem(itemId)
