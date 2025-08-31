@@ -43,6 +43,36 @@ export function ProductDetailHydrationSafe() {
     setMounted(true)
   }, [])
 
+  // Prepare size options for SizeSelector component (MUST be before early returns)
+  const sizeOptions = React.useMemo(() => {
+    if (!mounted || !product?.variants) return []
+    
+    const sizeMap = new Map()
+    product.variants.forEach(variant => {
+      if (!sizeMap.has(variant.size)) {
+        sizeMap.set(variant.size, {
+          size: variant.size,
+          label: variant.size,
+          stock: 0,
+          isAvailable: false
+        })
+      }
+      const size = sizeMap.get(variant.size)
+      size.stock += variant.stock_quantity
+      size.isAvailable = size.isAvailable || variant.stock_quantity > 0
+    })
+    return Array.from(sizeMap.values())
+  }, [mounted, product?.variants])
+
+  // Determine product type for size guide (MUST be before early returns)
+  const productType = React.useMemo(() => {
+    if (!mounted || !product?.category?.name) return 'tshirt'
+    const category = product.category.name.toLowerCase()
+    if (category.includes('hoodie') || category.includes('sweatshirt')) return 'hoodie'
+    if (category.includes('polo')) return 'polo'
+    return 'tshirt'
+  }, [mounted, product?.category])
+
   useEffect(() => {
     async function fetchProduct() {
       if (!params.slug) return
@@ -131,38 +161,8 @@ export function ProductDetailHydrationSafe() {
     )
   }
 
-  // Prepare size options for SizeSelector component
-  const sizeOptions = React.useMemo(() => {
-    if (!mounted || !product?.variants) return []
-    
-    const sizeMap = new Map()
-    product.variants.forEach(variant => {
-      if (!sizeMap.has(variant.size)) {
-        sizeMap.set(variant.size, {
-          size: variant.size,
-          label: variant.size,
-          stock: 0,
-          isAvailable: false
-        })
-      }
-      const size = sizeMap.get(variant.size)
-      size.stock += variant.stock_quantity
-      size.isAvailable = size.isAvailable || variant.stock_quantity > 0
-    })
-    return Array.from(sizeMap.values())
-  }, [mounted, product?.variants])
-
-  // Get unique colors
-  const colors = [...new Set(product.variants?.map(v => v.color) || [])]
-
-  // Determine product type for size guide
-  const productType = React.useMemo(() => {
-    if (!mounted || !product?.category?.name) return 'tshirt'
-    const category = product.category.name.toLowerCase()
-    if (category.includes('hoodie') || category.includes('sweatshirt')) return 'hoodie'
-    if (category.includes('polo')) return 'polo'
-    return 'tshirt'
-  }, [mounted, product?.category])
+  // Get unique colors (moved after useMemo hooks)
+  const colors = [...new Set(product?.variants?.map(v => v.color) || [])]
 
   // Find current variant
   const currentVariant = product.variants?.find(
