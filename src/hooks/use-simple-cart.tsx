@@ -109,7 +109,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (!isHydrated) return
 
     if (quantity <= 0) {
-      removeItem(id)
+      // Inline removal instead of calling removeItem to avoid circular dependency
+      setItems(currentItems => currentItems.filter(item => item.id !== id))
       return
     }
 
@@ -121,7 +122,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return item
       })
     )
-  }, [isHydrated, removeItem])
+  }, [isHydrated])
 
   const clearCart = React.useCallback(() => {
     if (!isHydrated) return
