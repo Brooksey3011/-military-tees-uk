@@ -36,6 +36,12 @@ export function ProductDetailHydrationSafe() {
   const [selectedSize, setSelectedSize] = useState<string>("")
   const [selectedColor, setSelectedColor] = useState<string>("")
   const [isAddingToCart, setIsAddingToCart] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   useEffect(() => {
     async function fetchProduct() {
@@ -75,6 +81,11 @@ export function ProductDetailHydrationSafe() {
 
     fetchProduct()
   }, [params.slug])
+
+  // Don't render until hydrated to prevent hydration mismatch
+  if (!mounted) {
+    return null
+  }
 
   if (loading) {
     return (
@@ -122,7 +133,7 @@ export function ProductDetailHydrationSafe() {
 
   // Prepare size options for SizeSelector component
   const sizeOptions = React.useMemo(() => {
-    if (!product.variants) return []
+    if (!mounted || !product?.variants) return []
     
     const sizeMap = new Map()
     product.variants.forEach(variant => {
@@ -139,19 +150,19 @@ export function ProductDetailHydrationSafe() {
       size.isAvailable = size.isAvailable || variant.stock_quantity > 0
     })
     return Array.from(sizeMap.values())
-  }, [product.variants])
+  }, [mounted, product?.variants])
 
   // Get unique colors
   const colors = [...new Set(product.variants?.map(v => v.color) || [])]
 
   // Determine product type for size guide
   const productType = React.useMemo(() => {
-    if (!product.category?.name) return 'tshirt'
+    if (!mounted || !product?.category?.name) return 'tshirt'
     const category = product.category.name.toLowerCase()
     if (category.includes('hoodie') || category.includes('sweatshirt')) return 'hoodie'
     if (category.includes('polo')) return 'polo'
     return 'tshirt'
-  }, [product.category])
+  }, [mounted, product?.category])
 
   // Find current variant
   const currentVariant = product.variants?.find(
