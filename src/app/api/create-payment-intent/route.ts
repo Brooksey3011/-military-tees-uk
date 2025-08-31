@@ -3,29 +3,19 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
 
-// PaymentIntent request schema for Express Checkout
-const paymentIntentSchema = z.object({
+// Optimized PaymentIntent schema for Express Checkout conversion
+const expressCheckoutSchema = z.object({
   items: z.array(z.object({
-    variantId: z.string().min(1, 'Variant ID is required'),
-    quantity: z.number().int().min(1, 'Quantity must be at least 1').max(10, 'Maximum quantity is 10')
-  })).min(1, 'At least one item is required'),
-  shippingAddress: z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    email: z.string().email('Valid email is required'),
-    phone: z.string().min(1, 'Phone number is required'),
-    address1: z.string().min(1, 'Address is required'),
-    address2: z.string().optional(),
-    city: z.string().min(1, 'City is required'),
-    postcode: z.string().min(1, 'Postcode is required'),
-    country: z.string().min(2, 'Country is required')
-  }).optional(),
+    variantId: z.string().uuid('Invalid variant ID'),
+    quantity: z.number().int().min(1).max(10)
+  })).min(1, 'Cart cannot be empty'),
+  customerEmail: z.string().email().optional(),
   currency: z.string().default('gbp')
 })
 
-type PaymentIntentRequest = z.infer<typeof paymentIntentSchema>
+type ExpressCheckoutRequest = z.infer<typeof expressCheckoutSchema>
 
-// Helper functions
+// Optimized pricing calculations for conversion
 function calculateShipping(subtotal: number): number {
   return subtotal >= 50 ? 0 : 4.99
 }
@@ -34,8 +24,12 @@ function calculateVAT(subtotal: number, shipping: number): number {
   return Math.round((subtotal + shipping) * 0.2 * 100) / 100
 }
 
-// Get product details from Supabase
-async function getProductDetails(items: PaymentIntentRequest['items']) {
+function formatAmount(amount: number): number {
+  return Math.round(amount * 100) // Convert to pence for Stripe
+}
+
+// Fast product lookup optimized for conversion
+async function getProductDetails(items: ExpressCheckoutRequest['items']) {
   const supabase = createSupabaseAdmin()
   const productDetails = []
 
@@ -97,112 +91,59 @@ async function getProductDetails(items: PaymentIntentRequest['items']) {
 
 export async function POST(request: NextRequest) {
   try {
-    console.log('🚀 PaymentIntent API: Processing Express Checkout request')
-
-    // Parse and validate request
     const body = await request.json()
-    const validatedData = paymentIntentSchema.parse(body)
-    const { items, shippingAddress, currency } = validatedData
+    const { items, customerEmail, currency } = expressCheckoutSchema.parse(body)
 
-    // Get product details from database
+    // Fast product validation and pricing
     const productDetails = await getProductDetails(items)
-    
-    // Calculate totals
     const subtotal = productDetails.reduce((sum, product) => sum + product.totalPrice, 0)
     const shipping = calculateShipping(subtotal)
     const tax = calculateVAT(subtotal, shipping)
     const total = subtotal + shipping + tax
 
-    console.log('💰 PaymentIntent totals:', { subtotal, shipping, tax, total })
-
-    // Create PaymentIntent for Express Checkout
+    // Create optimized PaymentIntent for Express Checkout
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(total * 100), // Convert to pence/cents
+      amount: formatAmount(total),
       currency: currency.toLowerCase(),
+      automatic_payment_methods: { enabled: true },
       
-      // Enable automatic payment methods (required for Express Checkout)
-      automatic_payment_methods: {
-        enabled: true,
-      },
-      
-      // Add metadata for order processing
+      // Streamlined metadata for conversion tracking
       metadata: {
-        orderType: 'express_checkout',
-        subtotal: subtotal.toString(),
-        shipping: shipping.toString(),
-        tax: tax.toString(),
-        total: total.toString(),
+        source: 'express_checkout',
         itemCount: items.length.toString(),
-        ...(shippingAddress && {
-          customerEmail: shippingAddress.email,
-          customerName: `${shippingAddress.firstName} ${shippingAddress.lastName}`
-        })
+        total: total.toString(),
+        ...(customerEmail && { customerEmail })
       },
-
-      // Shipping information (if provided)
-      ...(shippingAddress && {
-        shipping: {
-          name: `${shippingAddress.firstName} ${shippingAddress.lastName}`,
-          phone: shippingAddress.phone,
-          address: {
-            line1: shippingAddress.address1,
-            line2: shippingAddress.address2 || undefined,
-            city: shippingAddress.city,
-            postal_code: shippingAddress.postcode,
-            country: shippingAddress.country.toUpperCase(),
-          },
-        },
-      }),
-
-      // Receipt email (if provided)
-      ...(shippingAddress?.email && {
-        receipt_email: shippingAddress.email,
-      }),
+      
+      // Receipt email if provided
+      ...(customerEmail && { receipt_email: customerEmail })
     })
 
-    console.log('✅ PaymentIntent created:', paymentIntent.id)
-
-    // Return client secret for frontend
+    // Clean response optimized for frontend
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
       paymentIntentId: paymentIntent.id,
-      amount: total,
+      total: parseFloat(total.toFixed(2)),
       currency: currency.toLowerCase(),
-      totals: {
-        subtotal: subtotal,
-        shipping: shipping,
-        tax: tax,
-        total: total
-      },
-      items: productDetails.map(item => ({
-        name: item.name,
-        sku: item.sku,
-        size: item.size,
-        color: item.color,
-        quantity: item.quantity,
-        unitPrice: item.unitPrice,
-        totalPrice: item.totalPrice
-      }))
+      breakdown: {
+        subtotal: parseFloat(subtotal.toFixed(2)),
+        shipping: parseFloat(shipping.toFixed(2)),
+        tax: parseFloat(tax.toFixed(2))
+      }
     })
 
   } catch (error) {
-    console.error('❌ PaymentIntent API error:', error)
-    
+    // Conversion-optimized error handling
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        {
-          error: 'Validation failed',
-          details: error.issues.map((issue) => `${issue.path.join('.')}: ${issue.message}`).join(', ')
-        },
+        { error: 'Invalid request', message: 'Please check your cart and try again' },
         { status: 400 }
       )
     }
 
+    // Generic error for security
     return NextResponse.json(
-      {
-        error: error instanceof Error ? error.message : 'Failed to create PaymentIntent',
-        timestamp: new Date().toISOString()
-      },
+      { error: 'Payment setup failed', message: 'Please try again or contact support' },
       { status: 500 }
     )
   }
