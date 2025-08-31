@@ -327,12 +327,12 @@ export default function TrackOrderPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
                     <h4 className="font-semibold text-foreground mb-2">Email Support</h4>
-                    <p className="text-sm text-muted-foreground">orders@militarytees.co.uk</p>
+                    <p className="text-sm text-muted-foreground">info@militarytees.co.uk</p>
                     <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                   </div>
                   
                   <div>
-                    <h4 className="font-semibold text-foreground mb-2">Live Chat</h4>
+                    <h4 className="font-semibold text-foreground mb-2">Email Support</h4>
                     <p className="text-sm text-muted-foreground">Available on website</p>
                     <p className="text-xs text-muted-foreground">Mon-Fri, 9AM-5PM GMT</p>
                   </div>

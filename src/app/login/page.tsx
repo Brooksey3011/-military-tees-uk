@@ -3,9 +3,10 @@
 import { Layout } from "@/components/layout/layout"
 import { LoginForm } from "@/components/auth/login-form"
 import { Badge } from "@/components/ui/badge"
-import { Shield } from "lucide-react"
+import { Shield, CheckCircle } from "lucide-react"
 import { useAuth } from "@/hooks/use-auth"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import Link from "next/link"
 
 // Force dynamic rendering for this page
@@ -13,6 +14,15 @@ export const dynamic = 'force-dynamic'
 
 export default function LoginPage() {
   const { signIn, user, loading } = useAuth()
+  const searchParams = useSearchParams()
+  const [showSuccess, setShowSuccess] = useState(false)
+
+  // Check for registration success message
+  useEffect(() => {
+    if (searchParams?.get('message') === 'registration-success') {
+      setShowSuccess(true)
+    }
+  }, [searchParams])
 
   // Redirect if already logged in
   useEffect(() => {
@@ -54,7 +64,21 @@ export default function LoginPage() {
         {/* Login Form Section */}
         <section className="py-16">
           <div className="container mx-auto px-4 flex justify-center">
-            <div className="w-full max-w-md">
+            <div className="w-full max-w-md space-y-6">
+              
+              {/* Registration Success Message */}
+              {showSuccess && (
+                <div className="p-4 bg-green-50 border-2 border-green-200 rounded text-green-800 text-sm">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-5 w-5 text-green-600" />
+                    <div>
+                      <p className="font-semibold">Registration Successful!</p>
+                      <p>You can now sign in with your new account.</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               <LoginForm
                 onSubmit={handleLogin}
                 onSwitchToSignup={() => {

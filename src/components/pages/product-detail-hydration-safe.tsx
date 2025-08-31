@@ -1,8 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useParams, useRouter } from "next/navigation"
 import { useSimpleCart } from "@/hooks/use-simple-cart"
+import { SizeSelector } from "@/components/product/size-selector"
 
 interface Product {
   id: string
@@ -119,9 +120,38 @@ export function ProductDetailHydrationSafe() {
     )
   }
 
-  // Get unique sizes and colors
-  const sizes = [...new Set(product.variants?.map(v => v.size) || [])]
+  // Prepare size options for SizeSelector component
+  const sizeOptions = React.useMemo(() => {
+    if (!product.variants) return []
+    
+    const sizeMap = new Map()
+    product.variants.forEach(variant => {
+      if (!sizeMap.has(variant.size)) {
+        sizeMap.set(variant.size, {
+          size: variant.size,
+          label: variant.size,
+          stock: 0,
+          isAvailable: false
+        })
+      }
+      const size = sizeMap.get(variant.size)
+      size.stock += variant.stock_quantity
+      size.isAvailable = size.isAvailable || variant.stock_quantity > 0
+    })
+    return Array.from(sizeMap.values())
+  }, [product.variants])
+
+  // Get unique colors
   const colors = [...new Set(product.variants?.map(v => v.color) || [])]
+
+  // Determine product type for size guide
+  const productType = React.useMemo(() => {
+    if (!product.category?.name) return 'tshirt'
+    const category = product.category.name.toLowerCase()
+    if (category.includes('hoodie') || category.includes('sweatshirt')) return 'hoodie'
+    if (category.includes('polo')) return 'polo'
+    return 'tshirt'
+  }, [product.category])
 
   // Find current variant
   const currentVariant = product.variants?.find(
@@ -200,26 +230,14 @@ export function ProductDetailHydrationSafe() {
             </div>
           </div>
 
-          {/* Size Selection */}
-          {sizes.length > 0 && (
-            <div>
-              <h3 className="text-lg font-semibold mb-3">Size</h3>
-              <div className="flex flex-wrap gap-2">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 border rounded ${
-                      selectedSize === size
-                        ? 'border-green-600 bg-green-50 text-green-600'
-                        : 'border-gray-300 hover:border-green-600'
-                    }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
+          {/* Size Selection with Integrated Size Guide */}
+          {sizeOptions.length > 0 && (
+            <SizeSelector
+              sizes={sizeOptions}
+              selectedSize={selectedSize}
+              onSizeChange={setSelectedSize}
+              productType={productType}
+            />
           )}
 
           {/* Color Selection */}

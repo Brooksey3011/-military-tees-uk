@@ -66,7 +66,7 @@ Error Details:
 Please describe what you were doing when this error occurred:
 
 `)
-      window.open(`mailto:support@militarytees.co.uk?subject=${subject}&body=${body}`)
+      window.open(`mailto:info@militarytees.co.uk?subject=${subject}&body=${body}`)
     }
   }
 
@@ -153,10 +153,10 @@ Please describe what you were doing when this error occurred:
               <p>
                 For immediate assistance: <br />
                 <a 
-                  href="mailto:support@militarytees.co.uk" 
+                  href="mailto:info@militarytees.co.uk" 
                   className="text-primary hover:underline"
                 >
-                  support@militarytees.co.uk
+                  info@militarytees.co.uk
                 </a>
               </p>
             </div>

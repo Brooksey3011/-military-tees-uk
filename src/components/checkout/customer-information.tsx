@@ -22,7 +22,6 @@ interface CustomerData {
   email: string
   firstName: string
   lastName: string
-  phone: string
   createAccount: boolean
   password: string
   marketingConsent: boolean
@@ -44,7 +43,6 @@ export function CustomerInformation({
     email: initialData.email || '',
     firstName: initialData.firstName || '',
     lastName: initialData.lastName || '',
-    phone: initialData.phone || '',
     createAccount: initialData.createAccount || false,
     password: '',
     marketingConsent: initialData.marketingConsent || false
@@ -73,9 +71,6 @@ export function CustomerInformation({
       newErrors.lastName = 'Last name is required'
     }
 
-    if (formData.phone && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(formData.phone)) {
-      newErrors.phone = 'Please enter a valid phone number'
-    }
 
     if ((checkoutType === 'register' || formData.createAccount) && !formData.password) {
       newErrors.password = 'Password is required'
@@ -287,28 +282,6 @@ export function CustomerInformation({
               </div>
 
               {/* Phone */}
-              <div className="space-y-2">
-                <Label htmlFor="phone">
-                  Phone Number <span className="text-muted-foreground text-sm">(Optional)</span>
-                </Label>
-                <div className="relative">
-                  <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="Enter your phone number"
-                    value={formData.phone}
-                    onChange={(e) => handleInputChange('phone', e.target.value)}
-                    className={`pl-10 ${errors.phone ? 'border-destructive' : ''}`}
-                  />
-                </div>
-                {errors.phone && (
-                  <p className="text-sm text-destructive">{errors.phone}</p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  We'll only contact you about your order
-                </p>
-              </div>
 
               {/* Account Creation for Guest */}
               {checkoutType === 'guest' && (

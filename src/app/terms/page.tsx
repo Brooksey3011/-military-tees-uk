@@ -229,7 +229,7 @@ export default function TermsPage() {
                 </p>
                 
                 <div className="space-y-2 text-sm">
-                  <div><strong>Email:</strong> legal@militarytees.co.uk</div>
+                  <div><strong>Email:</strong> info@militarytees.co.uk</div>
                   <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   <div><strong>Address:</strong> Military Tees UK, United Kingdom</div>
                 </div>

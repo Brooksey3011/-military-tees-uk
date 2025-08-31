@@ -24,7 +24,6 @@ interface UploadedImage {
 const quoteSchema = z.object({
   name: z.string().min(1, 'Name is required').max(100, 'Name too long'),
   email: z.string().email('Invalid email address'),
-  phone: z.string().optional(),
   orderType: z.string().min(1, 'Please select an order type'),
   quantity: z.number().min(1, 'Quantity must be at least 1').max(10000, 'Quantity too high'),
   description: z.string().min(10, 'Please provide at least 10 characters').max(2000, 'Description too long'),
@@ -185,17 +184,6 @@ export function QuoteForm({ serviceType, onClose }: QuoteFormProps) {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-foreground">
-                Phone Number
-              </label>
-              <Input 
-                {...register('phone')}
-                type="tel"
-                placeholder="Your phone number"
-                className="rounded-none border-2"
-              />
-            </div>
             
             <div className="space-y-2">
               <label className="text-sm font-medium text-foreground">
@@ -339,7 +327,7 @@ export function QuoteForm({ serviceType, onClose }: QuoteFormProps) {
             </div>
             <div className="flex items-center gap-2">
               <Mail className="h-4 w-4 text-primary" />
-              <span>custom@militarytees.co.uk</span>
+              <span>info@militarytees.co.uk</span>
             </div>
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-primary" />

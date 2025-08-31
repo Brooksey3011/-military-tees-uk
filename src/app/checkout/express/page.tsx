@@ -90,7 +90,7 @@ export default function ExpressCheckoutRedirectPage() {
                       </span>
                     </div>
                     <p className="text-xs text-green-700 text-center mb-2">
-                      SSL encrypted • PCI compliant • One-click checkout
+                      SSL encrypted • PCI compliant • One-click checkout • No VAT applied
                     </p>
                     <div className="text-xs text-blue-700 text-center">
                       🍎 Apple Pay • 🅱️ Google Pay • 💳 All Cards Supported

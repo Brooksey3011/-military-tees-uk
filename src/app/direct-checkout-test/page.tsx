@@ -55,11 +55,10 @@ export default function DirectCheckoutTest() {
 
   const clearCart = () => setCartItems([])
 
-  // Calculate totals
+  // Calculate totals (NO VAT - not VAT registered)
   const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0)
   const shipping = subtotal >= 50 ? 0 : 4.99
-  const tax = Math.round((subtotal + shipping) * 0.2 * 100) / 100
-  const total = subtotal + shipping + tax
+  const total = subtotal + shipping
 
   // Convert to cart format for the button
   const simpleCartItems = cartItems.map(item => ({
@@ -203,13 +202,12 @@ export default function DirectCheckoutTest() {
                         {shipping === 0 ? "FREE" : `£${shipping.toFixed(2)}`}
                       </span>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span>VAT (20%):</span>
-                      <span>£{tax.toFixed(2)}</span>
-                    </div>
                     <div className="flex justify-between text-lg font-bold text-green-900 border-t pt-2">
                       <span>Total:</span>
                       <span>£{total.toFixed(2)}</span>
+                    </div>
+                    <div className="text-xs text-muted-foreground text-center mt-2">
+                      No VAT applied - not VAT registered
                     </div>
                   </div>
                 </CardContent>

@@ -404,7 +404,7 @@ export default function CustomOrdersPage() {
                     <Mail className="h-5 w-5 text-primary mt-1" />
                     <div>
                       <p className="font-medium text-foreground">Email</p>
-                      <p className="text-muted-foreground">custom@militarytees.co.uk</p>
+                      <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       <p className="text-xs text-muted-foreground">Response within 24 hours</p>
                     </div>
                   </div>

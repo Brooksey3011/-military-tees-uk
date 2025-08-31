@@ -325,7 +325,7 @@ export default function DeliveryPage() {
                   </p>
                   
                   <div className="space-y-2 text-sm">
-                    <div><strong className="text-foreground">Delivery Support:</strong> delivery@militarytees.co.uk</div>
+                    <div><strong className="text-foreground">Delivery Support:</strong> info@militarytees.co.uk</div>
                     <div><strong className="text-foreground">Phone Support:</strong> +44 1234 567890</div>
                     <div><strong className="text-foreground">Track Order:</strong> <Link href="/track-order" className="text-primary hover:underline">Online Tracking</Link></div>
                   </div>

@@ -5,6 +5,7 @@ import { useSimpleCart } from '@/hooks/use-simple-cart'
 import { Card, CardContent } from '@/components/ui/card'
 import { Loader2, ArrowLeft, Shield } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { trackBeginCheckout } from '@/components/analytics/plausible'
 import Link from 'next/link'
 
 export default function CheckoutRedirectPage() {
@@ -19,6 +20,10 @@ export default function CheckoutRedirectPage() {
 
   const handleDirectCheckout = async () => {
     try {
+      // Track checkout initiation
+      const totalValue = items.reduce((sum, item) => sum + (item.price * item.quantity), 0)
+      trackBeginCheckout(totalValue, items.length)
+
       // Convert cart items to API format
       const checkoutItems = items.map(item => ({
         variantId: item.variantId,
@@ -87,7 +92,7 @@ export default function CheckoutRedirectPage() {
                       </span>
                     </div>
                     <p className="text-xs text-green-700 text-center">
-                      SSL encrypted • PCI compliant • All major cards accepted
+                      SSL encrypted • PCI compliant • All major cards accepted • No VAT applied
                     </p>
                   </div>
 

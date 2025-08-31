@@ -253,7 +253,7 @@ export default function PrivacyPage() {
                 </div>
                 
                 <p className="text-sm text-muted-foreground">
-                  To exercise these rights, contact us at <strong className="text-foreground">privacy@militarytees.co.uk</strong>
+                  To exercise these rights, contact us at <strong className="text-foreground">info@militarytees.co.uk</strong>
                 </p>
               </CardContent>
             </Card>
@@ -322,7 +322,7 @@ export default function PrivacyPage() {
                 </p>
                 
                 <div className="space-y-2 text-sm">
-                  <div><strong>Email:</strong> privacy@militarytees.co.uk</div>
+                  <div><strong>Email:</strong> info@militarytees.co.uk</div>
                   <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   <div><strong>Address:</strong> Data Protection Officer, Military Tees UK, United Kingdom</div>
                 </div>

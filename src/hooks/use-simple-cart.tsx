@@ -1,6 +1,7 @@
 "use client"
 
 import React, { createContext, useContext, useState, useEffect } from 'react'
+import { trackAddToCart } from '@/components/analytics/plausible'
 
 export interface CartItem {
   id: string
@@ -79,6 +80,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           ...existingItem,
           quantity: Math.min(existingItem.quantity + 1, existingItem.maxQuantity)
         }
+        
+        // Track add to cart analytics
+        trackAddToCart(newItem.name, newItem.price, `${newItem.size} ${newItem.color}`.trim())
         return updatedItems
       } else {
         // Add new item
@@ -87,6 +91,9 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           id: `${newItem.productId}-${newItem.variantId}`,
           quantity: 1
         }
+        
+        // Track add to cart analytics
+        trackAddToCart(newItem.name, newItem.price, `${newItem.size} ${newItem.color}`.trim())
         return [...currentItems, cartItem]
       }
     })

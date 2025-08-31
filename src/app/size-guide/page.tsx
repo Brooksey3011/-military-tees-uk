@@ -312,7 +312,7 @@ export default function SizeGuidePage() {
                 </div>
                 
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p><strong>Email:</strong> sizing@militarytees.co.uk</p>
+                  <p><strong>Email:</strong> info@militarytees.co.uk</p>
                   <p><strong>Phone:</strong> +44 1234 567890</p>
                   <p>Include your measurements and intended use for personalized recommendations</p>
                 </div>

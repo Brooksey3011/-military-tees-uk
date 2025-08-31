@@ -142,7 +142,7 @@ export default function FAQPage() {
         },
         {
           question: "How can I contact customer support?",
-          answer: "Email: support@militarytees.co.uk | Hours: Mon-Fri 9AM-5PM GMT. We aim to respond to all inquiries within 24 hours."
+          answer: "Email: info@militarytees.co.uk | Hours: Mon-Fri 9AM-5PM GMT. We aim to respond to all inquiries within 24 hours."
         },
         {
           question: "Do you have a physical store?",
@@ -258,7 +258,7 @@ export default function FAQPage() {
                 </div>
                 
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p><strong>Email:</strong> support@militarytees.co.uk</p>
+                  <p><strong>Email:</strong> info@militarytees.co.uk</p>
                   <p><strong>Hours:</strong> Monday - Friday, 9:00 AM - 5:00 PM GMT</p>
                 </div>
               </CardContent>

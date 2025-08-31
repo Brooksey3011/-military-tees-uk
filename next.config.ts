@@ -2,18 +2,41 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   typescript: {
-    // Temporarily ignore TypeScript errors during build
+    // Temporarily ignore TypeScript errors during build (to be fixed incrementally)
     ignoreBuildErrors: true,
   },
   eslint: {
-    // Temporarily ignore ESLint errors during build
+    // Temporarily ignore ESLint errors during build (to be fixed incrementally)
     ignoreDuringBuilds: true,
   },
   skipTrailingSlashRedirect: true,
   images: {
-    domains: ['rdpjldootsglcbzhfkdi.supabase.co'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'rdpjldootsglcbzhfkdi.supabase.co',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+        port: '',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.vercel.app',
+        port: '',
+        pathname: '/**',
+      },
+    ],
     formats: ['image/webp', 'image/avif'],
-    unoptimized: true, // Disable optimization to prevent 400 errors
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 86400, // 1 day cache
+    dangerouslyAllowSVG: true,
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   
   async headers() {

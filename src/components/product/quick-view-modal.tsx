@@ -127,6 +127,15 @@ export function QuickViewModal({
     return Array.from(colorMap.values())
   }, [product])
 
+  // Determine product type for size guide
+  const productType = React.useMemo(() => {
+    if (!product?.category) return 'tshirt'
+    const category = product.category.toLowerCase()
+    if (category.includes('hoodie') || category.includes('sweatshirt')) return 'hoodie'
+    if (category.includes('polo')) return 'polo'
+    return 'tshirt'
+  }, [product?.category])
+
   if (!product) return null
 
   // Get selected variant
@@ -309,6 +318,7 @@ export function QuickViewModal({
                   sizes={availableSizes}
                   selectedSize={selectedSize}
                   onSizeChange={setSelectedSize}
+                  productType={productType}
                 />
 
                 {/* Color Selection */}

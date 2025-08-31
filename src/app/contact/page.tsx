@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { Phone, Mail, MapPin, Clock, MessageSquare, Users, HeadphonesIcon } from "lucide-react"
+import { Mail, MapPin, Clock, MessageSquare, Users, HeadphonesIcon } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -16,7 +16,6 @@ export default function ContactPage() {
   const [firstName, setFirstName] = React.useState("")
   const [lastName, setLastName] = React.useState("")
   const [email, setEmail] = React.useState("")
-  const [phone, setPhone] = React.useState("")
   const [subject, setSubject] = React.useState("")
   const [orderNumber, setOrderNumber] = React.useState("")
   const [militaryStatus, setMilitaryStatus] = React.useState("")
@@ -63,8 +62,8 @@ export default function ContactPage() {
                     <CardTitle className={cn(
                       "font-display tracking-wide uppercase flex items-center gap-2"
                     )}>
-                      <Phone className="h-5 w-5 text-primary" />
-                      Quick Contact
+                      <Mail className="h-5 w-5 text-primary" />
+                      Email Contact
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
@@ -73,7 +72,7 @@ export default function ContactPage() {
                         <Mail className="h-4 w-4 text-muted-foreground" />
                         <div>
                           <p className="font-medium text-foreground">General Email</p>
-                          <p className="text-sm text-muted-foreground">support@militarytees.co.uk</p>
+                          <p className="text-sm text-muted-foreground">info@militarytees.co.uk</p>
                         </div>
                       </div>
                       
@@ -102,27 +101,27 @@ export default function ContactPage() {
                     <div className="space-y-3 text-sm">
                       <div>
                         <p className="font-medium text-foreground">Orders & General Support</p>
-                        <p className="text-muted-foreground">support@militarytees.co.uk</p>
+                        <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       </div>
                       
                       <div>
                         <p className="font-medium text-foreground">Returns & Exchanges</p>
-                        <p className="text-muted-foreground">returns@militarytees.co.uk</p>
+                        <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       </div>
                       
                       <div>
                         <p className="font-medium text-foreground">Custom Design Requests</p>
-                        <p className="text-muted-foreground">design@militarytees.co.uk</p>
+                        <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       </div>
                       
                       <div>
                         <p className="font-medium text-foreground">Wholesale & Bulk Orders</p>
-                        <p className="text-muted-foreground">wholesale@militarytees.co.uk</p>
+                        <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       </div>
                       
                       <div>
                         <p className="font-medium text-foreground">Press & Media</p>
-                        <p className="text-muted-foreground">press@militarytees.co.uk</p>
+                        <p className="text-muted-foreground">info@militarytees.co.uk</p>
                       </div>
                     </div>
                   </CardContent>
@@ -327,13 +326,15 @@ export default function ContactPage() {
                     </div>
                     
                     <div>
-                      <MessageSquare className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <h3 className="font-semibold text-foreground mb-1">Live Chat</h3>
+                      <Mail className="h-8 w-8 text-primary mx-auto mb-2" />
+                      <h3 className="font-semibold text-foreground mb-1">Email Response</h3>
                       <p className="text-sm text-muted-foreground">
-                        Available on our website during business hours
+                        We respond to all emails within 24 hours
                       </p>
-                      <Button variant="outline" size="sm" className="rounded-none mt-2" disabled>
-                        Start Chat
+                      <Button variant="outline" size="sm" className="rounded-none mt-2" asChild>
+                        <a href="mailto:info@militarytees.co.uk">
+                          Send Email
+                        </a>
                       </Button>
                     </div>
                     

@@ -26,11 +26,10 @@ export function CheckoutButton({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Calculate totals for display
+  // Calculate totals for display (NO VAT - not VAT registered)
   const subtotal = totalPrice
   const shipping = subtotal >= 50 ? 0 : 4.99
-  const tax = Math.round((subtotal + shipping) * 0.2 * 100) / 100
-  const total = subtotal + shipping + tax
+  const total = subtotal + shipping
 
   const isDisabled = items.length === 0 || totalPrice < 0.5 || isLoading
 

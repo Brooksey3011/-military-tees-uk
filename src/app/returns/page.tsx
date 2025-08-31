@@ -173,7 +173,7 @@ export default function ReturnsPage() {
                       step: 1,
                       title: "Request Return Authorization",
                       description: "Contact our customer service team or use our online return portal to request a Return Authorization (RA) number.",
-                      details: "Email: returns@militarytees.co.uk | Phone: +44 1234 567890"
+                      details: "Email: info@militarytees.co.uk | Phone: "
                     },
                     {
                       step: 2,
@@ -354,8 +354,8 @@ export default function ReturnsPage() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2 text-sm">
-                    <div><strong>Returns Email:</strong> returns@militarytees.co.uk</div>
-                    <div><strong>General Support:</strong> support@militarytees.co.uk</div>
+                    <div><strong>Returns Email:</strong> info@militarytees.co.uk</div>
+                    <div><strong>General Support:</strong> info@militarytees.co.uk</div>
                     <div><strong>Website:</strong> militarytees.co.uk/contact</div>
                   </div>
                   

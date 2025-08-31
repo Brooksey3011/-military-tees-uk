@@ -52,7 +52,7 @@ export default function SignupPage() {
           <div className="container mx-auto px-4 flex justify-center">
             <div className="w-full max-w-md">
               <SignupForm
-                onSubmit={handleSignup}
+                useBackendAPI={true} // Use the secure backend API
                 onSwitchToLogin={() => {
                   window.location.href = "/login"
                 }}

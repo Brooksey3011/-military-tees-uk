@@ -49,18 +49,15 @@ const mediaAssets = [
 const pressContacts = [
   {
     title: "General Press Inquiries",
-    email: "press@militarytees.co.uk",
-    phone: "+44 1234 567890"
+    email: "info@militarytees.co.uk"
   },
   {
     title: "Partnership Opportunities", 
-    email: "partnerships@militarytees.co.uk",
-    phone: "+44 1234 567891"
+    email: "info@militarytees.co.uk"
   },
   {
     title: "Influencer Collaborations",
-    email: "influencers@militarytees.co.uk", 
-    phone: "+44 1234 567892"
+    email: "info@militarytees.co.uk"
   }
 ]
 
@@ -173,22 +170,13 @@ export default function MediaKitPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Email</p>
+                    <div className="text-center">
+                      <p className="text-sm text-muted-foreground mb-2">Email Contact</p>
                       <a 
                         href={`mailto:${contact.email}`}
-                        className="text-primary hover:text-primary/80 font-medium"
+                        className="text-primary hover:text-primary/80 font-medium text-sm"
                       >
                         {contact.email}
-                      </a>
-                    </div>
-                    <div>
-                      <p className="text-sm text-muted-foreground mb-1">Phone</p>
-                      <a 
-                        href={`tel:${contact.phone}`}
-                        className="text-primary hover:text-primary/80 font-medium"
-                      >
-                        {contact.phone}
                       </a>
                     </div>
                   </CardContent>
@@ -245,7 +233,7 @@ export default function MediaKitPage() {
                 className="bg-background text-foreground hover:bg-background/90 rounded-none font-display font-bold tracking-wide uppercase"
                 asChild
               >
-                <Link href="mailto:press@militarytees.co.uk">
+                <Link href="mailto:info@militarytees.co.uk">
                   Contact Press Team
                 </Link>
               </Button>

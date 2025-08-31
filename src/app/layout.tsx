@@ -5,6 +5,7 @@ import { SimpleErrorBoundary } from "@/components/ui/simple-error-boundary";
 import { CookieConsent } from "@/components/ui/cookie-consent";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-simple-cart";
+import { PlausibleProvider } from "@/components/analytics/plausible";
 import "./globals.css";
 
 const sourceSans3 = Source_Sans_3({
@@ -202,14 +203,16 @@ export default function RootLayout({
         />
       </head>
       <body className="antialiased">
-        <SimpleErrorBoundary>
-          <AuthProvider>
-            <CartProvider>
-              {children}
-              <CookieConsent />
-            </CartProvider>
-          </AuthProvider>
-        </SimpleErrorBoundary>
+        <PlausibleProvider domain="militarytees.co.uk">
+          <SimpleErrorBoundary>
+            <AuthProvider>
+              <CartProvider>
+                {children}
+                <CookieConsent />
+              </CartProvider>
+            </AuthProvider>
+          </SimpleErrorBoundary>
+        </PlausibleProvider>
       </body>
     </html>
   );

@@ -12,13 +12,15 @@ interface SignupFormProps {
   onSwitchToLogin?: () => void
   className?: string
   isLoading?: boolean
+  useBackendAPI?: boolean // New prop to use backend API instead of client-side auth
 }
 
 export function SignupForm({
   onSubmit,
   onSwitchToLogin,
   className,
-  isLoading = false
+  isLoading = false,
+  useBackendAPI = true // Default to using backend API
 }: SignupFormProps) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -35,7 +37,9 @@ export function SignupForm({
     firstName?: string
     lastName?: string
     terms?: string
+    general?: string // For general API errors
   }>({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const validateForm = () => {
     const newErrors: {
@@ -87,16 +91,98 @@ export function SignupForm({
     return Object.keys(newErrors).length === 0
   }
 
+  // Backend API registration
+  const handleBackendRegistration = async () => {
+    setIsSubmitting(true)
+    setErrors({}) // Clear previous errors
+
+    try {
+      const response = await fetch('/api/auth/register-simple', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: email.trim(),
+          password,
+          firstName: firstName.trim(),
+          lastName: lastName.trim(),
+          marketingConsent: false
+        })
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        // Handle specific error codes from backend
+        switch (data.code) {
+          case 'EMAIL_ALREADY_EXISTS':
+            setErrors({ email: data.error })
+            break
+          case 'VALIDATION_ERROR':
+            setErrors({ [data.field]: data.error })
+            break
+          case 'WEAK_PASSWORD':
+            setErrors({ password: data.error })
+            break
+          case 'INVALID_EMAIL':
+            setErrors({ email: data.error })
+            break
+          default:
+            setErrors({ general: data.error || 'Registration failed. Please try again.' })
+        }
+        return
+      }
+
+      // Registration successful
+      console.log('✅ Registration successful:', data)
+      
+      // Redirect to login or account page
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login?message=registration-success'
+      }
+
+    } catch (error) {
+      console.error('❌ Registration request failed:', error)
+      setErrors({ 
+        general: 'Network error. Please check your connection and try again.' 
+      })
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (!validateForm()) return
-    
-    try {
-      await onSubmit?.(email, password, firstName.trim(), lastName.trim())
-    } catch (error) {
-      console.error("Signup failed:", error)
-      setErrors({ email: "Registration failed. Please try again." })
+
+    if (useBackendAPI) {
+      await handleBackendRegistration()
+    } else {
+      // Use the original onSubmit prop (client-side auth)
+      try {
+        setIsSubmitting(true)
+        await onSubmit?.(email, password, firstName.trim(), lastName.trim())
+      } catch (error) {
+        console.error("Signup failed:", error)
+        
+        // Try to extract meaningful error message
+        let errorMessage = "Registration failed. Please try again."
+        if (error instanceof Error) {
+          if (error.message.includes('email')) {
+            setErrors({ email: error.message })
+          } else if (error.message.includes('password')) {
+            setErrors({ password: error.message })
+          } else {
+            setErrors({ general: error.message })
+          }
+        } else {
+          setErrors({ general: errorMessage })
+        }
+      } finally {
+        setIsSubmitting(false)
+      }
     }
   }
 
@@ -119,6 +205,16 @@ export function SignupForm({
 
       {/* Signup Form */}
       <form onSubmit={handleSubmit} className="space-y-4">
+        
+        {/* General Error Message */}
+        {errors.general && (
+          <div className="p-3 bg-red-50 border-2 border-red-200 rounded text-red-800 text-sm">
+            <div className="flex items-center gap-2">
+              <span className="font-semibold">Registration Failed:</span>
+              <span>{errors.general}</span>
+            </div>
+          </div>
+        )}
         
         {/* First Name Field */}
         <div className="space-y-2">
@@ -294,9 +390,9 @@ export function SignupForm({
         <Button
           type="submit"
           className="w-full rounded-none font-display font-bold tracking-wide uppercase"
-          disabled={isLoading}
+          disabled={isLoading || isSubmitting}
         >
-          {isLoading ? "Enlisting..." : "Complete Enlistment"}
+          {(isLoading || isSubmitting) ? "Enlisting..." : "Complete Enlistment"}
         </Button>
       </form>
 

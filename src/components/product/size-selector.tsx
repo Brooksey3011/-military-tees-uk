@@ -4,6 +4,7 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
+import { SizeGuideButton } from "./size-guide-modal"
 
 interface SizeOption {
   size: string
@@ -18,6 +19,7 @@ interface SizeSelectorProps {
   onSizeChange?: (size: string) => void
   className?: string
   disabled?: boolean
+  productType?: 'tshirt' | 'hoodie' | 'polo' | 'tank' | 'jacket'
 }
 
 export function SizeSelector({
@@ -25,7 +27,8 @@ export function SizeSelector({
   selectedSize,
   onSizeChange,
   className,
-  disabled = false
+  disabled = false,
+  productType = 'tshirt'
 }: SizeSelectorProps) {
   const [internalSelectedSize, setInternalSelectedSize] = React.useState(selectedSize || "")
 
@@ -43,11 +46,18 @@ export function SizeSelector({
 
   return (
     <div className={cn("space-y-3", className)}>
-      {/* Size Label */}
+      {/* Size Label with Size Guide Button */}
       <div className="flex items-center justify-between">
-        <h3 className="text-sm font-display font-bold tracking-wide uppercase text-foreground">
-          Size
-        </h3>
+        <div className="flex items-center gap-3">
+          <h3 className="text-sm font-display font-bold tracking-wide uppercase text-foreground">
+            Size
+          </h3>
+          <SizeGuideButton 
+            productType={productType}
+            variant="subtle"
+            className="text-xs"
+          />
+        </div>
         {currentSize && (
           <Badge className="rounded-none bg-primary text-primary-foreground">
             {sizes.find(s => s.size === currentSize)?.label || currentSize}
@@ -102,20 +112,19 @@ export function SizeSelector({
         })}
       </div>
 
-      {/* Size Guide Link */}
+      {/* Stock Info & Additional Size Guide */}
       <div className="flex items-center justify-between text-xs">
-        <button 
-          className="text-primary hover:text-primary/80 font-medium tracking-wide uppercase underline"
-          onClick={() => {
-            // This would open a size guide modal or page
-            console.log("Open size guide")
-          }}
-        >
-          Size Guide
-        </button>
+        <div className="flex items-center gap-4">
+          <SizeGuideButton 
+            productType={productType}
+            variant="prominent"
+            className="text-xs px-3 py-1.5"
+          />
+          <span className="text-muted-foreground">Need help choosing?</span>
+        </div>
         
         {currentSize && (
-          <div className="text-muted-foreground">
+          <div className="text-muted-foreground font-medium">
             {(() => {
               const selected = sizes.find(s => s.size === currentSize)
               if (!selected) return null

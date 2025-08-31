@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
+import { ShippingCalculator, createStripeShippingOptions } from '@/lib/shipping-calculator'
 
-// Minimal schema for DIRECT checkout - no friction
+// Enhanced schema for multi-shipping checkout
 const directCheckoutSchema = z.object({
   items: z.array(z.object({
     variantId: z.string().uuid(),
     quantity: z.number().int().min(1).max(10)
   })).min(1),
-  customerEmail: z.string().email().optional()
+  customerEmail: z.string().email().optional(),
+  preferredCountry: z.string().length(2).optional() // ISO country code for shipping calculation
 })
 
 type DirectCheckoutRequest = z.infer<typeof directCheckoutSchema>
@@ -59,25 +61,35 @@ async function getProductDetails(items: DirectCheckoutRequest['items']) {
   return productDetails
 }
 
-// Calculate pricing
-function calculateTotals(productDetails: any[]) {
-  const subtotal = productDetails.reduce((sum, item) => sum + item.totalPrice, 0)
-  const shipping = subtotal >= 50 ? 0 : 4.99
-  const vat = Math.round((subtotal + shipping) * 0.2 * 100) / 100
-  const total = subtotal + shipping + vat
-  
-  return { subtotal, shipping, vat, total }
+// Calculate subtotal only (shipping handled by Stripe with multiple options)
+function calculateSubtotal(productDetails: any[]) {
+  return productDetails.reduce((sum, item) => sum + item.totalPrice, 0)
 }
 
 export async function POST(request: NextRequest) {
   try {
-    // Parse minimal request
+    // Parse request with shipping preferences
     const body = await request.json()
-    const { items, customerEmail } = directCheckoutSchema.parse(body)
+    const { items, customerEmail, preferredCountry } = directCheckoutSchema.parse(body)
 
     // Fast product validation
     const productDetails = await getProductDetails(items)
-    const { subtotal, shipping, vat, total } = calculateTotals(productDetails)
+    const subtotal = calculateSubtotal(productDetails)
+    
+    // Prepare items for shipping calculation
+    const shippingItems = productDetails.map(item => ({
+      variantId: item.variantId,
+      quantity: item.quantity,
+      price: item.unitPrice
+    }))
+    
+    // Calculate shipping rates based on customer location (default to UK)
+    const countryCode = preferredCountry || 'GB'
+    const shippingRates = ShippingCalculator.calculateShippingRates({
+      items: shippingItems,
+      countryCode,
+      subtotal
+    })
 
     // Get app URL for redirects
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
@@ -122,21 +134,8 @@ export async function POST(request: NextRequest) {
         quantity: item.quantity
       })),
       
-      // Shipping options
-      shipping_options: [{
-        shipping_rate_data: {
-          type: 'fixed_amount',
-          fixed_amount: {
-            amount: Math.round(shipping * 100),
-            currency: 'gbp'
-          },
-          display_name: shipping === 0 ? 'Free UK Shipping (Over £50)' : 'Standard UK Shipping',
-          delivery_estimate: {
-            minimum: { unit: 'business_day', value: 3 },
-            maximum: { unit: 'business_day', value: 7 }
-          }
-        }
-      }],
+      // Dynamic shipping options based on location and cart value
+      shipping_options: createStripeShippingOptions(shippingRates),
       
       // Metadata for order processing
       metadata: {
@@ -152,11 +151,20 @@ export async function POST(request: NextRequest) {
       expires_at: Math.floor(Date.now() / 1000) + (30 * 60)
     })
 
-    // Return checkout URL for immediate redirect
+    // Return checkout URL with shipping information
     return NextResponse.json({
       url: session.url,
       sessionId: session.id,
-      orderRef
+      orderRef,
+      shipping: {
+        country: countryCode,
+        availableRates: shippingRates.map(rate => ({
+          id: rate.id,
+          name: rate.name,
+          amount: rate.amount,
+          estimatedDays: rate.estimatedDays
+        }))
+      }
     })
 
   } catch (error) {
