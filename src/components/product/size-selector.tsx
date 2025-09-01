@@ -4,7 +4,6 @@ import * as React from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
-import { SizeGuideButton } from "./size-guide-modal"
 
 interface SizeOption {
   size: string
@@ -46,17 +45,21 @@ export function SizeSelector({
 
   return (
     <div className={cn("space-y-3", className)}>
-      {/* Size Label with Size Guide Button */}
+      {/* Size Label with Size Guide Reference */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <h3 className="text-sm font-display font-bold tracking-wide uppercase text-foreground">
             Size
           </h3>
-          <SizeGuideButton 
-            productType={productType}
-            variant="subtle"
-            className="text-xs"
-          />
+          <button 
+            onClick={() => {
+              const sizeGuide = document.getElementById('inline-size-guide')
+              sizeGuide?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
+            className="text-xs text-primary hover:text-primary/80 underline font-medium"
+          >
+            See Size Guide ↓
+          </button>
         </div>
         {currentSize && (
           <Badge className="rounded-none bg-primary text-primary-foreground">
@@ -112,15 +115,10 @@ export function SizeSelector({
         })}
       </div>
 
-      {/* Stock Info & Additional Size Guide */}
+      {/* Stock Info & Size Guide Help */}
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-4">
-          <SizeGuideButton 
-            productType={productType}
-            variant="prominent"
-            className="text-xs px-3 py-1.5"
-          />
-          <span className="text-muted-foreground">Need help choosing?</span>
+          <span className="text-muted-foreground">Need help choosing? Check the size guide below</span>
         </div>
         
         {currentSize && (

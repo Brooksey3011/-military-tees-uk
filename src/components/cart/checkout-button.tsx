@@ -26,10 +26,8 @@ export function CheckoutButton({
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Calculate totals for display (NO VAT - not VAT registered)
+  // Show only product subtotal - shipping calculated by Stripe at checkout
   const subtotal = totalPrice
-  const shipping = subtotal >= 50 ? 0 : 4.99
-  const total = subtotal + shipping
 
   const isDisabled = items.length === 0 || totalPrice < 0.5 || isLoading
 
@@ -105,7 +103,7 @@ export function CheckoutButton({
               <span>Secure Checkout</span>
             </div>
             <span className="font-bold">
-              {formatPrice(total)}
+              {formatPrice(subtotal)}
             </span>
           </div>
         )}
@@ -128,10 +126,10 @@ export function CheckoutButton({
 
       {/* Quick Info */}
       <div className="text-center space-y-1">
-        {shipping === 0 && subtotal >= 50 && (
+        {subtotal >= 50 && (
           <div className="flex items-center justify-center gap-1 text-green-700">
             <span className="text-sm">🚚</span>
-            <span className="text-sm font-medium">Free shipping applied!</span>
+            <span className="text-sm font-medium">Free shipping at checkout!</span>
           </div>
         )}
         

@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent } from '@/components/ui/card'
 import { VariantSelector, ProductVariant } from './variant-selector'
 import { AddToCartButton } from '@/components/cart/add-to-cart-button'
+import { InlineSizeGuide } from './inline-size-guide'
 import { cn, formatPrice } from '@/lib/utils'
 
 export interface Product {
@@ -322,6 +323,13 @@ export function ProductPage({ product, categoryName }: ProductPageProps) {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Inline Size Guide */}
+      <div id="inline-size-guide" className="mt-12">
+        <InlineSizeGuide 
+          productType={product.name.toLowerCase().includes('hoodie') ? 'hoodie' : 'tshirt'}
+        />
       </div>
     </div>
   )
