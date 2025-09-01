@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge"
 import { PromoBanner } from "@/components/ui/promo-banner"
 import { PaymentOptions } from "@/components/ui/payment-options"
 import { OptimizedImage } from "@/components/ui/optimized-image"
-import { TestimonialsSection } from "@/components/testimonials/testimonials-section"
 import { NewsletterSignup } from "@/components/marketing/newsletter-signup"
 import { SocialProof, InstagramFeed } from "@/components/social/social-integration"
 import { Truck, Award, Users, Check } from "lucide-react"
@@ -113,8 +112,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Customer Testimonials */}
-        <TestimonialsSection />
 
         {/* Why Choose Us - Complementing About Page */}
         <section className="py-16 bg-muted/30">

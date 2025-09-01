@@ -44,16 +44,19 @@ export function VariantSelector({
   onVariantChange,
   className
 }: VariantSelectorProps) {
-  // Define full size range and available colors
-  const fullSizeRange = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
+  // Only show sizes and colors that are actually available
   const availableSizes = [...new Set(variants.map(v => v.size).filter(Boolean))]
-  // Always show full size range
-  const sizes = fullSizeRange
-  
-  const fullColorRange = ["black", "olive green", "white", "navy", "maroon", "brown", "sand", "green"]
   const availableColors = [...new Set(variants.map(v => v.color).filter(Boolean))]
-  // Always show full color range
-  const colors = fullColorRange
+  
+  // Sort sizes in standard order
+  const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
+  const sizes = availableSizes.sort((a, b) => {
+    const aIndex = sizeOrder.indexOf(a)
+    const bIndex = sizeOrder.indexOf(b)
+    return aIndex - bIndex
+  })
+  
+  const colors = availableColors
   const hasVariants = sizes.length > 0 || colors.length > 0
 
   const [selectedSize, setSelectedSize] = useState<string | null>(
@@ -123,7 +126,7 @@ export function VariantSelector({
               const isSelected = selectedSize === size
               const stock = selectedColor 
                 ? getVariantStock(size, selectedColor)
-                : Math.max(...variants.filter(v => v.size === size).map(v => v.stock_quantity))
+                : Math.max(...variants.filter(v => v.size === size && v.stock_quantity > 0).map(v => v.stock_quantity), 0)
               const isAvailable = stock > 0
               
               return (
@@ -166,7 +169,7 @@ export function VariantSelector({
               const isSelected = selectedColor === color
               const stock = selectedSize 
                 ? getVariantStock(selectedSize, color)
-                : Math.max(...variants.filter(v => v.color === color).map(v => v.stock_quantity))
+                : Math.max(...variants.filter(v => v.color === color && v.stock_quantity > 0).map(v => v.stock_quantity), 0)
               const isAvailable = stock > 0
               
               return (
