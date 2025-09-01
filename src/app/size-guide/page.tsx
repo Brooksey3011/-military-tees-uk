@@ -16,23 +16,50 @@ export const metadata: Metadata = {
 }
 
 export default function SizeGuidePage() {
-  const mensSizes = [
-    { size: "XS", chest: "34-36", waist: "28-30", length: "26.5" },
-    { size: "S", chest: "36-38", waist: "30-32", length: "27.5" },
-    { size: "M", chest: "38-40", waist: "32-34", length: "28.5" },
-    { size: "L", chest: "40-42", waist: "34-36", length: "29.5" },
-    { size: "XL", chest: "42-44", waist: "36-38", length: "30.5" },
-    { size: "XXL", chest: "44-46", waist: "38-40", length: "31.5" },
-    { size: "3XL", chest: "46-48", waist: "40-42", length: "32.5" },
-  ]
-
-  const womensSizes = [
-    { size: "XS", chest: "30-32", waist: "24-26", hips: "32-34", length: "24.5" },
-    { size: "S", chest: "32-34", waist: "26-28", hips: "34-36", length: "25.5" },
-    { size: "M", chest: "34-36", waist: "28-30", hips: "36-38", length: "26.5" },
-    { size: "L", chest: "36-38", waist: "30-32", hips: "38-40", length: "27.5" },
-    { size: "XL", chest: "38-40", waist: "32-34", hips: "40-42", length: "28.5" },
-    { size: "XXL", chest: "40-42", waist: "34-36", hips: "42-44", length: "29.5" },
+  // Standardized size labels - no duplicates, consistent format
+  const standardSizes = [
+    { 
+      size: "XS", 
+      chestCm: "86-91", chestIn: "34-36",
+      waistCm: "71-76", waistIn: "28-30", 
+      lengthCm: "67", lengthIn: "26.5" 
+    },
+    { 
+      size: "S", 
+      chestCm: "91-97", chestIn: "36-38",
+      waistCm: "76-81", waistIn: "30-32", 
+      lengthCm: "70", lengthIn: "27.5" 
+    },
+    { 
+      size: "M", 
+      chestCm: "97-102", chestIn: "38-40",
+      waistCm: "81-86", waistIn: "32-34", 
+      lengthCm: "72", lengthIn: "28.5" 
+    },
+    { 
+      size: "L", 
+      chestCm: "102-107", chestIn: "40-42",
+      waistCm: "86-91", waistIn: "34-36", 
+      lengthCm: "75", lengthIn: "29.5" 
+    },
+    { 
+      size: "XL", 
+      chestCm: "107-112", chestIn: "42-44",
+      waistCm: "91-97", waistIn: "36-38", 
+      lengthCm: "78", lengthIn: "30.5" 
+    },
+    { 
+      size: "XXL", 
+      chestCm: "112-117", chestIn: "44-46",
+      waistCm: "97-102", waistIn: "38-40", 
+      lengthCm: "81", lengthIn: "31.5" 
+    },
+    { 
+      size: "XXXL", 
+      chestCm: "117-122", chestIn: "46-48",
+      waistCm: "102-107", waistIn: "40-42", 
+      lengthCm: "83", lengthIn: "32.5" 
+    },
   ]
 
   return (
@@ -49,15 +76,12 @@ export default function SizeGuidePage() {
                 <Ruler className="h-12 w-12 text-primary mx-auto" />
               </div>
               
-              <h1 className={cn(
-                "text-4xl md:text-5xl font-display font-bold text-foreground mb-4",
-                "tracking-wider uppercase"
-              )}>
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-3">
                 Size Guide
               </h1>
               
-              <p className="text-xl text-muted-foreground leading-relaxed">
-                Find your perfect military fit. Precision sizing for comfort and professional appearance.
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+                Find your perfect fit with our size guide. All measurements are designed for comfort and authentic military styling.
               </p>
             </div>
           </div>
@@ -68,253 +92,149 @@ export default function SizeGuidePage() {
           <div className="max-w-6xl mx-auto space-y-8">
             
             {/* How to Measure */}
-            <Card className="border-2 border-border rounded-none bg-primary/5">
-              <CardHeader>
-                <CardTitle className={cn(
-                  "font-display tracking-wide uppercase flex items-center gap-2"
-                )}>
-                  <User className="h-5 w-5 text-primary" />
+            <Card className="border border-gray-200 shadow-sm">
+              <CardHeader className="bg-gray-50 border-b border-gray-200">
+                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <User className="h-5 w-5 text-green-600" />
                   How to Measure
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-none border-2 border-primary flex items-center justify-center">
-                    <span className="font-bold text-primary">1</span>
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                      <span className="font-bold text-green-700">1</span>
+                    </div>
+                    <h3 className="font-medium text-gray-900 mb-2">Chest</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Measure around the fullest part of your chest, keeping the tape horizontal and snug but not tight.
+                    </p>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">Chest/Bust</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Measure around the fullest part of your chest, keeping the tape horizontal and snug but not tight.
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-none border-2 border-primary flex items-center justify-center">
-                    <span className="font-bold text-primary">2</span>
+                  
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                      <span className="font-bold text-green-700">2</span>
+                    </div>
+                    <h3 className="font-medium text-gray-900 mb-2">Waist</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Measure around your natural waistline, typically the narrowest part of your torso.
+                    </p>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">Waist</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Measure around your natural waistline, typically the narrowest part of your torso.
-                  </p>
-                </div>
-                
-                <div className="text-center">
-                  <div className="w-16 h-16 mx-auto mb-3 bg-primary/10 rounded-none border-2 border-primary flex items-center justify-center">
-                    <span className="font-bold text-primary">3</span>
+                  
+                  <div className="text-center">
+                    <div className="w-12 h-12 mx-auto mb-3 bg-green-100 rounded-full flex items-center justify-center">
+                      <span className="font-bold text-green-700">3</span>
+                    </div>
+                    <h3 className="font-medium text-gray-900 mb-2">Length</h3>
+                    <p className="text-sm text-gray-600 leading-relaxed">
+                      Measure from the highest point of your shoulder down to where you want the garment to end.
+                    </p>
                   </div>
-                  <h3 className="font-semibold text-foreground mb-2">Length</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Measure from the highest point of your shoulder down to where you want the garment to end.
-                  </p>
                 </div>
               </CardContent>
             </Card>
 
-            {/* Men's Sizing */}
-            <Card className="border-2 border-border rounded-none">
-              <CardHeader>
-                <CardTitle className={cn(
-                  "font-display tracking-wide uppercase flex items-center gap-2"
-                )}>
-                  <Shirt className="h-5 w-5 text-primary" />
-                  Men&apos;s Sizing Chart
-                  <Badge className="rounded-none">UK Sizes</Badge>
+            {/* Main Size Chart - Clean Professional Table */}
+            <Card className="border border-gray-200 shadow-sm">
+              <CardHeader className="bg-gray-50 border-b border-gray-200">
+                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <Shirt className="h-5 w-5 text-green-600" />
+                  Size Chart
                 </CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="p-0">
                 <div className="overflow-x-auto">
-                  <table className="w-full border-2 border-border">
-                    <thead>
-                      <tr className="bg-muted/20">
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Size</th>
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Chest (inches)</th>
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Waist (inches)</th>
-                        <th className="p-3 text-left font-semibold">Length (inches)</th>
+                  <table className="w-full">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          Size
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          Chest (cm/in)
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          Waist (cm/in)
+                        </th>
+                        <th className="px-6 py-4 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          Length (cm/in)
+                        </th>
                       </tr>
                     </thead>
-                    <tbody>
-                      {mensSizes.map((row, index) => (
-                        <tr key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-muted/5"}>
-                          <td className="border-r-2 border-border p-3 font-medium">{row.size}</td>
-                          <td className="border-r-2 border-border p-3">{row.chest}</td>
-                          <td className="border-r-2 border-border p-3">{row.waist}</td>
-                          <td className="p-3">{row.length}</td>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {standardSizes.map((row, index) => (
+                        <tr key={row.size} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                              {row.size}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {row.chestCm} / {row.chestIn}"
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {row.waistCm} / {row.waistIn}"
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">
+                            {row.lengthCm} / {row.lengthIn}"
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Women's Sizing */}
-            <Card className="border-2 border-border rounded-none">
-              <CardHeader>
-                <CardTitle className={cn(
-                  "font-display tracking-wide uppercase flex items-center gap-2"
-                )}>
-                  <Shirt className="h-5 w-5 text-primary" />
-                  Women&apos;s Sizing Chart
-                  <Badge className="rounded-none">UK Sizes</Badge>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="overflow-x-auto">
-                  <table className="w-full border-2 border-border">
-                    <thead>
-                      <tr className="bg-muted/20">
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Size</th>
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Bust (inches)</th>
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Waist (inches)</th>
-                        <th className="border-r-2 border-border p-3 text-left font-semibold">Hips (inches)</th>
-                        <th className="p-3 text-left font-semibold">Length (inches)</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {womensSizes.map((row, index) => (
-                        <tr key={row.size} className={index % 2 === 0 ? "bg-background" : "bg-muted/5"}>
-                          <td className="border-r-2 border-border p-3 font-medium">{row.size}</td>
-                          <td className="border-r-2 border-border p-3">{row.chest}</td>
-                          <td className="border-r-2 border-border p-3">{row.waist}</td>
-                          <td className="border-r-2 border-border p-3">{row.hips}</td>
-                          <td className="p-3">{row.length}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Fit Guide */}
-            <Card className="border-2 border-border rounded-none">
-              <CardHeader>
-                <CardTitle className={cn(
-                  "font-display tracking-wide uppercase"
-                )}>
-                  Fit & Style Guide
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <h3 className="font-semibold text-foreground mb-3">Military Fit</h3>
-                  <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-                    <li>Tailored, professional appearance</li>
-                    <li>Closer to body than civilian casual wear</li>
-                    <li>Allows for movement without being loose</li>
-                    <li>Suitable for tucking into trousers</li>
-                  </ul>
-                </div>
-                
-                <div>
-                  <h3 className="font-semibold text-foreground mb-3">Casual Fit</h3>
-                  <ul className="space-y-2 text-sm text-muted-foreground list-disc list-inside">
-                    <li>More relaxed, comfortable fit</li>
-                    <li>Slightly roomier through the body</li>
-                    <li>Great for everyday wear</li>
-                    <li>Available on selected styles</li>
-                  </ul>
                 </div>
               </CardContent>
             </Card>
 
             {/* Sizing Tips */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              
-              <Card className="border-2 border-border rounded-none">
-                <CardHeader>
-                  <CardTitle className={cn(
-                    "font-display tracking-wide uppercase flex items-center gap-2"
-                  )}>
-                    <AlertCircle className="h-5 w-5 text-primary" />
-                    Sizing Tips
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3 text-sm text-muted-foreground">
-                  <div>
-                    <strong className="text-foreground">Between Sizes?</strong>
-                    <p>We recommend sizing up for a more comfortable fit, especially for military-style garments.</p>
-                  </div>
-                  
-                  <div>
-                    <strong className="text-foreground">Shrinkage:</strong>
-                    <p>Our premium cotton may shrink up to 5% after first wash. Pre-shrunk options available on select items.</p>
-                  </div>
-                  
-                  <div>
-                    <strong className="text-foreground">Layering:</strong>
-                    <p>Consider sizing up if you plan to wear thermals or layers underneath.</p>
-                  </div>
-                  
-                  <div>
-                    <strong className="text-foreground">Military Standard:</strong>
-                    <p>Our sizing follows military clothing specifications for authentic fit and appearance.</p>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="border-2 border-border rounded-none bg-muted/10">
-                <CardHeader>
-                  <CardTitle className={cn(
-                    "font-display tracking-wide uppercase"
-                  )}>
-                    Size Exchange Policy
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <p className="text-muted-foreground">
-                    Not sure about your size? We offer free size exchanges within the UK for unworn items with tags attached.
-                  </p>
-                  
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <ArrowRight className="h-3 w-3 text-primary" />
-                      <span>Free UK returns and exchanges</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ArrowRight className="h-3 w-3 text-primary" />
-                      <span>30-day return window</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <ArrowRight className="h-3 w-3 text-primary" />
-                      <span>Items must be unworn with tags</span>
-                    </div>
-                  </div>
-                  
-                  <Button className="w-full rounded-none" disabled>
-                    Start Size Exchange
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* Contact for Help */}
-            <Card className="border-2 border-border rounded-none bg-primary/5">
-              <CardHeader>
-                <CardTitle className={cn(
-                  "font-display tracking-wide uppercase text-center"
-                )}>
-                  Still Unsure About Sizing?
+            <Card className="border border-gray-200 shadow-sm">
+              <CardHeader className="bg-gray-50 border-b border-gray-200">
+                <CardTitle className="text-xl font-semibold text-gray-900 flex items-center gap-2">
+                  <AlertCircle className="h-5 w-5 text-green-600" />
+                  Sizing Tips
                 </CardTitle>
               </CardHeader>
-              <CardContent className="text-center space-y-4">
-                <p className="text-muted-foreground">
-                  Our team has extensive experience with military sizing and can help you find the perfect fit.
+              <CardContent className="p-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Between Sizes?</h4>
+                      <p className="text-sm text-gray-600">We recommend sizing up for a more comfortable fit.</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Shrinkage</h4>
+                      <p className="text-sm text-gray-600">Premium cotton may shrink up to 3% after first wash.</p>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-4">
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Layering</h4>
+                      <p className="text-sm text-gray-600">Consider sizing up if wearing layers underneath.</p>
+                    </div>
+                    
+                    <div>
+                      <h4 className="font-medium text-gray-900 mb-1">Military Standard</h4>
+                      <p className="text-sm text-gray-600">Sizing follows authentic military specifications.</p>
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Contact for Help */}
+            <Card className="border border-gray-200 shadow-sm bg-green-50">
+              <CardContent className="p-6 text-center">
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                  Still Unsure About Sizing?
+                </h3>
+                <p className="text-gray-600 mb-4">
+                  Contact us for personalized sizing advice.
                 </p>
                 
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button className="rounded-none" disabled>
-                    Chat with Sizing Expert
-                  </Button>
-                  <Button variant="outline" className="rounded-none border-2" disabled>
-                    Email Size Question
-                  </Button>
-                </div>
-                
-                <div className="text-sm text-muted-foreground space-y-1">
+                <div className="text-sm text-gray-600">
                   <p><strong>Email:</strong> info@militarytees.co.uk</p>
-                  <p><strong>Phone:</strong> +44 1234 567890</p>
-                  <p>Include your measurements and intended use for personalized recommendations</p>
                 </div>
               </CardContent>
             </Card>

@@ -15,24 +15,60 @@ interface SizeGuideProps {
 }
 
 export function SizeGuide({ isOpen, onClose, category = "adult" }: SizeGuideProps) {
+  // Standardized adult sizes with both cm and inches
   const adultSizes = [
-    { size: "XS", chest: "34-36\"", waist: "28-30\"", length: "27\"", uk: "6-8", eu: "34-36" },
-    { size: "S", chest: "36-38\"", waist: "30-32\"", length: "28\"", uk: "8-10", eu: "36-38" },
-    { size: "M", chest: "38-40\"", waist: "32-34\"", length: "29\"", uk: "10-12", eu: "38-40" },
-    { size: "L", chest: "40-42\"", waist: "34-36\"", length: "30\"", uk: "12-14", eu: "40-42" },
-    { size: "XL", chest: "42-44\"", waist: "36-38\"", length: "31\"", uk: "14-16", eu: "42-44" },
-    { size: "XXL", chest: "44-46\"", waist: "38-40\"", length: "32\"", uk: "16-18", eu: "44-46" },
-    { size: "XXXL", chest: "46-48\"", waist: "40-42\"", length: "33\"", uk: "18-20", eu: "46-48" }
+    { 
+      size: "XS", 
+      chestCm: "86-91", chestIn: "34-36",
+      waistCm: "71-76", waistIn: "28-30", 
+      lengthCm: "69", lengthIn: "27"
+    },
+    { 
+      size: "S", 
+      chestCm: "91-97", chestIn: "36-38",
+      waistCm: "76-81", waistIn: "30-32", 
+      lengthCm: "71", lengthIn: "28"
+    },
+    { 
+      size: "M", 
+      chestCm: "97-102", chestIn: "38-40",
+      waistCm: "81-86", waistIn: "32-34", 
+      lengthCm: "74", lengthIn: "29"
+    },
+    { 
+      size: "L", 
+      chestCm: "102-107", chestIn: "40-42",
+      waistCm: "86-91", waistIn: "34-36", 
+      lengthCm: "76", lengthIn: "30"
+    },
+    { 
+      size: "XL", 
+      chestCm: "107-112", chestIn: "42-44",
+      waistCm: "91-97", waistIn: "36-38", 
+      lengthCm: "79", lengthIn: "31"
+    },
+    { 
+      size: "XXL", 
+      chestCm: "112-117", chestIn: "44-46",
+      waistCm: "97-102", waistIn: "38-40", 
+      lengthCm: "81", lengthIn: "32"
+    },
+    { 
+      size: "XXXL", 
+      chestCm: "117-122", chestIn: "46-48",
+      waistCm: "102-107", waistIn: "40-42", 
+      lengthCm: "84", lengthIn: "33"
+    }
   ]
 
   const kidsSizes = [
-    { size: "2-3Y", chest: "20-21\"", length: "14-15\"", age: "2-3 Years", weight: "24-34 lbs" },
-    { size: "4-5Y", chest: "22-23\"", length: "16-17\"", age: "4-5 Years", weight: "35-45 lbs" },
-    { size: "6-7Y", chest: "24-25\"", length: "18-19\"", age: "6-7 Years", weight: "46-56 lbs" },
-    { size: "8-9Y", chest: "26-28\"", length: "20-21\"", age: "8-9 Years", weight: "57-72 lbs" },
-    { size: "10-11Y", chest: "29-31\"", length: "22-23\"", age: "10-11 Years", weight: "73-95 lbs" },
-    { size: "12-13Y", chest: "32-34\"", length: "24-25\"", age: "12-13 Years", weight: "96-125 lbs" },
-    { size: "14-15Y", chest: "35-37\"", length: "26-27\"", age: "14-15 Years", weight: "126-150 lbs" }
+    { size: "2-3Y", chestCm: "51-53", chestIn: "20-21", lengthCm: "36-38", lengthIn: "14-15", age: "2-3 Years" },
+    { size: "4-5Y", chestCm: "56-58", chestIn: "22-23", lengthCm: "41-43", lengthIn: "16-17", age: "4-5 Years" },
+    { size: "6-7Y", chestCm: "61-64", chestIn: "24-25", lengthCm: "46-48", lengthIn: "18-19", age: "6-7 Years" },
+    { size: "8-9Y", chestCm: "66-71", chestIn: "26-28", lengthCm: "51-53", lengthIn: "20-21", age: "8-9 Years" },
+    { size: "10-11Y", chestCm: "74-79", chestIn: "29-31", lengthCm: "56-58", lengthIn: "22-23", age: "10-11 Years" },
+    { size: "12-13Y", chestCm: "81-86", chestIn: "32-34", lengthCm: "61-64", lengthIn: "24-25", age: "12-13 Years" },
+    { size: "14-15Y", chestCm: "89-94", chestIn: "35-37", lengthCm: "66-69", lengthIn: "26-27", age: "14-15 Years" }
   ]
 
   const sizes = category === "kids" ? kidsSizes : adultSizes
@@ -70,74 +106,92 @@ export function SizeGuide({ isOpen, onClose, category = "adult" }: SizeGuideProp
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-4xl">
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <div className="flex items-center gap-2">
-            <Ruler className="h-5 w-5 text-primary" />
-            <h2 className="text-2xl font-display font-bold">
-              {category === "kids" ? "Kids" : "Adult"} Size Guide
-            </h2>
-          </div>
+          <h2 className="text-2xl font-semibold text-gray-900">
+            {category === "kids" ? "Kids" : ""} Size Guide
+          </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="rounded-none"
+            className="hover:bg-gray-100"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
+        {/* Intro text */}
+        <p className="text-gray-600 mb-6 text-center">
+          Find your perfect fit with our size guide.
+        </p>
+
         <div className="space-y-6">
           {/* Size Chart */}
-          <Card className="border-2 border-border rounded-none">
-            <CardHeader>
-              <CardTitle className="font-display tracking-wide uppercase">
+          <Card className="border border-gray-200 shadow-sm">
+            <CardHeader className="bg-gray-50 border-b border-gray-200">
+              <CardTitle className="text-lg font-semibold text-gray-900">
                 Size Chart
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0">
               <div className="overflow-x-auto">
-                <table className="w-full text-sm">
-                  <thead>
-                    <tr className="border-b border-border">
-                      <th className="text-left p-3 font-display font-bold uppercase">Size</th>
-                      <th className="text-left p-3 font-display font-bold uppercase">Chest</th>
+                <table className="w-full">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                        Size
+                      </th>
+                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                        Chest (cm/in)
+                      </th>
                       {category === "adult" ? (
                         <>
-                          <th className="text-left p-3 font-display font-bold uppercase">Waist</th>
-                          <th className="text-left p-3 font-display font-bold uppercase">Length</th>
-                          <th className="text-left p-3 font-display font-bold uppercase">UK Size</th>
-                          <th className="text-left p-3 font-display font-bold uppercase">EU Size</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                            Waist (cm/in)
+                          </th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                            Length (cm/in)
+                          </th>
                         </>
                       ) : (
                         <>
-                          <th className="text-left p-3 font-display font-bold uppercase">Length</th>
-                          <th className="text-left p-3 font-display font-bold uppercase">Age</th>
-                          <th className="text-left p-3 font-display font-bold uppercase">Weight</th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                            Length (cm/in)
+                          </th>
+                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                            Age
+                          </th>
                         </>
                       )}
                     </tr>
                   </thead>
-                  <tbody>
+                  <tbody className="bg-white divide-y divide-gray-200">
                     {sizes.map((size, index) => (
-                      <tr key={size.size} className="border-b border-border/50 hover:bg-muted/10">
-                        <td className="p-3">
-                          <Badge className="rounded-none font-bold">
+                      <tr key={size.size} className="hover:bg-gray-50">
+                        <td className="px-4 py-3 whitespace-nowrap">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
                             {size.size}
-                          </Badge>
+                          </span>
                         </td>
-                        <td className="p-3 font-medium">{size.chest}</td>
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                          {(size as any).chestCm} / {(size as any).chestIn}"
+                        </td>
                         {category === "adult" ? (
                           <>
-                            <td className="p-3">{(size as any).waist}</td>
-                            <td className="p-3">{size.length}</td>
-                            <td className="p-3">{(size as any).uk}</td>
-                            <td className="p-3">{(size as any).eu}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {(size as any).waistCm} / {(size as any).waistIn}"
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {(size as any).lengthCm} / {(size as any).lengthIn}"
+                            </td>
                           </>
                         ) : (
                           <>
-                            <td className="p-3">{size.length}</td>
-                            <td className="p-3">{(size as any).age}</td>
-                            <td className="p-3 text-muted-foreground">{(size as any).weight}</td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {(size as any).lengthCm} / {(size as any).lengthIn}"
+                            </td>
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                              {(size as any).age}
+                            </td>
                           </>
                         )}
                       </tr>
@@ -148,48 +202,17 @@ export function SizeGuide({ isOpen, onClose, category = "adult" }: SizeGuideProp
             </CardContent>
           </Card>
 
-          {/* Size Descriptions */}
-          <Card className="border-2 border-border rounded-none">
-            <CardHeader>
-              <CardTitle className="font-display tracking-wide uppercase">
-                Size Descriptions
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {Object.entries(sizeDescriptions[category] as any).map(([size, description]) => (
-                  <div key={size} className="border border-border/30 p-3 rounded-none">
-                    <div className="font-bold text-primary mb-1">{size}</div>
-                    <div className="text-sm text-muted-foreground">{description}</div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-
           {/* Measurement Tips */}
-          <Card className="border-2 border-border rounded-none bg-primary/5">
-            <CardHeader>
-              <CardTitle className="font-display tracking-wide uppercase flex items-center gap-2">
-                <Ruler className="h-4 w-4" />
-                How to Measure
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ul className="space-y-2">
-                {measurementTips.map((tip, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm">
-                    <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-                    <span>{tip}</span>
-                  </li>
-                ))}
-              </ul>
-              
-              <div className="mt-4 p-3 bg-muted/20 rounded-none border-l-4 border-primary">
-                <h4 className="font-display font-bold mb-1">Need Help?</h4>
-                <p className="text-sm text-muted-foreground">
-                  Still unsure about sizing? Contact our customer service team for personalized sizing advice.
-                </p>
+          <Card className="border border-gray-200 shadow-sm bg-gray-50">
+            <CardContent className="p-4">
+              <h3 className="font-medium text-gray-900 mb-3">Sizing Tips</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>
+                  <p><strong>Between sizes?</strong> We recommend sizing up.</p>
+                </div>
+                <div>
+                  <p><strong>Questions?</strong> Contact us at info@militarytees.co.uk</p>
+                </div>
               </div>
             </CardContent>
           </Card>
