@@ -23,9 +23,7 @@ export const dynamic = 'force-dynamic'
 export default function CartPage() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem } = useSimpleCart()
 
-  const shippingCost = totalPrice > 50 ? 0 : 4.99
-  // No VAT applied - not VAT registered  
-  const finalTotal = totalPrice + shippingCost
+  // No shipping or VAT calculations in cart - handled by Stripe at checkout
 
   return (
     <Layout>
@@ -165,36 +163,17 @@ export default function CartPage() {
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-lg font-bold">
                       <span>Subtotal ({totalItems} items)</span>
                       <span>£{totalPrice.toFixed(2)}</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span>Shipping</span>
-                      <span className={shippingCost === 0 ? 'text-green-600 font-medium' : ''}>
-                        {shippingCost === 0 ? 'FREE' : `£${shippingCost.toFixed(2)}`}
-                      </span>
-                    </div>
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>VAT</span>
-                      <span>Not applicable</span>
-                    </div>
                     
-                    <div className="border-t pt-4">
-                      <div className="flex justify-between text-lg font-bold">
-                        <span>Total</span>
-                        <span>£{finalTotal.toFixed(2)}</span>
+                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
+                      <div className="text-blue-800 text-sm">
+                        <p className="font-medium mb-1">Shipping & taxes calculated at checkout</p>
+                        <p className="text-xs">🚛 Free UK shipping on orders over £50</p>
                       </div>
                     </div>
-                    
-                    {shippingCost === 0 && (
-                      <div className="bg-green-50 border border-green-200 p-3 rounded-md">
-                        <div className="flex items-center gap-2 text-green-800 text-sm">
-                          <Truck className="h-4 w-4" />
-                          <span className="font-medium">Free shipping included!</span>
-                        </div>
-                      </div>
-                    )}
 
                     <div className="pt-4">
                       <CheckoutButton fullWidth />
