@@ -41,6 +41,14 @@ If you have the complete database setup script, place it in `setup/` and use it 
 - **Purpose**: Newsletter subscription functionality
 - **Status**: ✅ Applied and working
 
+**`fix-rls-performance-warnings.sql`** - *Performance Optimization*
+- **Purpose**: Fix Supabase linter WARN level performance issues
+- **Issues Addressed**: 
+  - Auth RLS initialization plan optimization (wraps auth function calls with SELECT)
+  - Multiple permissive policies consolidation for better performance
+  - Query performance improvements at scale
+- **Status**: ⏳ Ready for deployment (optional but recommended)
+
 ### Existing Migrations
 
 **`supabase/migrations/20250108_orders_system.sql`** - *Applied Previously*
