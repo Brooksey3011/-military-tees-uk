@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { Layout } from '@/components/layout/layout'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -64,7 +64,7 @@ function OrderHistoryTab() {
     }
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     fetchOrderHistory()
   }, [])
 
@@ -225,7 +225,7 @@ export default function ProfilePage() {
   })
 
   // Initialize form data when profile loads
-  React.useEffect(() => {
+  useEffect(() => {
     if (profile) {
       setFormData({
         first_name: profile.first_name || '',

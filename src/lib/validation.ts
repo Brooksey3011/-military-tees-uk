@@ -121,13 +121,187 @@ export function validateRequestBody<T>(schema: z.ZodSchema<T>, body: unknown): {
   }
 }
 
-// Sanitize HTML input to prevent XSS
+// Additional security validation schemas
+export const uuidSchema = z.string().uuid('Invalid UUID format')
+export const slugValidationSchema = z.string().min(1).max(100).regex(/^[a-z0-9-]+$/, 'Invalid slug format')
+export const phoneSchema = z.string().regex(/^[\+]?[(]?[\d\s\(\)\-\+]{10,}$/, 'Invalid phone number format').optional()
+
+// User profile update schema
+export const userProfileUpdateSchema = z.object({
+  first_name: z.string().min(1).max(50).trim().optional(),
+  last_name: z.string().min(1).max(50).trim().optional(), 
+  phone: phoneSchema,
+  marketing_consent: z.boolean().optional(),
+  addresses: z.array(z.object({
+    id: uuidSchema.optional(),
+    type: z.enum(['billing', 'shipping']),
+    first_name: z.string().min(1).max(50).trim(),
+    last_name: z.string().min(1).max(50).trim(),
+    street: z.string().min(1).max(255).trim(),
+    city: z.string().min(1).max(100).trim(),
+    postcode: z.string().min(2).max(12).trim(),
+    country: z.string().length(2, 'Country must be 2-letter ISO code').default('GB'),
+    phone: phoneSchema,
+    is_default: z.boolean().default(false)
+  })).max(5, 'Maximum 5 addresses allowed').optional()
+})
+
+// Custom quote request schema with enhanced validation
+export const customQuoteRequestSchema = z.object({
+  customer_email: z.string().email('Invalid email address'),
+  customer_name: z.string().min(1, 'Name is required').max(100).trim(),
+  requirements: z.string().min(10, 'Requirements must be at least 10 characters').max(2000, 'Requirements too long'),
+  quantity: z.number().int().min(1, 'Quantity must be at least 1').max(10000, 'Quantity too high'),
+  budget: z.number().min(0, 'Budget cannot be negative').optional(),
+  deadline: z.string().datetime('Invalid date format').optional(),
+  contact_phone: phoneSchema
+})
+
+// Admin authentication schemas
+export const adminLoginSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(1, 'Password is required'),
+  totp_token: z.string().length(6, '2FA token must be 6 digits').optional()
+})
+
+export const admin2FASetupSchema = z.object({
+  user_id: uuidSchema,
+  totp_token: z.string().length(6, '2FA token must be 6 digits')
+})
+
+// Search and filter validation
+export const searchParametersSchema = z.object({
+  q: z.string().min(1).max(100).trim().optional(),
+  category: slugValidationSchema.or(uuidSchema).optional(),
+  sort: z.enum(['name', 'price', 'created_at', 'updated_at']).default('created_at'),
+  order: z.enum(['asc', 'desc']).default('desc'),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(20),
+  min_price: z.coerce.number().min(0).optional(),
+  max_price: z.coerce.number().min(0).optional()
+})
+
+// Rate limiting validation
+export const rateLimitSchema = z.object({
+  ip: z.string().min(1).max(45), // IP addresses are max 45 chars (IPv6)
+  endpoint: z.string().min(1).max(100),
+  user_id: uuidSchema.optional(),
+  timestamp: z.number().min(0)
+})
+
+// File upload validation with enhanced security
+export const fileUploadValidationSchema = z.object({
+  filename: z.string()
+    .min(1, 'Filename is required')
+    .max(255, 'Filename too long')
+    .refine(name => !/[<>:"/\\|?*]/.test(name), 'Filename contains invalid characters'),
+  mimetype: z.enum([
+    'image/jpeg',
+    'image/png', 
+    'image/gif',
+    'image/webp',
+    'application/pdf'
+  ], { errorMap: () => ({ message: 'Unsupported file type' }) }),
+  size: z.number()
+    .min(1, 'File cannot be empty')
+    .max(10 * 1024 * 1024, 'File too large (max 10MB)'),
+  content: z.string().optional() // Base64 encoded content
+})
+
+// Enhanced security validation function
+export function validateAndSanitize<T>(
+  schema: z.ZodSchema<T>, 
+  data: unknown,
+  options: { sanitizeStrings?: boolean; maxDepth?: number } = {}
+): { success: true; data: T } | { success: false; error: string } {
+  const { sanitizeStrings = true, maxDepth = 10 } = options
+  
+  try {
+    const parsed = schema.parse(data)
+    
+    if (sanitizeStrings && typeof parsed === 'object' && parsed !== null) {
+      const sanitized = sanitizeObjectStrings(parsed, maxDepth)
+      return { success: true, data: sanitized as T }
+    }
+    
+    return { success: true, data: parsed }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      const errorMessages = error.issues.map(issue => {
+        const path = issue.path.length > 0 ? `${issue.path.join('.')}: ` : ''
+        return `${path}${issue.message}`
+      }).join(', ')
+      return { success: false, error: errorMessages }
+    }
+    return { success: false, error: 'Validation failed' }
+  }
+}
+
+// Deep sanitization of object strings
+function sanitizeObjectStrings(obj: any, maxDepth: number, currentDepth = 0): any {
+  if (currentDepth >= maxDepth || obj === null || obj === undefined) {
+    return obj
+  }
+  
+  if (typeof obj === 'string') {
+    return sanitizeInput(obj)
+  }
+  
+  if (Array.isArray(obj)) {
+    return obj.map(item => sanitizeObjectStrings(item, maxDepth, currentDepth + 1))
+  }
+  
+  if (typeof obj === 'object') {
+    const sanitized: any = {}
+    for (const [key, value] of Object.entries(obj)) {
+      sanitized[key] = sanitizeObjectStrings(value, maxDepth, currentDepth + 1)
+    }
+    return sanitized
+  }
+  
+  return obj
+}
+
+// Enhanced XSS prevention
 export function sanitizeInput(input: string): string {
+  if (typeof input !== 'string') return input
+  
   return input
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#x27;')
     .replace(/\//g, '&#x2F;')
+    .replace(/javascript:/gi, '') // Remove javascript: protocols
+    .replace(/data:/gi, '') // Remove data: protocols
+    .replace(/on\w+\s*=/gi, '') // Remove event handlers
     .trim()
+    .slice(0, 10000) // Prevent extremely long strings
+}
+
+// SQL injection prevention for search queries
+export function sanitizeSearchQuery(query: string): string {
+  return query
+    .replace(/[';-]/g, '') // Remove SQL comment and statement terminators
+    .replace(/-{2,}/g, '') // Remove double dashes
+    .replace(/(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION|OR|AND)\b)/gi, '') // Remove SQL keywords
+    .trim()
+    .slice(0, 100) // Limit length
+}
+
+// Security headers validation
+export const securityHeadersSchema = z.object({
+  'user-agent': z.string().max(1000).optional(),
+  'x-forwarded-for': z.string().min(1).max(45).optional(), // IP address
+  'x-real-ip': z.string().min(1).max(45).optional(), // IP address
+  'origin': z.string().url().optional(),
+  'referer': z.string().url().optional()
+})
+
+// Environment validation
+export function validateEnvironmentVariables(requiredVars: string[]): void {
+  const missing = requiredVars.filter(varName => !process.env[varName])
+  if (missing.length > 0) {
+    throw new Error(`Missing required environment variables: ${missing.join(', ')}`)
+  }
 }

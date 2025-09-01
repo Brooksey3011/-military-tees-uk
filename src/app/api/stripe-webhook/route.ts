@@ -9,6 +9,16 @@ export async function POST(request: NextRequest) {
   try {
     console.log('🔔 Stripe webhook received')
 
+    // Validate required environment variables
+    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
+    if (!webhookSecret) {
+      console.error('❌ STRIPE_WEBHOOK_SECRET not configured')
+      return NextResponse.json(
+        { error: 'Webhook configuration error' },
+        { status: 500 }
+      )
+    }
+
     // Get the raw body as text for signature verification
     const body = await request.text()
     const headersList = await headers()
@@ -22,18 +32,24 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify the webhook signature
+    // Verify the webhook signature with proper error handling
     let event: Stripe.Event
     
     try {
       event = stripe.webhooks.constructEvent(
         body,
         signature,
-        process.env.STRIPE_WEBHOOK_SECRET!
+        webhookSecret
       )
       console.log('✅ Webhook signature verified')
     } catch (error) {
       console.error('❌ Webhook signature verification failed:', error)
+      // Log security incident - invalid signature could indicate attack
+      await logSecurityIncident('invalid_webhook_signature', {
+        timestamp: new Date().toISOString(),
+        signature_provided: !!signature,
+        error_message: error instanceof Error ? error.message : 'Unknown signature error'
+      })
       return NextResponse.json(
         { error: 'Invalid signature' },
         { status: 400 }
@@ -177,12 +193,22 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
           throw new Error(`Failed to create order item: ${orderItemError.message}`)
         }
 
-        // Update stock quantity
+        // Update stock quantity (secure approach - no raw SQL)
+        const { data: currentVariant, error: fetchError } = await trx
+          .from('product_variants')
+          .select('stock_quantity')
+          .eq('id', item.variant_id)
+          .single()
+
+        if (fetchError || !currentVariant) {
+          throw new Error(`Failed to fetch current stock for variant ${item.variant_id}`)
+        }
+
+        const newStockQuantity = Math.max(0, currentVariant.stock_quantity - item.quantity)
+        
         const { error: stockError } = await trx
           .from('product_variants')
-          .update({
-            stock_quantity: trx.raw('stock_quantity - ?', [item.quantity])
-          })
+          .update({ stock_quantity: newStockQuantity })
           .eq('id', item.variant_id)
 
         if (stockError) {
@@ -266,5 +292,27 @@ async function logOrderError(sessionId: string, errorMessage: string) {
       })
   } catch (error) {
     console.error('❌ Failed to log error:', error)
+  }
+}
+
+// Log security incidents for monitoring and alerting
+async function logSecurityIncident(type: string, details: Record<string, any>) {
+  const supabase = createSupabaseAdmin()
+  
+  try {
+    await supabase
+      .from('security_logs')
+      .insert({
+        incident_type: type,
+        details: details,
+        severity: 'high',
+        source: 'stripe-webhook',
+        created_at: new Date().toISOString()
+      })
+    
+    console.warn('🚨 Security incident logged:', type, details)
+  } catch (error) {
+    console.error('❌ Failed to log security incident:', error)
+    // In production, you might want to send alerts to external monitoring
   }
 }

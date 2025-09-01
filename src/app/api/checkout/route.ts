@@ -122,15 +122,11 @@ async function getProductDetails(items: CheckoutRequest['items']) {
   return productDetails
 }
 
-// Health check endpoint
+// Health check endpoint - minimal information exposure
 export async function GET() {
   return NextResponse.json({
     status: 'ok',
-    service: 'checkout-api',
-    timestamp: new Date().toISOString(),
-    stripe_configured: !!process.env.STRIPE_SECRET_KEY,
-    supabase_configured: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-    using_live_data: true
+    timestamp: new Date().toISOString()
   });
 }
 
@@ -254,34 +250,32 @@ export async function POST(request: NextRequest) {
         unitPrice: parseFloat(item.unitPrice.toFixed(2)),
         totalPrice: parseFloat(item.totalPrice.toFixed(2))
       })),
-      debug: {
-        timestamp: new Date().toISOString(),
-        environment: process.env.NODE_ENV,
-        stripeMode: 'test',
-        dataSource: 'live_supabase',
-        variantsProcessed: productDetails.length
-      }
+      timestamp: new Date().toISOString()
     })
 
   } catch (error) {
-    console.error('❌ Live Checkout API error:', error)
+    console.error('❌ Checkout API error:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      timestamp: new Date().toISOString()
+    })
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
-          error: 'Validation failed',
-          details: error.issues.map((err: z.ZodIssue) => `${err.path.join('.')}: ${err.message}`).join(', ')
+          error: 'Invalid checkout data provided',
+          timestamp: new Date().toISOString()
         },
         { status: 400 }
       )
     }
 
+    // Generic error response - don't expose internal details
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Checkout failed',
+        error: 'Checkout could not be processed. Please check your information and try again.',
         timestamp: new Date().toISOString()
       },
-      { status: 400 }
+      { status: 500 }
     )
   }
 }

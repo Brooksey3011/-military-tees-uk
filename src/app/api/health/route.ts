@@ -1,11 +1,9 @@
 import { NextResponse } from 'next/server'
 
 export async function GET() {
+  // Simple health check endpoint - minimal information exposure
   return NextResponse.json({
     status: 'healthy',
-    timestamp: new Date().toISOString(),
-    message: 'API is operational and protection disabled',
-    environment: process.env.NODE_ENV || 'development',
-    deployment: 'vercel-production'
+    timestamp: new Date().toISOString()
   })
 }

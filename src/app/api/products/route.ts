@@ -1,123 +1,126 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
+import { createSupabaseAdmin } from '@/lib/supabase';
+import { searchParametersSchema, validateAndSanitize, validateEnvironmentVariables } from '@/lib/validation';
+import { handleError, CommonErrors } from '@/lib/error-handling';
+
+// Validate required environment variables
+validateEnvironmentVariables(['NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY']);
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    const category = searchParams.get('category');
-    const search = searchParams.get('search');
-    const featured = searchParams.get('featured') === 'true';
-    const limit = parseInt(searchParams.get('limit') || '20');
-    const offset = parseInt(searchParams.get('offset') || '0');
-    const sortBy = searchParams.get('sortBy') || 'created_at';
-    const sortOrder = searchParams.get('sortOrder') === 'asc' ? 'asc' : 'desc';
+    
+    // Validate and sanitize query parameters
+    const queryParams = {
+      q: searchParams.get('search'),
+      category: searchParams.get('category'),
+      sort: searchParams.get('sortBy') || 'created_at',
+      order: searchParams.get('sortOrder') || 'desc',
+      page: parseInt(searchParams.get('page') || '1'),
+      limit: Math.min(parseInt(searchParams.get('limit') || '20'), 50), // Cap at 50
+      featured: searchParams.get('featured') === 'true'
+    };
 
-    console.log('🔍 Products API called with:', { category, search, featured, limit, offset });
-    console.log('🔑 Environment check:', {
-      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
-      hasServiceKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
-      serviceKeyLength: process.env.SUPABASE_SERVICE_ROLE_KEY?.length,
-      serviceKeyStart: process.env.SUPABASE_SERVICE_ROLE_KEY?.substring(0, 20) + '...'
-    });
+    const validation = validateAndSanitize(searchParametersSchema, queryParams);
+    if (!validation.success) {
+      throw CommonErrors.INVALID_INPUT(validation.error);
+    }
 
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
+    const params = validation.data;
+    const offset = (params.page - 1) * params.limit;
 
+    const supabase = createSupabaseAdmin();
+
+    // Optimized query with proper joins to eliminate N+1 queries
     let query = supabase
       .from('products')
       .select(`
-        *,
-        category:categories(id, name, slug),
-        variants:product_variants(*)
+        id,
+        name,
+        slug,
+        description,
+        price,
+        main_image_url,
+        is_featured,
+        created_at,
+        category:categories!inner(
+          id,
+          name,
+          slug
+        ),
+        variants:product_variants!inner(
+          id,
+          sku,
+          size,
+          color,
+          stock_quantity,
+          price,
+          is_active
+        )
       `, { count: 'exact' })
       .eq('is_active', true)
-      .range(offset, offset + limit - 1);
+      .eq('variants.is_active', true)
+      .range(offset, offset + params.limit - 1);
 
-    if (category) {
-      // Check if category is a UUID (format: 8-4-4-4-12 characters)
+    // Handle category filtering with proper validation
+    if (params.category) {
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       
-      if (uuidRegex.test(category)) {
-        // It's a UUID, use directly as category_id
-        console.log(`Using category UUID: ${category}`);
-        query = query.eq('category_id', category);
+      if (uuidRegex.test(params.category)) {
+        // Direct UUID lookup
+        query = query.eq('category_id', params.category);
       } else {
-        // It's a slug, look up the category ID
-        try {
-          console.log(`Looking up category with slug: ${category}`);
-          const { data: categoryData, error: categoryError } = await supabase
-            .from('categories')
-            .select('id')
-            .eq('slug', category)
-            .single()
-          
-          if (categoryError || !categoryData) {
-            console.log(`Category '${category}' not found:`, categoryError);
-            // Return empty results for non-existent category
-            return NextResponse.json({ 
-              products: [], 
-              hasMore: false,
-              total: 0 
-            });
-          }
-          
-          console.log(`Found category ID: ${categoryData.id}`);
-          query = query.eq('category_id', categoryData.id);
-        } catch (error) {
-          console.error('Category lookup error:', error);
-          return NextResponse.json({ error: 'Failed to lookup category' }, { status: 500 });
-        }
+        // Category slug lookup using inner join for better performance
+        query = query.eq('category.slug', params.category);
       }
     }
 
-    if (search) {
-      query = query.ilike('name', `%${search}%`);
+    // Handle search with proper text search
+    if (params.q) {
+      query = query.or(`name.ilike.%${params.q}%, description.ilike.%${params.q}%`);
     }
 
-    if (featured) {
-      query = query.eq('featured', true);
+    // Handle featured filter
+    if (params.featured) {
+      query = query.eq('is_featured', true);
     }
 
-    // Add sorting with error handling
-    try {
-      console.log(`🔄 Applying sorting: ${sortBy} ${sortOrder}`);
-      query = query.order(sortBy, { ascending: sortOrder === 'asc' });
-    } catch (sortError) {
-      console.error('❌ Sorting error:', sortError);
-      // Fallback to default sorting
-      query = query.order('created_at', { ascending: false });
-    }
+    // Apply sorting with validation
+    const allowedSortFields = ['name', 'price', 'created_at', 'updated_at'];
+    const sortField = allowedSortFields.includes(params.sort) ? params.sort : 'created_at';
+    query = query.order(sortField, { ascending: params.order === 'asc' });
 
-    console.log('🚀 Executing database query...');
+    // Execute optimized query
     const { data: products, error, count } = await query;
 
     if (error) {
-      console.error('❌ Database error details:', error);
-      console.error('❌ Database error message:', error.message);
-      console.error('❌ Database error code:', error.code);
-      return NextResponse.json({ error: 'Failed to fetch products', details: error.message }, { status: 500 });
+      console.error('Database error in products query:', {
+        error: error.message,
+        code: error.code,
+        timestamp: new Date().toISOString()
+      });
+      throw CommonErrors.DATABASE_CONNECTION_FAILED();
     }
 
-    // Calculate if there are more products
-    const hasMore = count ? (offset + limit) < count : false;
+    // Calculate pagination info
+    const hasMore = count ? (offset + params.limit) < count : false;
     const total = count || 0;
 
     return NextResponse.json({ 
+      success: true,
       products: products || [], 
       hasMore,
-      total 
+      total,
+      page: params.page,
+      limit: params.limit,
+      timestamp: new Date().toISOString()
     });
+
   } catch (error) {
-    console.error('💥 Server error details:', error);
-    console.error('💥 Server error message:', error instanceof Error ? error.message : 'Unknown error');
-    console.error('💥 Server error stack:', error instanceof Error ? error.stack : 'No stack trace');
-    return NextResponse.json({ 
-      error: 'Internal server error', 
-      details: error instanceof Error ? error.message : 'Unknown error' 
-    }, { status: 500 });
+    return await handleError(error, {
+      endpoint: '/api/products',
+      method: 'GET'
+    });
   }
 }
 

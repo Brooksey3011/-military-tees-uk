@@ -14,6 +14,17 @@ if (!supabaseAnonKey) {
 
 export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
+// For server-side operations with user context (API routes)
+// This maintains user authentication context on the server
+export function createSupabaseServer() {
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false
+    }
+  })
+}
+
 // For server-side operations that need elevated permissions
 // This function creates the admin client only when called on the server
 export function createSupabaseAdmin() {
