@@ -306,11 +306,11 @@ export function Navbar() {
               </Link>
             </Button>
 
-            {/* User Account */}
+            {/* User Profile */}
             <Button variant="ghost" size="icon" asChild>
-              <Link href="/account">
+              <Link href="/profile">
                 <User className="h-4 w-4" />
-                <span className="sr-only">Account</span>
+                <span className="sr-only">Profile</span>
               </Link>
             </Button>
 
@@ -414,8 +414,8 @@ export function Navbar() {
                   Quick Links
                 </div>
                 <div className="space-y-1">
-                  <Link href="/account" className="block px-4 py-2 text-sm text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
-                    My Account
+                  <Link href="/profile" className="block px-4 py-2 text-sm text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
+                    My Profile
                   </Link>
                   <Link href="/account/wishlist" className="block px-4 py-2 text-sm text-foreground hover:text-primary transition-colors" onClick={() => setIsMobileMenuOpen(false)}>
                     Wishlist
