@@ -24,31 +24,22 @@ interface CategoryGroup {
 
 const categoryGroups: CategoryGroup[] = [
   {
-    title: "Core Military",
+    title: "Military Collections",
     icon: "⚔️",
     categories: [
-      { title: "Armoury", href: "/categories/armoury", description: "Tactical and combat gear designs" },
-      { title: "Operations", href: "/categories/ops-room", description: "Strategic and tactical operations" },
-      { title: "Command & Leadership", href: "/categories/regimental-hq", description: "Officer and command structure themed" },
-      { title: "Ceremonial", href: "/categories/parade-square", description: "Dress uniform and parade designs" },
-    ]
-  },
-  {
-    title: "Specialist Corps",
-    icon: "🔧",
-    categories: [
-      { title: "Corps & Specialist", href: "/categories/signals", description: "Signals, medical, transport & logistics" },
-      { title: "Training & Fitness", href: "/categories/ranges", description: "PT, marksmanship and military training" },
-      { title: "Barracks Life", href: "/categories/mess-hall", description: "Military community and camaraderie" },
+      { title: "Military Essentials", href: "/categories/military-essentials", description: "Combat, tactical, and command designs" },
+      { title: "Barracks Life", href: "/categories/barracks-life", description: "Mess halls, NAAFI, and military community" },
+      { title: "Training & Fitness", href: "/categories/training-fitness", description: "PT, ranges, and military training" },
+      { title: "Corps & Specialist", href: "/categories/corps-specialist", description: "Signals, medical, logistics & specialist units" },
     ]
   },
   {
     title: "Special Collections",
     icon: "🌟",
     categories: [
-      { title: "Veterans", href: "/veterans", description: "Honoring those who served with pride" },
+      { title: "Veterans Collection", href: "/categories/veterans-collection", description: "Honoring those who served with pride" },
+      { title: "Memorial Collection", href: "/memorial", description: "Remembrance and tribute designs" },
       { title: "Kids Collection", href: "/kids", description: "Military-themed apparel for young recruits" },
-      { title: "Veteran Life", href: "/categories/civvy-street", description: "Post-service and civilian transition" },
     ]
   }
 ]

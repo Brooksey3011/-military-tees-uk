@@ -1,0 +1,65 @@
+import { Metadata } from "next"
+import { Medal, Heart } from "lucide-react"
+import { Layout } from "@/components/layout"
+import { CategoryProductsSafe } from "@/components/pages/category-products-safe"
+import { ClientOnly } from "@/components/ui/client-only"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
+
+export const metadata: Metadata = {
+  title: "Veterans Collection | Post-Service Apparel - Military Tees UK",
+  description: "Veteran and post-service military themed apparel. Celebrating those who served and transition to civilian life.",
+  keywords: [
+    "veterans apparel", "post service", "military veterans", "civvy street", 
+    "ex military", "veteran pride", "service transition", "veteran clothing"
+  ]
+}
+
+export default function VeteransCollectionPage() {
+  return (
+    <Layout>
+      <div className="min-h-screen bg-background">
+        <section className="border-b-2 border-border bg-muted/10">
+          <div className="container mx-auto px-4 py-16">
+            <div className="max-w-4xl mx-auto text-center">
+              <div className="inline-block p-4 mb-6 border-2 border-primary rounded-none bg-background">
+                <Medal className="h-12 w-12 text-primary mx-auto" />
+              </div>
+              <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-4 tracking-wider uppercase">
+                Veterans Collection
+              </h1>
+              <p className="text-xl text-muted-foreground leading-relaxed mb-8">
+                Honoring those who served - veteran pride and post-service life. Service never truly ends.
+              </p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Button variant="outline" size="sm" className="rounded-none border-2" asChild>
+                  <Link href="/veterans">Veteran Pride</Link>
+                </Button>
+                <Button variant="outline" size="sm" className="rounded-none border-2" asChild>
+                  <Link href="/categories/civvy-street">Civvy Street</Link>
+                </Button>
+                <Button variant="outline" size="sm" className="rounded-none border-2" asChild>
+                  <Link href="/categories/guard-room">Guard Room</Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section className="container mx-auto px-4 py-16">
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <CategoryProductsSafe 
+              categorySlug="veterans-collection"
+              categoryName="Veterans Collection"
+            />
+          </ClientOnly>
+        </section>
+      </div>
+    </Layout>
+  )
+}
