@@ -61,7 +61,14 @@ export function ProductDetailHydrationSafe() {
       size.stock += variant.stock_quantity
       size.isAvailable = size.isAvailable || variant.stock_quantity > 0
     })
-    return Array.from(sizeMap.values())
+    
+    // Sort sizes in standard order
+    const sizeOrder = ["XS", "S", "M", "L", "XL", "XXL", "XXXL"]
+    return Array.from(sizeMap.values()).sort((a, b) => {
+      const aIndex = sizeOrder.indexOf(a.size)
+      const bIndex = sizeOrder.indexOf(b.size)
+      return aIndex - bIndex
+    })
   }, [mounted, product?.variants])
 
   // Determine product type for size guide (MUST be before early returns)

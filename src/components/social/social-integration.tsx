@@ -142,7 +142,7 @@ export function SocialProof({ className }: SocialProofProps) {
     <Card className={cn("border-2 border-border rounded-none", className)}>
       <CardHeader>
         <CardTitle className="text-lg font-display font-bold tracking-wide uppercase">
-          Follow Our Journey
+          Follow Our Story
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
