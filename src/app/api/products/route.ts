@@ -11,18 +11,36 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     
     // Validate and sanitize query parameters
-    const queryParams = {
-      q: searchParams.get('search'),
-      category: searchParams.get('category'),
-      sort: searchParams.get('sortBy') || 'created_at',
-      order: searchParams.get('sortOrder') || 'desc',
-      page: parseInt(searchParams.get('page') || '1'),
-      limit: Math.min(parseInt(searchParams.get('limit') || '20'), 50), // Cap at 50
-      featured: searchParams.get('featured') === 'true'
-    };
+    const queryParams: any = {};
+    
+    // Only add parameters that have values
+    const search = searchParams.get('search');
+    if (search) queryParams.q = search;
+    
+    const category = searchParams.get('category');  
+    if (category) queryParams.category = category;
+    
+    queryParams.sort = searchParams.get('sortBy') || 'created_at';
+    queryParams.order = searchParams.get('sortOrder') || 'desc';
+    queryParams.page = parseInt(searchParams.get('page') || '1');
+    queryParams.limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50);
+    
+    const minPrice = searchParams.get('min_price');
+    if (minPrice) queryParams.min_price = parseFloat(minPrice);
+    
+    const maxPrice = searchParams.get('max_price');
+    if (maxPrice) queryParams.max_price = parseFloat(maxPrice);
+    
+    const featured = searchParams.get('featured');
+    if (featured === 'true') queryParams.featured = true;
 
     const validation = validateAndSanitize(searchParametersSchema, queryParams);
     if (!validation.success) {
+      console.error('Products API validation failed:', {
+        queryParams,
+        validationError: validation.error,
+        timestamp: new Date().toISOString()
+      });
       throw CommonErrors.INVALID_INPUT(validation.error);
     }
 

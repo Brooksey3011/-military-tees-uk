@@ -172,13 +172,14 @@ export const admin2FASetupSchema = z.object({
 // Search and filter validation
 export const searchParametersSchema = z.object({
   q: z.string().min(1).max(100).trim().optional(),
-  category: slugValidationSchema.or(uuidSchema).optional(),
+  category: z.string().min(1).max(100).optional(), // Accept any valid category string
   sort: z.enum(['name', 'price', 'created_at', 'updated_at']).default('created_at'),
   order: z.enum(['asc', 'desc']).default('desc'),
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(20),
   min_price: z.coerce.number().min(0).optional(),
-  max_price: z.coerce.number().min(0).optional()
+  max_price: z.coerce.number().min(0).optional(),
+  featured: z.boolean().optional()
 })
 
 // Rate limiting validation
