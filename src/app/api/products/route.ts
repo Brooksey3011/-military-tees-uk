@@ -1,10 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdmin } from '@/lib/supabase';
 import { searchParametersSchema, validateAndSanitize, validateEnvironmentVariables } from '@/lib/validation';
-import { handleError, CommonErrors } from '@/lib/error-handling';
 
-// Validate required environment variables
-validateEnvironmentVariables(['NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY']);
+// Environment validation with fallback
+try {
+  validateEnvironmentVariables(['NEXT_PUBLIC_SUPABASE_URL', 'SUPABASE_SERVICE_ROLE_KEY']);
+} catch (error) {
+  console.error('Environment validation failed:', error);
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -41,7 +44,11 @@ export async function GET(request: NextRequest) {
         validationError: validation.error,
         timestamp: new Date().toISOString()
       });
-      throw CommonErrors.INVALID_INPUT(validation.error);
+      return NextResponse.json({
+        error: 'Invalid parameters',
+        details: validation.error,
+        timestamp: new Date().toISOString()
+      }, { status: 400 });
     }
 
     const params = validation.data;
@@ -49,38 +56,18 @@ export async function GET(request: NextRequest) {
 
     const supabase = createSupabaseAdmin();
 
-    // Optimized query with proper joins to eliminate N+1 queries
+    // Simplified query to avoid join issues
     let query = supabase
       .from('products')
       .select(`
-        id,
-        name,
-        slug,
-        description,
-        price,
-        main_image_url,
-        is_featured,
-        created_at,
-        category:categories!inner(
-          id,
-          name,
-          slug
-        ),
-        variants:product_variants!inner(
-          id,
-          sku,
-          size,
-          color,
-          stock_quantity,
-          price,
-          is_active
-        )
+        *,
+        category:categories(id, name, slug),
+        variants:product_variants(*)
       `, { count: 'exact' })
       .eq('is_active', true)
-      .eq('variants.is_active', true)
       .range(offset, offset + params.limit - 1);
 
-    // Handle category filtering with proper validation
+    // Handle category filtering
     if (params.category) {
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
       
@@ -88,8 +75,17 @@ export async function GET(request: NextRequest) {
         // Direct UUID lookup
         query = query.eq('category_id', params.category);
       } else {
-        // Category slug lookup using inner join for better performance
-        query = query.eq('category.slug', params.category);
+        // For slug lookup, we need to first get the category ID
+        const { data: categoryData } = await supabase
+          .from('categories')
+          .select('id')
+          .eq('slug', params.category)
+          .eq('is_active', true)
+          .single();
+        
+        if (categoryData) {
+          query = query.eq('category_id', categoryData.id);
+        }
       }
     }
 
@@ -117,7 +113,12 @@ export async function GET(request: NextRequest) {
         code: error.code,
         timestamp: new Date().toISOString()
       });
-      throw CommonErrors.DATABASE_CONNECTION_FAILED();
+      
+      return NextResponse.json({
+        error: 'Failed to fetch products',
+        details: error.message,
+        timestamp: new Date().toISOString()
+      }, { status: 500 });
     }
 
     // Calculate pagination info
@@ -135,10 +136,26 @@ export async function GET(request: NextRequest) {
     });
 
   } catch (error) {
-    return await handleError(error, {
-      endpoint: '/api/products',
-      method: 'GET'
+    console.error('Products API error:', {
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : 'No stack trace',
+      timestamp: new Date().toISOString()
     });
+
+    // For debugging in production, return more detailed error info temporarily
+    if (process.env.NODE_ENV === 'development') {
+      return NextResponse.json({
+        error: 'Products API failed',
+        details: error instanceof Error ? error.message : 'Unknown error',
+        timestamp: new Date().toISOString()
+      }, { status: 500 });
+    }
+
+    // Simple fallback error response
+    return NextResponse.json({
+      error: 'Unable to fetch products',
+      timestamp: new Date().toISOString()
+    }, { status: 500 });
   }
 }
 
