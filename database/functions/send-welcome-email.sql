@@ -2,7 +2,7 @@
 CREATE OR REPLACE FUNCTION send_welcome_email()
 RETURNS trigger AS $$
 DECLARE
-  webhook_url TEXT := 'https://your-domain.vercel.app/api/auth/welcome';
+  webhook_url TEXT := 'https://militarytees.co.uk/api/auth/welcome';
   request_id bigint;
 BEGIN
   -- Only send welcome email for new user signups (not password resets, etc.)

@@ -7,7 +7,7 @@
 CREATE OR REPLACE FUNCTION send_custom_password_reset_email()
 RETURNS trigger AS $$
 DECLARE
-  webhook_url TEXT := 'https://your-domain.vercel.app/api/auth/password-reset';
+  webhook_url TEXT := 'https://militarytees.co.uk/api/auth/password-reset';
   reset_url TEXT;
   request_id bigint;
 BEGIN
@@ -15,7 +15,7 @@ BEGIN
   IF TG_OP = 'UPDATE' AND NEW.recovery_token IS NOT NULL AND OLD.recovery_token IS DISTINCT FROM NEW.recovery_token THEN
     
     -- Build the password reset URL (same format as Supabase default)
-    reset_url := 'https://your-domain.vercel.app/auth/reset-password?token=' || NEW.recovery_token || '&type=recovery';
+    reset_url := 'https://militarytees.co.uk/auth/reset-password?token=' || NEW.recovery_token || '&type=recovery';
     
     -- Log the password reset trigger
     RAISE LOG 'Triggering custom password reset email for user: %', NEW.email;
