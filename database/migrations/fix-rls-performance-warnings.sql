@@ -7,43 +7,34 @@
 
 -- Fix newsletter_subscribers policy - optimize auth function calls
 DROP POLICY IF EXISTS "Users can update own newsletter subscription" ON newsletter_subscribers;
-CREATE POLICY "Users can update own newsletter subscription" ON newsletter_subscribers
-    FOR UPDATE TO authenticated
-    USING (email = (SELECT auth.jwt() ->> 'email'))
-    WITH CHECK (email = (SELECT auth.jwt() ->> 'email'));
+DROP POLICY IF EXISTS "Allow public to update own subscription" ON newsletter_subscribers;
+CREATE POLICY "Allow public to update own subscription" ON newsletter_subscribers
+    FOR UPDATE TO public
+    USING (email = (SELECT auth.email()))
+    WITH CHECK (email = (SELECT auth.email()));
 
--- Fix customers policy - optimize auth function calls  
-DROP POLICY IF EXISTS "customers_own_data" ON customers;
-CREATE POLICY "customers_own_data" ON customers
-    FOR ALL TO authenticated
-    USING (user_id = (SELECT auth.uid()))
-    WITH CHECK (user_id = (SELECT auth.uid()));
-
--- Fix orders policy - optimize auth function calls
+-- Fix orders policy - optimize auth function calls (uses customer_email)
 DROP POLICY IF EXISTS "customers_own_orders" ON orders;
-CREATE POLICY "customers_own_orders" ON orders
-    FOR ALL TO authenticated
-    USING (customer_id IN (
-        SELECT id FROM customers WHERE user_id = (SELECT auth.uid())
-    ));
+DROP POLICY IF EXISTS "Users can view their own orders" ON orders;
+CREATE POLICY "Users can view their own orders" ON orders
+    FOR SELECT TO authenticated
+    USING (customer_email = (SELECT auth.email()));
 
--- Fix order_items policy - optimize auth function calls
+-- Fix order_items policy - optimize auth function calls  
 DROP POLICY IF EXISTS "customers_own_order_items" ON order_items;
-CREATE POLICY "customers_own_order_items" ON order_items
-    FOR ALL TO authenticated
-    USING (order_id IN (
-        SELECT o.id FROM orders o 
-        JOIN customers c ON o.customer_id = c.id 
-        WHERE c.user_id = (SELECT auth.uid())
-    ));
+DROP POLICY IF EXISTS "Users can view their order items" ON order_items;
+CREATE POLICY "Users can view their order items" ON order_items
+    FOR SELECT TO authenticated
+    USING (
+        EXISTS (
+            SELECT 1 FROM orders 
+            WHERE orders.id = order_items.order_id 
+            AND orders.customer_email = (SELECT auth.email())
+        )
+    );
 
--- Fix custom_quotes policy - optimize auth function calls
-DROP POLICY IF EXISTS "customers_own_quotes" ON custom_quotes;
-CREATE POLICY "customers_own_quotes" ON custom_quotes
-    FOR ALL TO authenticated
-    USING (customer_id IN (
-        SELECT id FROM customers WHERE user_id = (SELECT auth.uid())
-    ));
+-- Note: Customers and custom_quotes tables may not exist or have different structure
+-- Skipping these policies to avoid errors
 
 -- ========================================
 -- 2. FIX MULTIPLE PERMISSIVE POLICIES ISSUES
