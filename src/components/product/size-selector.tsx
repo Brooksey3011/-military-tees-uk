@@ -91,11 +91,8 @@ export function SizeSelector({
               onClick={() => handleSizeSelect(sizeOption.size)}
               disabled={disabled || isOutOfStock}
             >
-              <div className="flex flex-col items-center justify-center">
-                <span className="text-xs font-bold">{sizeOption.size}</span>
-                <span className="text-[10px] opacity-80 leading-none">
-                  {sizeOption.label}
-                </span>
+              <div className="flex items-center justify-center">
+                <span className="text-sm font-bold">{sizeOption.size}</span>
               </div>
 
               {/* Stock Indicators */}
