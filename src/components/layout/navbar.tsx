@@ -137,7 +137,7 @@ export function Navbar() {
 
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" data-navbar>
+    <nav className="sticky top-0 z-[60] w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" data-navbar>
       <div className="container mx-auto px-4">
         {/* Main navbar */}
         <div className="flex h-16 items-center justify-between">
@@ -187,7 +187,7 @@ export function Navbar() {
 
           {/* Desktop Mega Menu */}
           {isCategoriesOpen && (
-            <div className="absolute left-0 right-0 top-full bg-background border-b-2 border-border shadow-lg z-60">
+            <div className="absolute left-0 right-0 top-full bg-background border-b-2 border-border shadow-lg z-[70]">
               <div className="container mx-auto px-4 py-6">
                 <div className="max-w-2xl mx-auto">
                   {categoryGroups.map((group) => (
