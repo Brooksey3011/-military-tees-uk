@@ -39,7 +39,7 @@ export default function BritishArmyPage() {
                 href="/categories" 
                 className="hover:text-foreground transition-colors"
               >
-                Military
+                British Armed Forces
               </Link>
               <span>/</span>
               <span className="text-foreground font-medium">British Army</span>
@@ -59,7 +59,7 @@ export default function BritishArmyPage() {
                 )}
               >
                 <ArrowLeft className="h-4 w-4" />
-                Back to Military Collections
+                Back to British Armed Forces
               </Link>
               
               <div className="flex items-center gap-4 mb-6">

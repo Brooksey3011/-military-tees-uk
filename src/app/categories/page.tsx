@@ -1,82 +1,54 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Shield, MapPin, Users, Truck, Radio, Target, Building, Dumbbell, Lock, Award, Package, GraduationCap, Home, Crosshair, Heart, Store, Star, Baby } from "lucide-react"
+import { Shield, Anchor, Plane, Ship } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { cn } from "@/lib/utils"
 
-// Professional condensed categories - core military themes
-const categories = [
+// British Armed Forces categories - matches navbar structure
+const militaryBranches = [
   { 
-    slug: "armoury", 
-    name: "Armoury", 
-    description: "Tactical and combat gear designs",
-    icon: Shield
+    slug: "british-army", 
+    name: "British Army", 
+    description: "Infantry, armoured corps, and army regiment designs",
+    longDescription: "Discover our collection celebrating the British Army's rich heritage. From the disciplined ranks of the infantry to the armoured might of tank regiments, these designs honor the traditions, courage, and brotherhood that define Britain's land forces.",
+    icon: Shield,
+    color: "text-green-600"
   },
   { 
-    slug: "regimental-hq", 
-    name: "Command & Leadership", 
-    description: "Officer and command structure themed",
-    icon: MapPin
+    slug: "royal-marines", 
+    name: "Royal Marines", 
+    description: "Commando and amphibious warfare designs",
+    longDescription: "Honor the Royal Marines' legendary legacy with our elite collection. From the beaches of D-Day to modern amphibious operations, these designs celebrate the courage, skill, and brotherhood of Britain's premier amphibious force.",
+    icon: Anchor,
+    color: "text-blue-600"
   },
   { 
-    slug: "parade-square", 
-    name: "Ceremonial", 
-    description: "Dress uniform and parade designs",
-    icon: Award
+    slug: "royal-air-force", 
+    name: "Royal Air Force", 
+    description: "RAF squadron and aviation designs",
+    longDescription: "Soar with the Royal Air Force collection, celebrating the bravery and skill of Britain's airmen and women. From the Battle of Britain to modern air operations, these designs honor the RAF's proud heritage of defending the skies.",
+    icon: Plane,
+    color: "text-sky-600"
   },
   { 
-    slug: "ops-room", 
-    name: "Operations", 
-    description: "Strategic and tactical operations",
-    icon: Target
-  },
-  { 
-    slug: "signals", 
-    name: "Corps & Specialist", 
-    description: "Signals, medical, transport & logistics",
-    icon: Radio
-  },
-  { 
-    slug: "ranges", 
-    name: "Training & Fitness", 
-    description: "PT, marksmanship and military training",
-    icon: Crosshair
-  },
-  { 
-    slug: "mess-hall", 
-    name: "Barracks Life", 
-    description: "Military community and camaraderie",
-    icon: Users
-  },
-  { 
-    slug: "veterans", 
-    name: "Veterans", 
-    description: "Honoring those who served with pride",
-    icon: Star
-  },
-  { 
-    slug: "kids", 
-    name: "Kids Collection", 
-    description: "Military-themed apparel for young recruits",
-    icon: Baby
-  },
-  { 
-    slug: "civvy-street", 
-    name: "Veteran Life", 
-    description: "Post-service and civilian transition",
-    icon: Home
+    slug: "royal-navy", 
+    name: "Royal Navy", 
+    description: "Naval traditions and fleet designs",
+    longDescription: "Navigate the Royal Navy collection, celebrating Britain's Senior Service and its proud maritime heritage. From Nelson's victories to modern fleet operations, these designs honor the sailors who have defended Britain's shores for centuries.",
+    icon: Ship,
+    color: "text-navy-600"
   }
 ]
 
 export const metadata: Metadata = {
-  title: "Camp Map - Browse All Categories | Military Tees UK",
-  description: "Explore our complete range of military-themed t-shirt categories. From the Armoury to Civvy Street, find designs that honor British military tradition.",
-  keywords: ["military t-shirts", "british army", "military clothing", "tactical gear", "military categories"],
+  title: "British Armed Forces Collections | Military Tees UK",
+  description: "Explore our complete range of British Armed Forces themed apparel. From the British Army to Royal Navy, find designs that honor British military tradition and heritage.",
+  keywords: ["military t-shirts", "british army", "royal navy", "royal air force", "royal marines", "military clothing", "british armed forces"],
   openGraph: {
-    title: "Military T-Shirt Categories - Camp Map",
-    description: "Browse our military-themed categories inspired by British Army bases and units",
+    title: "British Armed Forces Collections | Military Tees UK",
+    description: "Browse our British Armed Forces themed categories - Army, Navy, Air Force, and Marines",
     type: "website",
   }
 }
@@ -95,7 +67,7 @@ export default function CategoriesPage() {
             "rounded-none", // Sharp military edges
             "bg-background"
           )}>
-            <MapPin className="h-12 w-12 text-primary mx-auto" />
+            <span className="text-4xl">🇬🇧</span>
           </div>
           
           <h1 className={cn(
@@ -103,35 +75,35 @@ export default function CategoriesPage() {
             "tracking-wider uppercase", // Military stencil feel
             "text-shadow-sm"
           )}>
-            Camp Map
+            British Armed Forces
           </h1>
           
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-6 leading-relaxed">
-            Navigate through our military-inspired collection. Each category represents a different area 
-            of camp life, from tactical operations to everyday military culture.
+            Explore our military collections celebrating the courage, tradition, and heritage of Britain's Armed Forces. 
+            Each collection honors the unique culture and proud service of our military branches.
           </p>
           
           <div className="flex justify-center gap-6 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="rounded-none">
-                {categories.length}
+                {militaryBranches.length}
               </Badge>
-              <span>Categories Available</span>
+              <span>Military Branches</span>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Categories Grid */}
+      {/* Military Branches Grid */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          {categories.map((category) => {
-            const IconComponent = category.icon
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {militaryBranches.map((branch) => {
+            const IconComponent = branch.icon
             
             return (
               <Link 
-                key={category.slug}
-                href={`/categories/${category.slug}`}
+                key={branch.slug}
+                href={`/categories/${branch.slug}`}
                 className="group"
               >
                 <Card className={cn(
@@ -140,31 +112,38 @@ export default function CategoriesPage() {
                   "rounded-none", // Sharp military styling
                   "group-hover:shadow-lg group-hover:-translate-y-1"
                 )}>
-                  <CardContent className="p-6">
+                  <CardContent className="p-8">
                     {/* Icon */}
                     <div className={cn(
-                      "mb-4 p-3",
+                      "mb-6 p-4",
                       "border border-muted-foreground/20",
                       "rounded-none",
                       "bg-muted/20 group-hover:bg-primary/10 transition-colors"
                     )}>
-                      <IconComponent className="h-8 w-8 text-primary group-hover:text-primary" />
+                      <IconComponent className={cn(
+                        "h-10 w-10 group-hover:text-primary transition-colors",
+                        branch.color
+                      )} />
                     </div>
                     
-                    {/* Category Info */}
+                    {/* Branch Info */}
                     <h3 className={cn(
-                      "text-lg font-display font-semibold text-foreground mb-2",
+                      "text-xl font-display font-bold text-foreground mb-3",
                       "tracking-wide", // Military stencil feel
                       "group-hover:text-primary transition-colors"
                     )}>
-                      {category.name}
+                      {branch.name}
                     </h3>
                     
                     <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-                      {category.description}
+                      {branch.description}
                     </p>
                     
-                    {/* Category Action */}
+                    <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+                      {branch.longDescription}
+                    </p>
+                    
+                    {/* Branch Action */}
                     <div className="flex items-center justify-between">
                       <Badge 
                         variant="secondary" 
@@ -173,10 +152,10 @@ export default function CategoriesPage() {
                           "group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
                         )}
                       >
-                        View Category
+                        Browse Collection
                       </Badge>
                       
-                      <div className="text-primary group-hover:translate-x-1 transition-transform">
+                      <div className="text-primary group-hover:translate-x-1 transition-transform text-lg">
                         →
                       </div>
                     </div>
@@ -195,43 +174,41 @@ export default function CategoriesPage() {
             "text-2xl md:text-3xl font-display font-bold text-foreground mb-4",
             "tracking-wider uppercase"
           )}>
-            Can't Find What You're Looking For?
+            Proudly Serving Those Who Serve
           </h2>
           
           <p className="text-muted-foreground max-w-lg mx-auto mb-8">
-            Browse all our products or use our advanced search to find specific designs, 
-            sizes, or themes across our entire collection.
+            Can't find what you're looking for? Explore our custom orders service or browse our 
+            memorial and veterans collections for specialized military designs.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link 
-              href="/products"
+              href="/custom"
               className={cn(
                 "inline-flex items-center justify-center gap-2",
                 "px-8 py-3 bg-primary text-primary-foreground",
                 "border-2 border-primary rounded-none",
-                "font-medium tracking-wide",
+                "font-display font-bold tracking-wide uppercase",
                 "hover:bg-primary/90 transition-colors",
                 "focus:outline-none focus:ring-2 focus:ring-primary/20"
               )}
             >
-              <Package className="h-4 w-4" />
-              Browse All Products
+              Custom Orders
             </Link>
             
             <Link 
-              href="/custom"
+              href="/memorial"
               className={cn(
                 "inline-flex items-center justify-center gap-2",
                 "px-8 py-3 bg-background text-foreground",
                 "border-2 border-border rounded-none",
-                "font-medium tracking-wide",
+                "font-display font-bold tracking-wide uppercase",
                 "hover:border-primary hover:text-primary transition-colors",
                 "focus:outline-none focus:ring-2 focus:ring-primary/20"
               )}
             >
-              <Award className="h-4 w-4" />
-              Custom Orders
+              Memorial Collection
             </Link>
           </div>
         </div>

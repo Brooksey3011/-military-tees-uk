@@ -39,7 +39,7 @@ const navigation: NavItem[] = [
   {
     title: "Military",
     href: "/categories",
-    description: "Browse military branch collections"
+    description: "Browse British Armed Forces collections"
   },
   {
     title: "Sale",
