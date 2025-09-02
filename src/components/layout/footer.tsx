@@ -39,8 +39,8 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: Facebook, href: "https://facebook.com/militaryteesuk", label: "Facebook" },
-  { icon: Instagram, href: "https://instagram.com/militaryteesuk", label: "Instagram" },
+  { icon: Facebook, href: "https://www.facebook.com/militaryteesukltd", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/militaryteesukltd/", label: "Instagram" },
 ]
 
 export function Footer() {

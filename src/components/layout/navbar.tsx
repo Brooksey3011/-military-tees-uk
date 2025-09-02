@@ -24,31 +24,22 @@ interface CategoryGroup {
 
 const categoryGroups: CategoryGroup[] = [
   {
-    title: "Military Collections",
-    icon: "⚔️",
+    title: "British Armed Forces",
+    icon: "🇬🇧",
     categories: [
-      { title: "Military Essentials", href: "/categories/military-essentials", description: "Combat, tactical, and command designs" },
-      { title: "Barracks Life", href: "/categories/barracks-life", description: "Mess halls, NAAFI, and military community" },
-      { title: "Training & Fitness", href: "/categories/training-fitness", description: "PT, ranges, and military training" },
-      { title: "Corps & Specialist", href: "/categories/corps-specialist", description: "Signals, medical, logistics & specialist units" },
-    ]
-  },
-  {
-    title: "Special Collections",
-    icon: "🌟",
-    categories: [
-      { title: "Veterans Collection", href: "/categories/veterans-collection", description: "Honoring those who served with pride" },
-      { title: "Memorial Collection", href: "/memorial", description: "Remembrance and tribute designs" },
-      { title: "Kids Collection", href: "/kids", description: "Military-themed apparel for young recruits" },
+      { title: "British Army", href: "/categories/british-army", description: "Infantry, armoured corps, and army regiment designs" },
+      { title: "Royal Marines", href: "/categories/royal-marines", description: "Commando and amphibious warfare designs" },
+      { title: "Royal Air Force", href: "/categories/royal-air-force", description: "RAF squadron and aviation designs" },
+      { title: "Royal Navy", href: "/categories/royal-navy", description: "Naval traditions and fleet designs" },
     ]
   }
 ]
 
 const navigation: NavItem[] = [
   {
-    title: "Categories",
+    title: "Military",
     href: "/categories",
-    description: "Browse all military-themed apparel"
+    description: "Browse military branch collections"
   },
   {
     title: "Sale",
@@ -167,7 +158,7 @@ export function Navbar() {
           <div className="hidden lg:flex items-center space-x-8">
             {navigation.map((item) => (
               <div key={item.title} className="relative">
-                {item.title === "Categories" ? (
+                {item.title === "Military" ? (
                   <button
                     className="flex items-center space-x-1 text-sm font-display font-bold tracking-wide uppercase text-foreground hover:text-primary transition-colors"
                     onClick={toggleCategories}
@@ -196,30 +187,30 @@ export function Navbar() {
 
           {/* Desktop Mega Menu */}
           {isCategoriesOpen && (
-            <div className="absolute left-0 right-0 top-full bg-background border-b-2 border-border shadow-lg z-40">
-              <div className="container mx-auto px-4 py-8">
-                <div className="grid grid-cols-3 gap-8">
+            <div className="absolute left-0 right-0 top-full bg-background border-b-2 border-border shadow-lg z-60">
+              <div className="container mx-auto px-4 py-6">
+                <div className="max-w-2xl mx-auto">
                   {categoryGroups.map((group) => (
                     <div key={group.title} className="space-y-4">
-                      <div className="flex items-center gap-2 pb-2 border-b border-border">
-                        <span className="text-lg">{group.icon}</span>
-                        <h3 className="font-display font-bold tracking-wide uppercase text-foreground">
+                      <div className="flex items-center justify-center gap-2 pb-4 mb-4 border-b border-border">
+                        <span className="text-2xl">{group.icon}</span>
+                        <h3 className="font-display font-bold tracking-wide uppercase text-foreground text-lg">
                           {group.title}
                         </h3>
                       </div>
-                      <div className="space-y-2">
+                      <div className="grid grid-cols-2 gap-4">
                         {group.categories.map((category) => (
                           <Link
                             key={category.title}
                             href={category.href}
-                            className="block p-2 rounded-none hover:bg-muted/20 transition-colors group"
+                            className="block p-4 rounded-none border border-border hover:bg-primary/5 transition-colors group text-center"
                             onClick={() => setIsCategoriesOpen(false)}
                           >
-                            <div className="text-sm font-medium text-foreground group-hover:text-primary">
+                            <div className="text-sm font-display font-bold uppercase text-foreground group-hover:text-primary mb-1">
                               {category.title}
                             </div>
                             {category.description && (
-                              <div className="text-xs text-muted-foreground mt-1">
+                              <div className="text-xs text-muted-foreground">
                                 {category.description}
                               </div>
                             )}
@@ -228,24 +219,6 @@ export function Navbar() {
                       </div>
                     </div>
                   ))}
-                </div>
-                
-                {/* Featured Section */}
-                <div className="mt-8 pt-6 border-t border-border">
-                  <div className="grid grid-cols-3 gap-4">
-                    <Link href="/bestsellers" className="text-center p-4 rounded-none border border-border hover:bg-primary/5 transition-colors">
-                      <div className="text-2xl mb-2">⭐</div>
-                      <div className="text-sm font-display font-bold uppercase">Bestsellers</div>
-                    </Link>
-                    <Link href="/memorial" className="text-center p-4 rounded-none border border-border hover:bg-primary/5 transition-colors">
-                      <div className="text-2xl mb-2">🕊️</div>
-                      <div className="text-sm font-display font-bold uppercase">Memorial</div>
-                    </Link>
-                    <Link href="/custom" className="text-center p-4 rounded-none border border-border hover:bg-primary/5 transition-colors">
-                      <div className="text-2xl mb-2">✏️</div>
-                      <div className="text-sm font-display font-bold uppercase">Custom Orders</div>
-                    </Link>
-                  </div>
                 </div>
               </div>
             </div>
@@ -323,15 +296,15 @@ export function Navbar() {
         {isMobileMenuOpen && (
           <div className="lg:hidden border-t bg-background">
             <div className="py-4 space-y-2">
-              {/* Categories with organized dropdown */}
+              {/* Military with dropdown */}
               <div>
                 <button
-                  onClick={() => handleDropdownToggle("Categories")}
+                  onClick={() => handleDropdownToggle("Military")}
                   className="flex items-center justify-between w-full px-4 py-3 text-sm font-display font-bold tracking-wide uppercase text-foreground hover:text-primary hover:bg-muted/20 rounded-none transition-colors"
                 >
-                  <span>Categories</span>
+                  <span>Military</span>
                   <svg 
-                    className={cn("h-3 w-3 transition-transform", activeDropdown === "Categories" && "rotate-180")}
+                    className={cn("h-3 w-3 transition-transform", activeDropdown === "Military" && "rotate-180")}
                     fill="none" 
                     stroke="currentColor" 
                     viewBox="0 0 24 24"
@@ -340,7 +313,7 @@ export function Navbar() {
                   </svg>
                 </button>
                 
-                {activeDropdown === "Categories" && (
+                {activeDropdown === "Military" && (
                   <div className="mt-2 bg-muted/10">
                     {categoryGroups.map((group) => (
                       <div key={group.title} className="border-b border-border/50 last:border-b-0">

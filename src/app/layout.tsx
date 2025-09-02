@@ -178,8 +178,8 @@ export default function RootLayout({
       ]
     },
     "sameAs": [
-      "https://www.facebook.com/militaryteesuk",
-      "https://www.instagram.com/militaryteesuk", 
+      "https://www.facebook.com/militaryteesukltd",
+      "https://www.instagram.com/militaryteesukltd/", 
       "https://www.tiktok.com/@militaryteesuk"
     ],
     "potentialAction": {

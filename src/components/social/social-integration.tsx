@@ -115,10 +115,10 @@ export function SocialProof({ className }: SocialProofProps) {
     {
       name: "Instagram",
       icon: Instagram,
-      handle: "@militaryteesuk",
+      handle: "@militaryteesukltd",
       followers: "1.2K",
       color: "text-pink-600",
-      url: "https://instagram.com/militaryteesuk"
+      url: "https://www.instagram.com/militaryteesukltd/"
     },
     {
       name: "Facebook",
@@ -126,7 +126,7 @@ export function SocialProof({ className }: SocialProofProps) {
       handle: "MilitaryTeesUK",
       followers: "850",
       color: "text-blue-600",
-      url: "https://facebook.com/militaryteesuk"
+      url: "https://www.facebook.com/militaryteesukltd"
     },
     {
       name: "Twitter",
@@ -301,7 +301,7 @@ export function InstagramFeed({ posts = [], className }: InstagramFeedProps) {
             asChild
           >
             <a
-              href="https://instagram.com/militaryteesuk"
+              href="https://www.instagram.com/militaryteesukltd/"
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -320,13 +320,13 @@ export function SocialMediaFooter({ className }: { className?: string }) {
     {
       name: "Instagram",
       icon: Instagram,
-      url: "https://instagram.com/militaryteesuk",
+      url: "https://www.instagram.com/militaryteesukltd/",
       color: "hover:text-pink-600"
     },
     {
       name: "Facebook", 
       icon: Facebook,
-      url: "https://facebook.com/militaryteesuk",
+      url: "https://www.facebook.com/militaryteesukltd",
       color: "hover:text-blue-600"
     },
     {
