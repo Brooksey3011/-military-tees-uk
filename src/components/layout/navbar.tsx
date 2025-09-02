@@ -5,7 +5,7 @@ import Link from "next/link"
 import { Menu, X, Search, User, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CartIcon } from "@/components/cart/cart-icon"
-import { AdvancedSearchBar } from "@/components/search/advanced-search-bar"
+import { SimpleSearchBar } from "@/components/search/simple-search-bar"
 import { cn } from "@/lib/utils"
 
 interface NavItem {
@@ -144,19 +144,6 @@ export function Navbar() {
     setActiveDropdown(activeDropdown === title ? null : title)
   }
 
-  const handleSearch = (query: string) => {
-    // Navigate to search page with query
-    if (typeof window !== 'undefined') {
-      window.location.href = `/search?q=${encodeURIComponent(query)}`
-    }
-  }
-
-  const handleResultSelect = (result: any) => {
-    // Navigate to selected result
-    if (typeof window !== 'undefined') {
-      window.location.href = `/products/${result.slug || result.id}`
-    }
-  }
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60" data-navbar>
@@ -264,14 +251,11 @@ export function Navbar() {
             </div>
           )}
 
-          {/* Advanced Search Bar - Desktop */}
+          {/* Search Bar - Desktop */}
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <AdvancedSearchBar
-              onSearch={handleSearch}
-              onResultSelect={handleResultSelect}
+            <SimpleSearchBar
               placeholder="Search military tees, categories..."
               className="w-full"
-              showHistory={true}
             />
           </div>
 
@@ -325,15 +309,12 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Advanced Search Bar */}
+        {/* Mobile Search Bar */}
         {isSearchOpen && (
           <div className="md:hidden py-4 border-t">
-            <AdvancedSearchBar
-              onSearch={handleSearch}
-              onResultSelect={handleResultSelect}
+            <SimpleSearchBar
               placeholder="Search military tees, categories..."
               className="w-full"
-              showHistory={true}
             />
           </div>
         )}
