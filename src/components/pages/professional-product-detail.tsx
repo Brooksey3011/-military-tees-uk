@@ -16,7 +16,7 @@ interface Product {
   id: string
   name: string
   price: number
-  sale_price?: number
+  sale_price?: number | null
   main_image_url: string
   description: string
   slug: string
@@ -38,6 +38,14 @@ interface Product {
 interface ProductImages {
   main: string
   gallery: string[]
+}
+
+// Helper function for safe price display
+const formatPrice = (price?: number | null): string => {
+  if (typeof price === 'number' && !isNaN(price)) {
+    return price.toFixed(2)
+  }
+  return '0.00'
 }
 
 export function ProfessionalProductDetail() {
@@ -129,9 +137,9 @@ export function ProfessionalProductDetail() {
     return product.variants.find(v => v.size === selectedSize && v.color === selectedColor)
   }, [product?.variants, selectedSize, selectedColor])
 
-  // Calculate savings
-  const savings = product?.sale_price ? product.price - product.sale_price : 0
-  const savingsPercentage = savings > 0 ? Math.round((savings / product.price) * 100) : 0
+  // Calculate savings with proper null checks
+  const savings = product?.sale_price && product?.price ? product.price - product.sale_price : 0
+  const savingsPercentage = savings > 0 && product?.price ? Math.round((savings / product.price) * 100) : 0
 
   // Product images
   const productImages: ProductImages = React.useMemo(() => {
@@ -151,6 +159,19 @@ export function ProfessionalProductDetail() {
   }, [product, currentVariant, selectedImage])
 
   if (!mounted) return null
+
+  // Early return for missing essential data
+  if (!product && !loading) {
+    return (
+      <div className="container mx-auto px-4 py-16 text-center">
+        <h2 className="text-2xl font-display font-bold mb-4 tracking-wide uppercase">Product Not Found</h2>
+        <p className="text-muted-foreground mb-6">This product could not be found.</p>
+        <Button asChild className="rounded-none font-display font-bold tracking-wide uppercase">
+          <Link href="/categories">Browse Categories</Link>
+        </Button>
+      </div>
+    )
+  }
 
   if (loading) {
     return (
@@ -282,17 +303,17 @@ export function ProfessionalProductDetail() {
           <div className="space-y-2">
             <div className="flex items-center gap-3">
               <span className="text-3xl font-bold text-foreground">
-                £{(product.sale_price || product.price).toFixed(2)}
+                £{formatPrice(product.sale_price || product.price)}
               </span>
-              {product.sale_price && (
+              {product.sale_price && product.price && (
                 <span className="text-xl text-muted-foreground line-through">
-                  £{product.price.toFixed(2)}
+                  £{formatPrice(product.price)}
                 </span>
               )}
             </div>
             {savings > 0 && (
               <div className="text-green-600 font-medium">
-                You save £{savings.toFixed(2)} ({savingsPercentage}% off)
+                You save £{formatPrice(savings)} ({savingsPercentage}% off)
               </div>
             )}
           </div>
@@ -349,11 +370,11 @@ export function ProfessionalProductDetail() {
               productId={product.id}
               variantId={currentVariant?.id || product.id}
               name={product.name}
-              price={product.sale_price || product.price}
+              price={product.sale_price || product.price || 0}
               image={productImages.main}
               size={selectedSize || "One Size"}
               color={selectedColor}
-              maxQuantity={currentVariant?.stock_quantity || product.stock_quantity}
+              maxQuantity={currentVariant?.stock_quantity || product.stock_quantity || 0}
               className="w-full rounded-none font-display font-bold tracking-wide uppercase text-lg py-4"
               buttonSize="lg"
             />
