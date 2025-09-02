@@ -105,18 +105,12 @@ interface SocialProofProps {
 }
 
 export function SocialProof({ className }: SocialProofProps) {
-  const [stats, setStats] = useState({
-    followers: 1250,
-    posts: 89,
-    engagement: 94
-  })
-
   const socialPlatforms = [
     {
       name: "Instagram",
       icon: Instagram,
       handle: "@militaryteesukltd",
-      followers: "1.2K",
+      description: "Behind-the-scenes content & new designs",
       color: "text-pink-600",
       url: "https://www.instagram.com/militaryteesukltd/"
     },
@@ -124,17 +118,9 @@ export function SocialProof({ className }: SocialProofProps) {
       name: "Facebook",
       icon: Facebook,
       handle: "MilitaryTeesUK",
-      followers: "850",
+      description: "Community updates & military features",
       color: "text-blue-600",
       url: "https://www.facebook.com/militaryteesukltd"
-    },
-    {
-      name: "Twitter",
-      icon: Twitter,
-      handle: "@MilitaryTeesUK",
-      followers: "640",
-      color: "text-sky-500",
-      url: "https://twitter.com/militaryteesuk"
     }
   ]
 
@@ -146,22 +132,15 @@ export function SocialProof({ className }: SocialProofProps) {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        <div className="grid grid-cols-3 gap-4 text-center">
-          <div>
-            <div className="text-2xl font-bold text-primary">{stats.followers}</div>
-            <div className="text-xs text-muted-foreground">Followers</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-primary">{stats.posts}</div>
-            <div className="text-xs text-muted-foreground">Posts</div>
-          </div>
-          <div>
-            <div className="text-2xl font-bold text-primary">{stats.engagement}%</div>
-            <div className="text-xs text-muted-foreground">Engagement</div>
+        {/* Military Heritage Call-to-Action */}
+        <div className="text-center p-4 border border-border rounded-none bg-muted/10">
+          <div className="text-lg font-display font-bold text-primary mb-2">Join Our Community</div>
+          <div className="text-sm text-muted-foreground">
+            Connect with fellow military enthusiasts and stay updated on new designs
           </div>
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-3">
           {socialPlatforms.map((platform) => {
             const IconComponent = platform.icon
             return (
@@ -170,23 +149,26 @@ export function SocialProof({ className }: SocialProofProps) {
                 href={platform.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center justify-between p-3 border border-border rounded-none hover:border-primary transition-colors group"
+                className="flex items-center justify-between p-4 border border-border rounded-none hover:border-primary transition-colors group bg-background hover:bg-muted/10"
               >
-                <div className="flex items-center gap-3">
-                  <IconComponent className={cn("h-5 w-5", platform.color)} />
+                <div className="flex items-center gap-4">
+                  <div className={cn(
+                    "p-2 border border-border rounded-none transition-colors",
+                    "group-hover:border-primary group-hover:bg-primary/10"
+                  )}>
+                    <IconComponent className={cn("h-6 w-6", platform.color)} />
+                  </div>
                   <div>
                     <div className="font-medium text-sm group-hover:text-primary transition-colors">
                       {platform.name}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      {platform.handle}
+                      {platform.description}
                     </div>
                   </div>
                 </div>
-                <div className="text-right">
-                  <Badge variant="secondary" className="rounded-none">
-                    {platform.followers}
-                  </Badge>
+                <div className="text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+                  →
                 </div>
               </a>
             )
@@ -328,12 +310,6 @@ export function SocialMediaFooter({ className }: { className?: string }) {
       icon: Facebook,
       url: "https://www.facebook.com/militaryteesukltd",
       color: "hover:text-blue-600"
-    },
-    {
-      name: "Twitter",
-      icon: Twitter,
-      url: "https://twitter.com/militaryteesuk",
-      color: "hover:text-sky-500"
     }
   ]
 
