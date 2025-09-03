@@ -191,120 +191,93 @@ export function RoyalNavyProducts() {
           </div>
         </div>
 
-        {/* Products Display */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className={cn(
-                "bg-background border-2 border-border rounded-none",
-                "hover:border-primary hover:shadow-lg transition-all duration-200",
-                "group"
-              )}>
-                <Link href={`/products/${product.slug}`} className="block">
-                  {/* Product Image */}
-                  <div className="aspect-square relative bg-muted/20">
-                    <OptimizedImage
-                      src={product.main_image_url || '/placeholder-product.jpg'}
-                      alt={product.name}
-                      width={400}
-                      height={400}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    {product.sale_price && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className="rounded-none bg-red-600 text-white font-bold">
-                          SALE
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="p-4">
-                    <div className="mb-2">
-                      {product.category && (
-                        <Badge variant="outline" className="rounded-none text-xs mb-2">
-                          {product.category.name}
-                        </Badge>
-                      )}
-                    </div>
-                    
-                    <h3 className="font-display font-semibold text-lg mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {product.name}
-                    </h3>
-                    
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
-                      {product.description}
-                    </p>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-primary">
-                          £{(product.sale_price || product.price).toFixed(2)}
-                        </span>
-                        {product.sale_price && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            £{product.price.toFixed(2)}
-                          </span>
-                        )}
-                      </div>
-                      
-                      {/* Star rating placeholder */}
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-
-                {/* Add to Cart Button */}
-                <div className="p-4 pt-0">
-                  <AddToCartButton
-                    productId={product.id}
-                    variantId={product.id} // Using product ID as variant ID for now
-                    name={product.name}
-                    price={product.sale_price || product.price}
-                    image={product.main_image_url || '/placeholder-product.jpg'}
-                    size="One Size"
-                    color="Standard"
-                    maxQuantity={10} // Default max quantity
-                    quantity={1}
-                    className={cn(
-                      "w-full rounded-none font-display font-bold tracking-wide uppercase",
-                      "border-2"
-                    )}
-                    buttonSize="default"
-                  />
-                </div>
-              </div>
+        {/* Products Grid */}
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, i) => (
+              <div key={i} className="bg-muted/20 h-96 animate-pulse rounded-none border-2 border-border"></div>
             ))}
           </div>
-        ) : (
+        ) : filteredProducts.length === 0 ? (
           <div className="text-center py-16">
-            <div className="mb-6">
-              <div className={cn(
-                "inline-block p-6 mb-4",
-                "border-2 border-muted-foreground/20 rounded-none bg-muted/10"
-              )}>
-                <ShoppingCart className="h-12 w-12 text-muted-foreground/50" />
-              </div>
-            </div>
-            <h3 className="text-xl font-display font-bold mb-4 tracking-wide uppercase">No Products Found</h3>
-            <p className="text-muted-foreground mb-6">
-              Try adjusting your filters or check back soon for new Royal Navy products!
-            </p>
-            <Button 
-              onClick={() => {
-                setSortBy('name')
-                setPriceFilter('all')
-              }}
-              variant="outline"
-              className="rounded-none font-display font-bold tracking-wide uppercase border-2"
-            >
-              Clear Filters
-            </Button>
+            <h3 className="text-xl font-semibold mb-4">No products found</h3>
+            <p className="text-muted-foreground">Try adjusting your filters or check back later for new products.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredProducts.map((product) => {
+              const displayPrice = product.sale_price || product.price
+              const formatPrice = (price: number) => `£${price.toFixed(2)}`
+
+              return (
+                <div key={product.id} className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
+                  <div className="relative aspect-square overflow-hidden">
+                    <Link href={`/products/${product.slug}`}>
+                      <OptimizedImage
+                        src={product.main_image_url}
+                        alt={product.name}
+                        fill
+                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      />
+                    </Link>
+                    
+                    {product.sale_price && (
+                      <div className="absolute top-2 right-2">
+                        <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="p-4 space-y-3">
+                    <div>
+                      <Link href={`/products/${product.slug}`}>
+                        <h3 className="font-display font-bold text-sm uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
+                          {product.name}
+                        </h3>
+                      </Link>
+                      <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                        {product.description}
+                      </p>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-bold text-lg">{formatPrice(displayPrice)}</span>
+                          {product.sale_price && (
+                            <span className="text-sm text-muted-foreground line-through">
+                              {formatPrice(product.price)}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="pt-2">
+                      <AddToCartButton
+                        productId={product.id}
+                        variantId={product.id}
+                        name={product.name}
+                        price={displayPrice}
+                        image={product.main_image_url}
+                        size="One Size"
+                        color="Standard"
+                        maxQuantity={10}
+                        className="w-full rounded-none text-xs"
+                        buttonSize="sm"
+                        showIcon={true}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        )}
+        
+        {!loading && filteredProducts.length > 0 && (
+          <div className="text-center text-sm text-muted-foreground">
+            Showing {filteredProducts.length} Royal Navy products
           </div>
         )}
       </main>

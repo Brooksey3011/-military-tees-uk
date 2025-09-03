@@ -89,45 +89,47 @@ export function RoyalAirForceProducts() {
   })
 
   // Filter products by price range
-  const filteredProducts = sortedProducts.filter(product => {
-    const price = product.sale_price || product.price
-    switch (priceFilter) {
-      case 'under-20':
-        return price < 20
-      case '20-30':
-        return price >= 20 && price <= 30
-      case '30-40':
-        return price >= 30 && price <= 40
-      case 'over-40':
-        return price > 40
-      default:
-        return true
-    }
-  })
+  const filteredAndSortedProducts = products
+    .filter(product => {
+      if (priceFilter === 'all') return true
+      if (priceFilter === 'under-20') return (product.sale_price || product.price) < 20
+      if (priceFilter === '20-30') return (product.sale_price || product.price) >= 20 && (product.sale_price || product.price) <= 30
+      if (priceFilter === '30-40') return (product.sale_price || product.price) >= 30 && (product.sale_price || product.price) <= 40
+      if (priceFilter === 'over-40') return (product.sale_price || product.price) > 40
+      return true
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'price-low':
+          return (a.sale_price || a.price) - (b.sale_price || b.price)
+        case 'price-high':
+          return (b.sale_price || b.price) - (a.sale_price || a.price)
+        case 'name':
+          return a.name.localeCompare(b.name)
+        default:
+          return 0
+      }
+    })
 
   if (loading) {
     return (
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar Skeleton */}
-        <aside className="lg:col-span-1">
-          <div className="bg-muted/20 h-64 rounded-none animate-pulse border border-border"></div>
-        </aside>
-
+      <div className="space-y-8">
+        {/* Filters and Sorting Skeleton */}
+        <div className="bg-muted/20 h-16 animate-pulse border border-border rounded-none"></div>
+        
         {/* Products Grid Skeleton */}
-        <main className="lg:col-span-3">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(12)].map((_, i) => (
-              <div key={i} className="bg-muted/20 h-96 rounded-none animate-pulse border border-border"></div>
-            ))}
-          </div>
-        </main>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-muted/20 h-96 animate-pulse rounded-none border-2 border-border"></div>
+          ))}
+        </div>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="text-center py-16">
         <h2 className="text-2xl font-display font-bold mb-4 tracking-wide uppercase">Unable to Load Products</h2>
         <p className="text-muted-foreground mb-6">Error: {error}</p>
         <Button 
@@ -140,210 +142,133 @@ export function RoyalAirForceProducts() {
     )
   }
 
+  const formatPrice = (price: number) => `£${price.toFixed(2)}`
+
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      {/* Filters Sidebar */}
-      <aside className="lg:col-span-1">
-        <div className="sticky top-24">
-          <div className="border-2 border-border rounded-none bg-background p-6">
-            <h3 className="text-lg font-display font-bold mb-6 tracking-wide uppercase flex items-center gap-2">
-              <Filter className="h-5 w-5 text-primary" />
-              Filter Products
-            </h3>
-            
-            {/* Sort Options */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-3 text-foreground">Sort By</h4>
-              <div className="space-y-2">
-                {[
-                  { value: 'name', label: 'Name A-Z' },
-                  { value: 'price-low', label: 'Price: Low to High' },
-                  { value: 'price-high', label: 'Price: High to Low' }
-                ].map(option => (
-                  <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="sort"
-                      value={option.value}
-                      checked={sortBy === option.value}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-muted-foreground">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Price Filter */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-3 text-foreground">Price Range</h4>
-              <div className="space-y-2">
-                {[
-                  { value: 'all', label: 'All Prices' },
-                  { value: 'under-20', label: 'Under £20' },
-                  { value: '20-30', label: '£20 - £30' },
-                  { value: '30-40', label: '£30 - £40' },
-                  { value: 'over-40', label: 'Over £40' }
-                ].map(option => (
-                  <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="price"
-                      value={option.value}
-                      checked={priceFilter === option.value}
-                      onChange={(e) => setPriceFilter(e.target.value)}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-muted-foreground">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Count */}
-            <div className="pt-4 border-t border-border">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Badge variant="outline" className="rounded-none">
-                  {filteredProducts.length}
-                </Badge>
-                <span>products available</span>
-              </div>
-            </div>
+    <div className="space-y-8">
+      {/* Filters and Sorting */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4" />
+            <span className="text-sm font-medium">Filter by price:</span>
+            <select 
+              value={priceFilter} 
+              onChange={(e) => setPriceFilter(e.target.value)}
+              className="text-sm border border-border rounded-none bg-background px-2 py-1"
+            >
+              <option value="all">All prices</option>
+              <option value="under-20">Under £20</option>
+              <option value="20-30">£20 - £30</option>
+              <option value="30-40">£30 - £40</option>
+              <option value="over-40">Over £40</option>
+            </select>
           </div>
         </div>
-      </aside>
+        
+        <div className="flex items-center gap-2">
+          <SortAsc className="h-4 w-4" />
+          <span className="text-sm font-medium">Sort by:</span>
+          <select 
+            value={sortBy} 
+            onChange={(e) => setSortBy(e.target.value)}
+            className="text-sm border border-border rounded-none bg-background px-2 py-1"
+          >
+            <option value="name">Name A-Z</option>
+            <option value="price-low">Price Low-High</option>
+            <option value="price-high">Price High-Low</option>
+          </select>
+        </div>
+      </div>
 
       {/* Products Grid */}
-      <main className="lg:col-span-3">
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-xl font-display font-bold tracking-wide uppercase text-foreground">
-              Royal Air Force Collection
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              {filteredProducts.length === 0 ? "No products match your filters" : `${filteredProducts.length} products found`}
-            </p>
-          </div>
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {[...Array(8)].map((_, i) => (
+            <div key={i} className="bg-muted/20 h-96 animate-pulse rounded-none border-2 border-border"></div>
+          ))}
         </div>
+      ) : filteredAndSortedProducts.length === 0 ? (
+        <div className="text-center py-16">
+          <h3 className="text-xl font-semibold mb-4">No products found</h3>
+          <p className="text-muted-foreground">Try adjusting your filters or check back later for new products.</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filteredAndSortedProducts.map((product) => {
+            const displayPrice = product.sale_price || product.price
 
-        {/* Products Display */}
-        {filteredProducts.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredProducts.map((product) => (
-              <div key={product.id} className={cn(
-                "bg-background border-2 border-border rounded-none",
-                "hover:border-primary hover:shadow-lg transition-all duration-200",
-                "group"
-              )}>
-                <Link href={`/products/${product.slug}`} className="block">
-                  {/* Product Image */}
-                  <div className="aspect-square relative bg-muted/20">
+            return (
+              <div key={product.id} className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
+                <div className="relative aspect-square overflow-hidden">
+                  <Link href={`/products/${product.slug}`}>
                     <OptimizedImage
-                      src={product.main_image_url || '/placeholder-product.jpg'}
+                      src={product.main_image_url}
                       alt={product.name}
-                      width={400}
-                      height={400}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    {product.sale_price && (
-                      <div className="absolute top-3 right-3">
-                        <Badge className="rounded-none bg-red-600 text-white font-bold">
-                          SALE
-                        </Badge>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Product Info */}
-                  <div className="p-4">
-                    <div className="mb-2">
-                      {product.category && (
-                        <Badge variant="outline" className="rounded-none text-xs mb-2">
-                          {product.category.name}
-                        </Badge>
-                      )}
+                  </Link>
+                  
+                  {product.sale_price && (
+                    <div className="absolute top-2 right-2">
+                      <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
                     </div>
-                    
-                    <h3 className="font-display font-semibold text-lg mb-2 text-foreground group-hover:text-primary transition-colors line-clamp-2">
-                      {product.name}
-                    </h3>
-                    
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
+                  )}
+                </div>
+                
+                <div className="p-4 space-y-3">
+                  <div>
+                    <Link href={`/products/${product.slug}`}>
+                      <h3 className="font-display font-bold text-sm uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
+                        {product.name}
+                      </h3>
+                    </Link>
+                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
                       {product.description}
                     </p>
-                    
-                    <div className="flex items-center justify-between">
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="text-2xl font-bold text-primary">
-                          £{(product.sale_price || product.price).toFixed(2)}
-                        </span>
+                        <span className="font-bold text-lg">{formatPrice(displayPrice)}</span>
                         {product.sale_price && (
                           <span className="text-sm text-muted-foreground line-through">
-                            £{product.price.toFixed(2)}
+                            {formatPrice(product.price)}
                           </span>
                         )}
                       </div>
-                      
-                      {/* Star rating placeholder */}
-                      <div className="flex items-center gap-1">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star key={star} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        ))}
-                      </div>
                     </div>
                   </div>
-                </Link>
-
-                {/* Add to Cart Button */}
-                <div className="p-4 pt-0">
-                  <AddToCartButton
-                    productId={product.id}
-                    variantId={product.id} // Using product ID as variant ID for now
-                    name={product.name}
-                    price={product.sale_price || product.price}
-                    image={product.main_image_url || '/placeholder-product.jpg'}
-                    size="One Size"
-                    color="Standard"
-                    maxQuantity={10} // Default max quantity
-                    quantity={1}
-                    className={cn(
-                      "w-full rounded-none font-display font-bold tracking-wide uppercase",
-                      "border-2"
-                    )}
-                    buttonSize="default"
-                  />
+                  
+                  <div className="pt-2">
+                    <AddToCartButton
+                      productId={product.id}
+                      variantId={product.id}
+                      name={product.name}
+                      price={displayPrice}
+                      image={product.main_image_url}
+                      size="One Size"
+                      color="Standard"
+                      maxQuantity={10}
+                      className="w-full rounded-none text-xs"
+                      buttonSize="sm"
+                      showIcon={true}
+                    />
+                  </div>
                 </div>
               </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16">
-            <div className="mb-6">
-              <div className={cn(
-                "inline-block p-6 mb-4",
-                "border-2 border-muted-foreground/20 rounded-none bg-muted/10"
-              )}>
-                <ShoppingCart className="h-12 w-12 text-muted-foreground/50" />
-              </div>
-            </div>
-            <h3 className="text-xl font-display font-bold mb-4 tracking-wide uppercase">No Products Found</h3>
-            <p className="text-muted-foreground mb-6">
-              Try adjusting your filters or check back soon for new Royal Air Force products!
-            </p>
-            <Button 
-              onClick={() => {
-                setSortBy('name')
-                setPriceFilter('all')
-              }}
-              variant="outline"
-              className="rounded-none font-display font-bold tracking-wide uppercase border-2"
-            >
-              Clear Filters
-            </Button>
-          </div>
-        )}
-      </main>
+            )
+          })}
+        </div>
+      )}
+      
+      {!loading && filteredAndSortedProducts.length > 0 && (
+        <div className="text-center text-sm text-muted-foreground">
+          Showing {filteredAndSortedProducts.length} Royal Air Force products
+        </div>
+      )}
     </div>
   )
 }
