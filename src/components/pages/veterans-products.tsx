@@ -2,11 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Filter, SortAsc, ShoppingCart, Star } from "lucide-react"
+import { Filter, SortAsc, ShoppingCart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
-import { cn } from "@/lib/utils"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 
 interface Product {
@@ -167,9 +166,7 @@ export function VeteransProducts() {
                   
                   {product.sale_price && (
                     <div className="absolute top-2 right-2">
-                      <Badge className="bg-red-600 text-white rounded-none">
-                        SALE
-                      </Badge>
+                      <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
                     </div>
                   )}
                   
