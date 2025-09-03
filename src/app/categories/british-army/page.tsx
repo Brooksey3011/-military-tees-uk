@@ -62,7 +62,7 @@ export default function BritishArmyPage() {
                 Back to British Armed Forces
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4">
                 <div className={cn(
                   "inline-block p-4",
                   "border-2 border-primary",
@@ -72,46 +72,13 @@ export default function BritishArmyPage() {
                 </div>
                 <div>
                   <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                    "text-3xl md:text-5xl font-display font-bold text-foreground",
                     "tracking-wider uppercase"
                   )}>
                     British Army
                   </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Infantry, armoured corps, and army regiment designs
-                  </p>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Shield className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Infantry Regiments</div>
-                    <div className="text-sm text-muted-foreground">Guards, Rifles, Light Infantry</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Zap className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Armoured Corps</div>
-                    <div className="text-sm text-muted-foreground">Tank regiments & cavalry</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Shield className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Support Arms</div>
-                    <div className="text-sm text-muted-foreground">Artillery, Engineers, Logistics</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Discover our collection celebrating the British Army's rich heritage. From the disciplined ranks of the infantry 
-                to the armoured might of tank regiments, these designs honor the traditions, courage, and brotherhood that define 
-                Britain's land forces. Each piece reflects the pride of serving in one of the world's most respected armies.
-              </p>
             </div>
           </div>
         </section>

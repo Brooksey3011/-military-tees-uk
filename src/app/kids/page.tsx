@@ -55,7 +55,7 @@ export default function KidsPage() {
                 Back to Home
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4">
                 <div className={cn(
                   "inline-block p-4",
                   "border-2 border-primary",
@@ -65,46 +65,13 @@ export default function KidsPage() {
                 </div>
                 <div>
                   <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                    "text-3xl md:text-5xl font-display font-bold text-foreground",
                     "tracking-wider uppercase"
                   )}>
                     Kids Collection
                   </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Premium military-themed apparel for young recruits
-                  </p>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Baby className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Young Recruits</div>
-                    <div className="text-sm text-muted-foreground">Comfortable & fun designs</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Shield className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Safe Materials</div>
-                    <div className="text-sm text-muted-foreground">Child-safe inks & fabrics</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Star className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Family Pride</div>
-                    <div className="text-sm text-muted-foreground">Celebrate military heritage</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Inspire the next generation with our premium kids military collection. Designed for comfort 
-                and durability, these pieces celebrate military family pride with age-appropriate designs 
-                that young recruits love to wear.
-              </p>
             </div>
           </div>
         </section>

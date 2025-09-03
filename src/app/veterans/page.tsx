@@ -55,7 +55,7 @@ export default function VeteransPage() {
                 Back to Home
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4">
                 <div className={cn(
                   "inline-block p-4",
                   "border-2 border-primary",
@@ -65,46 +65,13 @@ export default function VeteransPage() {
                 </div>
                 <div>
                   <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                    "text-3xl md:text-5xl font-display font-bold text-foreground",
                     "tracking-wider uppercase"
                   )}>
                     Veterans Collection
                   </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Celebrating those who served with honour
-                  </p>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Medal className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Veteran Pride</div>
-                    <div className="text-sm text-muted-foreground">Service before self</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Shield className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Military Heritage</div>
-                    <div className="text-sm text-muted-foreground">Honoring tradition</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Users className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Brotherhood</div>
-                    <div className="text-sm text-muted-foreground">Once served, always family</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Honor your service with our premium veteran collection. Designed with respect for those who answered 
-                the call to serve, these pieces celebrate the courage, dedication, and sacrifice of British Armed Forces 
-                veterans. Each design reflects the pride of having served and the enduring bonds of military brotherhood.
-              </p>
             </div>
           </div>
         </section>

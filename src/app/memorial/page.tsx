@@ -56,7 +56,7 @@ export default function MemorialPage() {
                 Back to Home
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
+              <div className="flex items-center gap-4">
                 <div className={cn(
                   "inline-block p-4",
                   "border-2 border-primary",
@@ -66,46 +66,13 @@ export default function MemorialPage() {
                 </div>
                 <div>
                   <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                    "text-3xl md:text-5xl font-display font-bold text-foreground",
                     "tracking-wider uppercase"
                   )}>
                     Memorial Collection
                   </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Honouring those who made the ultimate sacrifice
-                  </p>
                 </div>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Heart className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Remembrance</div>
-                    <div className="text-sm text-muted-foreground">They shall not be forgotten</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Star className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Fallen Heroes</div>
-                    <div className="text-sm text-muted-foreground">Honouring ultimate sacrifice</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Heart className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Memorial Respect</div>
-                    <div className="text-sm text-muted-foreground">Dignity in remembrance</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                We remember those who made the ultimate sacrifice in service to their country. These designs 
-                serve as lasting tributes to fallen heroes, ensuring their memory and sacrifice are never 
-                forgotten. Each piece is crafted with the utmost respect and dignity.
-              </p>
             </div>
           </div>
         </section>
