@@ -1,276 +1,126 @@
 import { Metadata } from "next"
 import Link from "next/link"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Layout } from "@/components/layout/layout"
-import { Medal, Shield, Users, Heart, Award, Star } from "lucide-react"
+import { ArrowLeft, Medal, Shield, Users } from "lucide-react"
+import { Layout } from "@/components/layout"
+import { ClientOnly } from "@/components/ui/client-only"
+import { cn } from "@/lib/utils"
+import { VeteransProducts } from "@/components/pages/veterans-products"
 
 export const metadata: Metadata = {
-  title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel",
-  description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour. 10% military discount available.",
+  title: "Veterans Collection | Military Tees UK",
+  description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
   keywords: [
     "veterans clothing UK", "veteran apparel", "military veterans gifts", "UK veterans merchandise",
-    "veteran pride shirts", "military heritage clothing", "British veterans apparel", "served with honour",
-    "veteran t-shirts", "military discount clothing", "army veteran gifts", "RAF veteran merchandise"
+    "veteran pride shirts", "military heritage clothing", "British veterans apparel", "served with honour"
   ],
   openGraph: {
-    title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel",
+    title: "Veterans Collection | Military Tees UK",
     description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
-    images: ["/veterans-og-image.jpg"],
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Veterans Collection | Military Tees UK - Premium Veteran Apparel", 
-    description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
-    images: ["/veterans-twitter-image.jpg"],
-  },
-  alternates: {
-    canonical: "/veterans",
   },
 }
 
 export default function VeteransPage() {
-  const veteranCategories = [
-    {
-      title: "Veteran Pride",
-      description: "Show your service with pride",
-      icon: <Medal className="h-8 w-8" />,
-      href: "/products?category=veteran-pride"
-    },
-    {
-      title: "Service Branches",
-      description: "Army, Navy, RAF, Marines",
-      icon: <Shield className="h-8 w-8" />,
-      href: "/products?category=service-branches"
-    },
-    {
-      title: "Years of Service",
-      description: "Celebrating service milestones",
-      icon: <Award className="h-8 w-8" />,
-      href: "/products?category=years-service"
-    },
-    {
-      title: "Veteran Family",
-      description: "For spouses and families",
-      icon: <Heart className="h-8 w-8" />,
-      href: "/products?category=veteran-family"
-    }
-  ]
-
-  const featuredDesigns = [
-    "Proud British Veteran",
-    "Once a Soldier, Always a Soldier",
-    "Served with Honour",
-    "Veteran - Earned Not Given",
-    "British Forces Veteran",
-    "Service Before Self"
-  ]
-
   return (
     <Layout>
       <div className="min-h-screen bg-background">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-b from-muted/20 to-background py-24 border-b-2 border-border">
-          <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-8">
-              <img 
-                src="/logowhite.png" 
-                alt="Military Tees UK Logo" 
-                className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
-                style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
-              />
-              <div className="text-left">
-                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
-                  Veterans Collection
-                </h1>
-                <p className="text-xl text-muted-foreground font-display tracking-wide">
-                  Celebrating Those Who Served
-                </p>
-              </div>
-            </div>
-            
-            <div className="max-w-3xl mx-auto mb-10">
-              <p className="text-lg text-muted-foreground leading-relaxed">
-                Honour your service with our premium veteran collection. Designed by veterans, for veterans - 
-                celebrating the courage, dedication, and sacrifice of those who served our nation.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
-                <Link href="/products?category=veterans">
-                  Shop Veterans Collection
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="rounded-none border-2 font-display font-bold tracking-wide uppercase" asChild>
-                <Link href="#veteran-categories">
-                  Browse Categories
-                </Link>
-              </Button>
-            </div>
+        {/* Breadcrumb Navigation */}
+        <div className="border-b border-border/50 bg-muted/10">
+          <div className="container mx-auto px-4 py-4">
+            <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Link 
+                href="/" 
+                className="hover:text-foreground transition-colors"
+              >
+                Home
+              </Link>
+              <span>/</span>
+              <span className="text-foreground font-medium">Veterans</span>
+            </nav>
           </div>
-        </section>
+        </div>
 
-        {/* Veteran Benefits */}
-        <section className="py-16 bg-green-600/5">
-          <div className="container mx-auto px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <div className="flex items-center justify-center gap-2 mb-6">
-                <Shield className="h-6 w-6 text-green-600" />
-                <h2 className="text-3xl font-display font-bold">
-                  Veteran Benefits
-                </h2>
+        {/* Category Header */}
+        <section className="border-b-2 border-border bg-muted/10">
+          <div className="container mx-auto px-4 py-12">
+            <div className="max-w-4xl">
+              <Link 
+                href="/"
+                className={cn(
+                  "inline-flex items-center gap-2 text-sm text-muted-foreground",
+                  "hover:text-foreground transition-colors mb-6"
+                )}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to Home
+              </Link>
+              
+              <div className="flex items-center gap-4 mb-6">
+                <div className={cn(
+                  "inline-block p-4",
+                  "border-2 border-primary",
+                  "rounded-none bg-background"
+                )}>
+                  <Medal className="h-12 w-12 text-primary" />
+                </div>
+                <div>
+                  <h1 className={cn(
+                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                    "tracking-wider uppercase"
+                  )}>
+                    Veterans Collection
+                  </h1>
+                  <p className="text-xl text-muted-foreground">
+                    Celebrating those who served with honour
+                  </p>
+                </div>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-background p-6 border-2 border-green-600/20 rounded-none">
-                  <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Medal className="h-6 w-6 text-white" />
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
+                  <Medal className="h-6 w-6 text-primary" />
+                  <div>
+                    <div className="font-semibold text-foreground">Veteran Pride</div>
+                    <div className="text-sm text-muted-foreground">Service before self</div>
                   </div>
-                  <h3 className="font-display font-bold mb-2">10% Military Discount</h3>
-                  <p className="text-sm text-muted-foreground">Automatic discount for verified veterans on all orders</p>
                 </div>
-                
-                <div className="bg-background p-6 border-2 border-green-600/20 rounded-none">
-                  <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-6 w-6 text-white" />
+                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
+                  <Shield className="h-6 w-6 text-primary" />
+                  <div>
+                    <div className="font-semibold text-foreground">Military Heritage</div>
+                    <div className="text-sm text-muted-foreground">Honoring tradition</div>
                   </div>
-                  <h3 className="font-display font-bold mb-2">Veteran Community</h3>
-                  <p className="text-sm text-muted-foreground">Connect with fellow veterans and share your stories</p>
                 </div>
-                
-                <div className="bg-background p-6 border-2 border-green-600/20 rounded-none">
-                  <div className="w-12 h-12 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Star className="h-6 w-6 text-white" />
+                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
+                  <Users className="h-6 w-6 text-primary" />
+                  <div>
+                    <div className="font-semibold text-foreground">Brotherhood</div>
+                    <div className="text-sm text-muted-foreground">Once served, always family</div>
                   </div>
-                  <h3 className="font-display font-bold mb-2">Priority Service</h3>
-                  <p className="text-sm text-muted-foreground">Dedicated customer support for our veteran customers</p>
                 </div>
               </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Veteran Categories */}
-        <section id="veteran-categories" className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
-                Veteran Categories
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Explore our specialized collections designed to honour different aspects of military service and veteran life.
+              
+              <p className="text-muted-foreground leading-relaxed">
+                Honor your service with our premium veteran collection. Designed with respect for those who answered 
+                the call to serve, these pieces celebrate the courage, dedication, and sacrifice of British Armed Forces 
+                veterans. Each design reflects the pride of having served and the enduring bonds of military brotherhood.
               </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {veteranCategories.map((category, index) => (
-                <Card key={index} className="border-2 border-border rounded-none hover:border-primary transition-colors group">
-                  <CardHeader className="text-center">
-                    <div className="flex justify-center mb-4">
-                      <div className="w-16 h-16 bg-primary/10 border-2 border-primary flex items-center justify-center group-hover:bg-primary/20 transition-colors">
-                        {category.icon}
-                      </div>
-                    </div>
-                    <CardTitle className="font-display tracking-wide uppercase">
-                      {category.title}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="text-center space-y-4">
-                    <p className="text-muted-foreground text-sm mb-6">
-                      {category.description}
-                    </p>
-                    <Button 
-                      className="w-full rounded-none font-display font-bold tracking-wide uppercase" 
-                      variant="outline"
-                      asChild
-                    >
-                      <Link href={category.href}>
-                        View Collection
-                      </Link>
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
           </div>
         </section>
 
-        {/* Featured Designs */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
-                Featured Veteran Designs
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Our most popular veteran-themed designs, created to honour service and celebrate military heritage.
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-w-4xl mx-auto">
-              {featuredDesigns.map((design, index) => (
-                <div 
-                  key={index}
-                  className="bg-background p-4 border border-border rounded-none hover:border-primary transition-colors text-center"
-                >
-                  <h3 className="font-display font-bold text-sm uppercase tracking-wide">
-                    "{design}"
-                  </h3>
-                </div>
+        {/* Products Section */}
+        <div className="container mx-auto px-4 py-8">
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
               ))}
             </div>
-            
-            <div className="text-center mt-8">
-              <Button 
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wide"
-                asChild
-              >
-                <Link href="/products?category=veterans">
-                  View All Veteran Designs
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Call to Action */}
-        <section className="py-16 bg-muted text-foreground">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-display font-bold mb-4">
-              Proud to Serve, Proud to Wear
-            </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of veterans who wear their service with pride. 
-              Every purchase supports veteran causes and the military community.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button 
-                variant="default" 
-                size="lg"
-                className="bg-primary text-primary-foreground hover:bg-primary/90 font-bold uppercase tracking-wide"
-                asChild
-              >
-                <Link href="/products?category=veterans">
-                  Shop Veterans Collection
-                </Link>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="lg"
-                className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-wide"
-                asChild
-              >
-                <Link href="/about">
-                  Our Veteran Story
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+          }>
+            <VeteransProducts />
+          </ClientOnly>
+        </div>
       </div>
     </Layout>
   )
