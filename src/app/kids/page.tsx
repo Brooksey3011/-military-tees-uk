@@ -55,22 +55,16 @@ export default function KidsPage() {
                 Back to Home
               </Link>
               
-              <div className="flex items-center gap-4">
-                <div className={cn(
-                  "inline-block p-4",
-                  "border-2 border-primary",
-                  "rounded-none bg-background"
+              <div className="text-center">
+                <h1 className={cn(
+                  "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                  "tracking-wider uppercase"
                 )}>
-                  <Baby className="h-12 w-12 text-primary" />
-                </div>
-                <div>
-                  <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground",
-                    "tracking-wider uppercase"
-                  )}>
-                    Kids Collection
-                  </h1>
-                </div>
+                  Kids Collection
+                </h1>
+                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                  (6 PRODUCTS)
+                </p>
               </div>
             </div>
           </div>

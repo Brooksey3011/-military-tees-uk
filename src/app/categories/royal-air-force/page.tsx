@@ -62,57 +62,17 @@ export default function RoyalAirForcePage() {
                 Back to British Armed Forces
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className={cn(
-                  "inline-block p-4",
-                  "border-2 border-primary",
-                  "rounded-none bg-background"
+              <div className="text-center">
+                <h1 className={cn(
+                  "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                  "tracking-wider uppercase"
                 )}>
-                  <Plane className="h-12 w-12 text-primary" />
-                </div>
-                <div>
-                  <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
-                    "tracking-wider uppercase"
-                  )}>
-                    Royal Air Force
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    RAF squadron and aviation designs
-                  </p>
-                </div>
+                  Royal Air Force
+                </h1>
+                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                  (14 PRODUCTS)
+                </p>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Plane className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Fighter Squadrons</div>
-                    <div className="text-sm text-muted-foreground">Fast jets & air superiority</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Cloud className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Transport Command</div>
-                    <div className="text-sm text-muted-foreground">Strategic & tactical airlift</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Plane className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Ground Crew</div>
-                    <div className="text-sm text-muted-foreground">Engineering & support</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Soar with the Royal Air Force collection, celebrating the bravery and skill of Britain's airmen and women. 
-                From the Battle of Britain to modern air operations, these designs honor the RAF's proud heritage of defending 
-                the skies. Whether you're celebrating fighter pilots, transport crews, or ground support, each piece reflects 
-                the motto "Per Ardua ad Astra" - Through Adversity to the Stars.
-              </p>
             </div>
           </div>
         </section>

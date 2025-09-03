@@ -62,57 +62,17 @@ export default function RoyalMarinesPage() {
                 Back to British Armed Forces
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className={cn(
-                  "inline-block p-4",
-                  "border-2 border-primary",
-                  "rounded-none bg-background"
+              <div className="text-center">
+                <h1 className={cn(
+                  "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                  "tracking-wider uppercase"
                 )}>
-                  <Anchor className="h-12 w-12 text-primary" />
-                </div>
-                <div>
-                  <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
-                    "tracking-wider uppercase"
-                  )}>
-                    Royal Marines
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Commando and amphibious warfare designs
-                  </p>
-                </div>
+                  Royal Marines
+                </h1>
+                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                  (9 PRODUCTS)
+                </p>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Anchor className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Commando Units</div>
-                    <div className="text-sm text-muted-foreground">Elite amphibious forces</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Waves className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Amphibious Ops</div>
-                    <div className="text-sm text-muted-foreground">Sea-to-shore operations</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Anchor className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Special Forces</div>
-                    <div className="text-sm text-muted-foreground">Elite maritime operations</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Honor the Royal Marines' legendary legacy with our elite collection. From the beaches of D-Day to modern 
-                amphibious operations, these designs celebrate the courage, skill, and brotherhood of Britain's premier 
-                amphibious force. Each piece reflects the motto "Per Mare, Per Terram" - By Sea, By Land - embodying the 
-                Marines' unique capability to fight from sea to shore and beyond.
-              </p>
             </div>
           </div>
         </section>

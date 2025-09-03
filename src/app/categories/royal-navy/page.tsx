@@ -62,57 +62,17 @@ export default function RoyalNavyPage() {
                 Back to British Armed Forces
               </Link>
               
-              <div className="flex items-center gap-4 mb-6">
-                <div className={cn(
-                  "inline-block p-4",
-                  "border-2 border-primary",
-                  "rounded-none bg-background"
+              <div className="text-center">
+                <h1 className={cn(
+                  "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                  "tracking-wider uppercase"
                 )}>
-                  <Ship className="h-12 w-12 text-primary" />
-                </div>
-                <div>
-                  <h1 className={cn(
-                    "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
-                    "tracking-wider uppercase"
-                  )}>
-                    Royal Navy
-                  </h1>
-                  <p className="text-xl text-muted-foreground">
-                    Naval traditions and fleet designs
-                  </p>
-                </div>
+                  Royal Navy
+                </h1>
+                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                  (10 PRODUCTS)
+                </p>
               </div>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Ship className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Fleet Operations</div>
-                    <div className="text-sm text-muted-foreground">Surface & submarine warfare</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Anchor className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Maritime Traditions</div>
-                    <div className="text-sm text-muted-foreground">Naval heritage & customs</div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-4 border border-border rounded-none bg-background">
-                  <Ship className="h-6 w-6 text-primary" />
-                  <div>
-                    <div className="font-semibold text-foreground">Shore Support</div>
-                    <div className="text-sm text-muted-foreground">Naval bases & logistics</div>
-                  </div>
-                </div>
-              </div>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Navigate the Royal Navy collection, celebrating Britain's Senior Service and its proud maritime heritage. 
-                From Nelson's victories to modern fleet operations, these designs honor the sailors who have defended 
-                Britain's shores for centuries. Whether you're celebrating surface ships, submarines, or shore establishments, 
-                each piece reflects the naval tradition of courage, honor, and seamanship that rules the waves.
-              </p>
             </div>
           </div>
         </section>
