@@ -19,7 +19,7 @@ export default function BestsellersPage() {
         {/* Header Section */}
         <section className="bg-muted/10 border-b-2 border-border">
           <div className="container mx-auto px-4 py-12">
-            <div className="max-w-4xl">
+            <div className="max-w-4xl mx-auto">
               <div className="text-center">
                 <h1 className={cn(
                   "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",

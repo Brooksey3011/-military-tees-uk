@@ -70,7 +70,7 @@ export default function BritishArmyPage() {
                   British Army
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (15 PRODUCTS)
+                  (10 PRODUCTS)
                 </p>
               </div>
             </div>

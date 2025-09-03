@@ -70,7 +70,7 @@ export default function RoyalAirForcePage() {
                   Royal Air Force
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (14 PRODUCTS)
+                  (8 PRODUCTS)
                 </p>
               </div>
             </div>

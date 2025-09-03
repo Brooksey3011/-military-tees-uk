@@ -70,7 +70,7 @@ export default function RoyalMarinesPage() {
                   Royal Marines
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (9 PRODUCTS)
+                  (5 PRODUCTS)
                 </p>
               </div>
             </div>

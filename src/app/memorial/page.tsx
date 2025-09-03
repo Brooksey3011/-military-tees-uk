@@ -44,7 +44,7 @@ export default function MemorialPage() {
         {/* Category Header */}
         <section className="border-b-2 border-border bg-muted/10">
           <div className="container mx-auto px-4 py-12">
-            <div className="max-w-4xl">
+            <div className="max-w-4xl mx-auto">
               <Link 
                 href="/"
                 className={cn(
@@ -64,7 +64,7 @@ export default function MemorialPage() {
                   Memorial Collection
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (8 PRODUCTS)
+                  (6 PRODUCTS)
                 </p>
               </div>
             </div>

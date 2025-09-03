@@ -70,7 +70,7 @@ export default function RoyalNavyPage() {
                   Royal Navy
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (10 PRODUCTS)
+                  (6 PRODUCTS)
                 </p>
               </div>
             </div>

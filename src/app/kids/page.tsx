@@ -43,7 +43,7 @@ export default function KidsPage() {
         {/* Category Header */}
         <section className="border-b-2 border-border bg-muted/10">
           <div className="container mx-auto px-4 py-12">
-            <div className="max-w-4xl">
+            <div className="max-w-4xl mx-auto">
               <Link 
                 href="/"
                 className={cn(
