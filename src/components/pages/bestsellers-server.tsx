@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js"
+import { Filter, SortAsc } from "lucide-react"
 
 interface Product {
   id: string
@@ -48,7 +49,7 @@ export async function BestsellersServer() {
 
   if (products.length === 0) {
     return (
-      <div className="container mx-auto px-4 py-16 text-center">
+      <div className="text-center py-16">
         <h2 className="text-2xl font-bold mb-4">No Bestsellers Available</h2>
         <p className="text-gray-600">Check back soon for our bestselling items!</p>
       </div>
@@ -56,7 +57,34 @@ export async function BestsellersServer() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="space-y-8">
+      {/* Filters and Sorting */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4" />
+            <span className="text-sm font-medium">Filter by price:</span>
+            <select className="text-sm border border-border rounded-none bg-background px-2 py-1">
+              <option value="all">All prices</option>
+              <option value="under-20">Under £20</option>
+              <option value="20-30">£20 - £30</option>
+              <option value="30-40">£30 - £40</option>
+              <option value="over-40">Over £40</option>
+            </select>
+          </div>
+        </div>
+        
+        <div className="flex items-center gap-2">
+          <SortAsc className="h-4 w-4" />
+          <span className="text-sm font-medium">Sort by:</span>
+          <select className="text-sm border border-border rounded-none bg-background px-2 py-1">
+            <option value="name">Name A-Z</option>
+            <option value="price-low">Price Low-High</option>
+            <option value="price-high">Price High-Low</option>
+          </select>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {products.map((product) => (
           <div key={product.id} className="bg-white border rounded-lg shadow-sm hover:shadow-md transition-shadow">

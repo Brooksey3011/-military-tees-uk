@@ -89,37 +89,33 @@ export async function ProductsServer() {
   const products = await getProducts()
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-8">
-        {/* Filters and Sorting */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
-              <span className="text-sm font-medium">Filter by price:</span>
-              <select 
-                className="text-sm border border-border rounded-none bg-background px-2 py-1"
-              >
-                <option value="all">All prices</option>
-                <option value="under20">Under £20</option>
-                <option value="20-30">£20 - £30</option>
-                <option value="over30">Over £30</option>
-              </select>
-            </div>
-          </div>
-          
+    <div className="space-y-8">
+      {/* Filters and Sorting */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+        <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <SortAsc className="h-4 w-4" />
-            <span className="text-sm font-medium">Sort by:</span>
-            <select 
-              className="text-sm border border-border rounded-none bg-background px-2 py-1"
-            >
-              <option value="name">Name A-Z</option>
-              <option value="price-low">Price Low-High</option>
-              <option value="price-high">Price High-Low</option>
+            <Filter className="h-4 w-4" />
+            <span className="text-sm font-medium">Filter by price:</span>
+            <select className="text-sm border border-border rounded-none bg-background px-2 py-1">
+              <option value="all">All prices</option>
+              <option value="under-20">Under £20</option>
+              <option value="20-30">£20 - £30</option>
+              <option value="30-40">£30 - £40</option>
+              <option value="over-40">Over £40</option>
             </select>
           </div>
         </div>
+        
+        <div className="flex items-center gap-2">
+          <SortAsc className="h-4 w-4" />
+          <span className="text-sm font-medium">Sort by:</span>
+          <select className="text-sm border border-border rounded-none bg-background px-2 py-1">
+            <option value="name">Name A-Z</option>
+            <option value="price-low">Price Low-High</option>
+            <option value="price-high">Price High-Low</option>
+          </select>
+        </div>
+      </div>
 
         {/* Products Grid */}
         {products.length > 0 ? (
@@ -209,7 +205,6 @@ export async function ProductsServer() {
               </div>
             </div>
           )}
-      </div>
     </div>
   )
 }

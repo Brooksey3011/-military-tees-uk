@@ -36,7 +36,9 @@ export default function BestsellersPage() {
         </section>
 
         {/* Products Section */}
-        <BestsellersServer />
+        <div className="container mx-auto px-4 py-8">
+          <BestsellersServer />
+        </div>
       </div>
     </Layout>
   )
