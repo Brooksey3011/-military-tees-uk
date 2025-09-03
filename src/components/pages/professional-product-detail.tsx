@@ -9,6 +9,8 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
+import { SizeGuideButton } from "@/components/product/size-guide"
+import { ReviewsSection } from "@/components/product/reviews-section"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { cn } from "@/lib/utils"
 
@@ -325,7 +327,7 @@ export function ProfessionalProductDetail() {
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label className="text-sm font-semibold text-foreground">Size</label>
-                <Button variant="link" size="sm" className="text-xs">Size Guide</Button>
+                <SizeGuideButton category="adult" className="text-xs" />
               </div>
               <div className="grid grid-cols-4 gap-2">
                 {availableSizes.map((size) => (
@@ -448,16 +450,13 @@ export function ProfessionalProductDetail() {
         </div>
       </div>
 
-      {/* Reviews Section Placeholder */}
+      {/* Reviews Section */}
       <div className="mt-16">
-        <Card className="border-2 border-border rounded-none">
-          <CardContent className="p-8">
-            <h3 className="text-2xl font-display font-bold tracking-wide uppercase mb-6">Customer Reviews</h3>
-            <div className="text-center py-8">
-              <p className="text-muted-foreground">Customer reviews will be displayed here once you have reviews enabled.</p>
-            </div>
-          </CardContent>
-        </Card>
+        <ReviewsSection 
+          productId={product.id}
+          productName={product.name}
+          className="border-2 border-border rounded-none p-6"
+        />
       </div>
     </div>
   )
