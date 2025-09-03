@@ -83,12 +83,12 @@ export function ProfessionalProductDetail() {
         }
         
         const data = await response.json()
-        setProduct(data)
-        setSelectedImage(data.main_image_url)
+        setProduct(data.product)
+        setSelectedImage(data.product.main_image_url)
         
         // Set default size if variants available
-        if (data.variants && data.variants.length > 0) {
-          const availableVariant = data.variants.find((v: any) => v.stock_quantity > 0)
+        if (data.product.variants && data.product.variants.length > 0) {
+          const availableVariant = data.product.variants.find((v: any) => v.stock_quantity > 0)
           if (availableVariant) {
             setSelectedSize(availableVariant.size)
             setSelectedColor(availableVariant.color || "Standard")
