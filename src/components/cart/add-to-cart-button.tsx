@@ -5,7 +5,7 @@ import { ShoppingCart, Check } from "lucide-react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-import { useCart } from "@/hooks/use-cart"
+import { useSimpleCart } from "@/hooks/use-simple-cart"
 import { cn } from "@/lib/utils"
 
 interface AddToCartButtonProps {
@@ -43,7 +43,7 @@ export function AddToCartButton({
 }: AddToCartButtonProps) {
   const [isAdding, setIsAdding] = React.useState(false)
   const [isAdded, setIsAdded] = React.useState(false)
-  const { addItem } = useCart()
+  const { addItem } = useSimpleCart()
 
   const isOutOfStock = maxQuantity <= 0
   const isDisabled = disabled || isOutOfStock || isAdding

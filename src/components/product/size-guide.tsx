@@ -106,90 +106,90 @@ export function SizeGuide({ isOpen, onClose, category = "adult" }: SizeGuideProp
     <Modal isOpen={isOpen} onClose={onClose} className="max-w-4xl">
       <div className="p-6">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-semibold text-gray-900">
+          <h2 className="text-2xl font-display font-bold tracking-wide uppercase text-foreground">
             {category === "kids" ? "Kids" : ""} Size Guide
           </h2>
           <Button
             variant="ghost"
             size="icon"
             onClick={onClose}
-            className="hover:bg-gray-100"
+            className="hover:bg-accent rounded-none"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
         {/* Intro text */}
-        <p className="text-gray-600 mb-6 text-center">
-          Find your perfect fit with our size guide.
+        <p className="text-muted-foreground mb-6 text-center">
+          Find your perfect fit with our military-grade size guide.
         </p>
 
         <div className="space-y-6">
           {/* Size Chart */}
-          <Card className="border border-gray-200 shadow-sm">
-            <CardHeader className="bg-gray-50 border-b border-gray-200">
-              <CardTitle className="text-lg font-semibold text-gray-900">
+          <Card className="border-2 border-border rounded-none">
+            <CardHeader className="bg-muted border-b-2 border-border">
+              <CardTitle className="text-lg font-display font-bold tracking-wide uppercase text-foreground">
                 Size Chart
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-gray-50">
+                  <thead className="bg-muted">
                     <tr>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                      <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                         Size
                       </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                      <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                         Chest (cm/in)
                       </th>
                       {category === "adult" ? (
                         <>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                             Waist (cm/in)
                           </th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                             Length (cm/in)
                           </th>
                         </>
                       ) : (
                         <>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                             Length (cm/in)
                           </th>
-                          <th className="px-4 py-3 text-left text-sm font-medium text-gray-900 border-b border-gray-200">
+                          <th className="px-4 py-3 text-left text-sm font-bold text-foreground border-b border-border">
                             Age
                           </th>
                         </>
                       )}
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-background divide-y divide-border">
                     {sizes.map((size, index) => (
-                      <tr key={size.size} className="hover:bg-gray-50">
+                      <tr key={size.size} className="hover:bg-muted">
                         <td className="px-4 py-3 whitespace-nowrap">
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                          <Badge variant="outline" className="rounded-none font-display font-bold tracking-wide uppercase">
                             {size.size}
-                          </span>
+                          </Badge>
                         </td>
-                        <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                        <td className="px-4 py-3 whitespace-nowrap text-sm text-muted-foreground">
                           {(size as any).chestCm} / {(size as any).chestIn}"
                         </td>
                         {category === "adult" ? (
                           <>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-muted-foreground">
                               {(size as any).waistCm} / {(size as any).waistIn}"
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-muted-foreground">
                               {(size as any).lengthCm} / {(size as any).lengthIn}"
                             </td>
                           </>
                         ) : (
                           <>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-muted-foreground">
                               {(size as any).lengthCm} / {(size as any).lengthIn}"
                             </td>
-                            <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-700">
+                            <td className="px-4 py-3 whitespace-nowrap text-sm text-muted-foreground">
                               {(size as any).age}
                             </td>
                           </>
@@ -203,15 +203,15 @@ export function SizeGuide({ isOpen, onClose, category = "adult" }: SizeGuideProp
           </Card>
 
           {/* Measurement Tips */}
-          <Card className="border border-gray-200 shadow-sm bg-gray-50">
+          <Card className="border-2 border-border rounded-none bg-muted">
             <CardContent className="p-4">
-              <h3 className="font-medium text-gray-900 mb-3">Sizing Tips</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
+              <h3 className="font-display font-bold tracking-wide uppercase text-foreground mb-3">Sizing Tips</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-muted-foreground">
                 <div>
-                  <p><strong>Between sizes?</strong> We recommend sizing up.</p>
+                  <p><strong className="text-foreground">Between sizes?</strong> We recommend sizing up.</p>
                 </div>
                 <div>
-                  <p><strong>Questions?</strong> Contact us at info@militarytees.co.uk</p>
+                  <p><strong className="text-foreground">Questions?</strong> Contact us at info@militarytees.co.uk</p>
                 </div>
               </div>
             </CardContent>

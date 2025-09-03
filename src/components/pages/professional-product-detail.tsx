@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
 import { SizeGuideButton } from "@/components/product/size-guide"
 import { ReviewsSection } from "@/components/product/reviews-section"
+import { ReviewSummary } from "@/components/product/review-summary"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { cn } from "@/lib/utils"
 
@@ -284,15 +285,8 @@ export function ProfessionalProductDetail() {
               {product.name}
             </h1>
             
-            {/* Rating placeholder */}
-            <div className="flex items-center gap-2 mb-4">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 fill-yellow-400 text-yellow-400" />
-                ))}
-              </div>
-              <span className="text-sm text-muted-foreground">(4.9/5 from 47 reviews)</span>
-            </div>
+            {/* Real Review Summary */}
+            <ReviewSummary productId={product.id} className="mb-4" />
 
             {product.category && (
               <Badge variant="outline" className="rounded-none mb-4">
@@ -382,11 +376,54 @@ export function ProfessionalProductDetail() {
             />
             
             <div className="flex gap-2">
-              <Button variant="outline" size="sm" className="flex-1 rounded-none">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 rounded-none"
+                onClick={() => {
+                  // Simple wishlist functionality - could be enhanced with actual storage
+                  const wishlistKey = 'military-tees-wishlist'
+                  const existing = JSON.parse(localStorage.getItem(wishlistKey) || '[]')
+                  const productData = {
+                    id: product.id,
+                    name: product.name,
+                    price: product.sale_price || product.price,
+                    image: productImages.main,
+                    slug: product.slug
+                  }
+                  
+                  const isAlreadyInWishlist = existing.some((item: any) => item.id === product.id)
+                  if (!isAlreadyInWishlist) {
+                    existing.push(productData)
+                    localStorage.setItem(wishlistKey, JSON.stringify(existing))
+                    alert('Added to wishlist!')
+                  } else {
+                    alert('Already in wishlist!')
+                  }
+                }}
+              >
                 <Heart className="h-4 w-4 mr-2" />
                 Add to Wishlist
               </Button>
-              <Button variant="outline" size="sm" className="flex-1 rounded-none">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex-1 rounded-none"
+                onClick={() => {
+                  // Simple share functionality
+                  if (navigator.share) {
+                    navigator.share({
+                      title: product.name,
+                      text: `Check out this ${product.name} from Military Tees UK`,
+                      url: window.location.href
+                    })
+                  } else {
+                    // Fallback - copy to clipboard
+                    navigator.clipboard.writeText(window.location.href)
+                    alert('Product link copied to clipboard!')
+                  }
+                }}
+              >
                 <Share2 className="h-4 w-4 mr-2" />
                 Share
               </Button>
