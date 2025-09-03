@@ -20,20 +20,17 @@ export default function BestsellersPage() {
         <section className="bg-muted/10 border-b-2 border-border">
           <div className="container mx-auto px-4 py-12">
             <div className="max-w-4xl">
-              <h1 className={cn(
-                "text-3xl md:text-5xl font-display font-bold text-foreground mb-4",
-                "tracking-wider uppercase"
-              )}>
-                Bestsellers
-              </h1>
-              
-              <p className="text-xl text-muted-foreground mb-6 leading-relaxed">
-                Our most popular military-themed apparel
-              </p>
-              
-              <p className="text-muted-foreground leading-relaxed">
-                Discover our customer favorites - the military-themed t-shirts, hoodies, and apparel that have earned the highest praise from our community. Each bestseller represents quality, authenticity, and pride in military heritage.
-              </p>
+              <div className="text-center">
+                <h1 className={cn(
+                  "text-3xl md:text-5xl font-display font-bold text-foreground mb-2",
+                  "tracking-wider uppercase"
+                )}>
+                  Bestsellers
+                </h1>
+                <p className="text-sm text-muted-foreground uppercase tracking-wide">
+                  (6 PRODUCTS)
+                </p>
+              </div>
             </div>
           </div>
         </section>

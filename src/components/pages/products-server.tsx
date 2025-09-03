@@ -90,55 +90,40 @@ export async function ProductsServer() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Filters Sidebar */}
-        <aside className="lg:col-span-1">
-          <div className="sticky top-24">
-            <h3 className="text-lg font-semibold mb-4 tracking-wide uppercase">
-              Filter Products
-            </h3>
-            
-            <div className="bg-white border-2 border-gray-200 p-4">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Filter className="h-4 w-4" />
-                  <span className="text-sm">Filters available when products load</span>
-                </div>
-                
-                <div className="flex items-center gap-2 text-gray-600">
-                  <SortAsc className="h-4 w-4" />
-                  <span className="text-sm">Sorting options available soon</span>
-                </div>
-              </div>
+      <div className="space-y-8">
+        {/* Filters and Sorting */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              <span className="text-sm font-medium">Filter by price:</span>
+              <select 
+                className="text-sm border border-border rounded-none bg-background px-2 py-1"
+              >
+                <option value="all">All prices</option>
+                <option value="under20">Under £20</option>
+                <option value="20-30">£20 - £30</option>
+                <option value="over30">Over £30</option>
+              </select>
             </div>
           </div>
-        </aside>
+          
+          <div className="flex items-center gap-2">
+            <SortAsc className="h-4 w-4" />
+            <span className="text-sm font-medium">Sort by:</span>
+            <select 
+              className="text-sm border border-border rounded-none bg-background px-2 py-1"
+            >
+              <option value="name">Name A-Z</option>
+              <option value="price-low">Price Low-High</option>
+              <option value="price-high">Price High-Low</option>
+            </select>
+          </div>
+        </div>
 
         {/* Products Grid */}
-        <main className="lg:col-span-3">
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">All Products</h1>
-              <p className="text-gray-600">
-                Discover our complete collection of military-themed apparel
-              </p>
-              <p className="text-sm text-gray-600 mt-2">
-                {products.length === 0 ? "No products available" : `${products.length} products found`}
-              </p>
-            </div>
-            
-            <button 
-              className="border-2 border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:border-green-600 transition-colors"
-              disabled
-            >
-              <SortAsc className="h-4 w-4 mr-2 inline" />
-              Sort By
-            </button>
-          </div>
-
-          {/* Products Display */}
-          {products.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {products.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {products.map((product) => {
                 const availableVariants = product.variants?.filter(v => v.stock_quantity > 0) || []
                 const totalStock = product.variants?.reduce((sum, v) => sum + v.stock_quantity, 0) || 0
@@ -224,7 +209,6 @@ export async function ProductsServer() {
               </div>
             </div>
           )}
-        </main>
       </div>
     </div>
   )

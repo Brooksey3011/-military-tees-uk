@@ -142,81 +142,44 @@ export function RoyalNavyProducts() {
   }
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-      {/* Filters Sidebar */}
-      <aside className="lg:col-span-1">
-        <div className="sticky top-24">
-          <div className="border-2 border-border rounded-none bg-background p-6">
-            <h3 className="text-lg font-display font-bold mb-6 tracking-wide uppercase flex items-center gap-2">
-              <Filter className="h-5 w-5 text-primary" />
-              Filter Products
-            </h3>
-            
-            {/* Sort Options */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-3 text-foreground">Sort By</h4>
-              <div className="space-y-2">
-                {[
-                  { value: 'name', label: 'Name A-Z' },
-                  { value: 'price-low', label: 'Price: Low to High' },
-                  { value: 'price-high', label: 'Price: High to Low' }
-                ].map(option => (
-                  <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="sort"
-                      value={option.value}
-                      checked={sortBy === option.value}
-                      onChange={(e) => setSortBy(e.target.value)}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-muted-foreground">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Price Filter */}
-            <div className="mb-6">
-              <h4 className="font-semibold mb-3 text-foreground">Price Range</h4>
-              <div className="space-y-2">
-                {[
-                  { value: 'all', label: 'All Prices' },
-                  { value: 'under-20', label: 'Under £20' },
-                  { value: '20-30', label: '£20 - £30' },
-                  { value: '30-40', label: '£30 - £40' },
-                  { value: 'over-40', label: 'Over £40' }
-                ].map(option => (
-                  <label key={option.value} className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="price"
-                      value={option.value}
-                      checked={priceFilter === option.value}
-                      onChange={(e) => setPriceFilter(e.target.value)}
-                      className="text-primary focus:ring-primary"
-                    />
-                    <span className="text-sm text-muted-foreground">{option.label}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-
-            {/* Product Count */}
-            <div className="pt-4 border-t border-border">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Badge variant="outline" className="rounded-none">
-                  {filteredProducts.length}
-                </Badge>
-                <span>products available</span>
-              </div>
-            </div>
+    <div className="space-y-8">
+      {/* Filters and Sorting */}
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <Filter className="h-4 w-4" />
+            <span className="text-sm font-medium">Filter by price:</span>
+            <select 
+              value={priceFilter}
+              onChange={(e) => setPriceFilter(e.target.value)}
+              className="text-sm border border-border rounded-none bg-background px-2 py-1"
+            >
+              <option value="all">All prices</option>
+              <option value="under-20">Under £20</option>
+              <option value="20-30">£20 - £30</option>
+              <option value="30-40">£30 - £40</option>
+              <option value="over-40">Over £40</option>
+            </select>
           </div>
         </div>
-      </aside>
+        
+        <div className="flex items-center gap-2">
+          <SortAsc className="h-4 w-4" />
+          <span className="text-sm font-medium">Sort by:</span>
+          <select 
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value)}
+            className="text-sm border border-border rounded-none bg-background px-2 py-1"
+          >
+            <option value="name">Name A-Z</option>
+            <option value="price-low">Price Low-High</option>
+            <option value="price-high">Price High-Low</option>
+          </select>
+        </div>
+      </div>
 
       {/* Products Grid */}
-      <main className="lg:col-span-3">
+      <main>
         <div className="flex items-center justify-between mb-6">
           <div>
             <h2 className="text-xl font-display font-bold tracking-wide uppercase text-foreground">
