@@ -85,8 +85,17 @@ async function getProducts(): Promise<Product[]> {
   }
 }
 
-export async function ProductsServer() {
+interface ProductsServerProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export async function ProductsServer({ onProductCountChange }: ProductsServerProps = {}) {
   const products = await getProducts()
+
+  // Notify parent of product count
+  if (onProductCountChange && products.length > 0) {
+    onProductCountChange(products.length)
+  }
 
   return (
     <div className="space-y-8">

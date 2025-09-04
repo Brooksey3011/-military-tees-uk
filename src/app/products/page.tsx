@@ -1,13 +1,12 @@
+"use client"
+
+import { useState } from "react"
 import { Layout } from "@/components/layout"
 import { ProductsServer } from "@/components/pages/products-server"
 import { cn } from "@/lib/utils"
 
-export const metadata = {
-  title: "All Products | Military Tees UK",
-  description: "Discover our complete collection of military-themed apparel and accessories",
-}
-
 export default function ProductsPage() {
+  const [productCount, setProductCount] = useState<number>(0)
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -23,7 +22,7 @@ export default function ProductsPage() {
                   All Products
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (18 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -32,7 +31,7 @@ export default function ProductsPage() {
 
         {/* Products Section */}
         <div className="container mx-auto px-4 py-8">
-          <ProductsServer />
+          <ProductsServer onProductCountChange={setProductCount} />
         </div>
       </div>
     </Layout>

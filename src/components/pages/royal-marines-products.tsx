@@ -23,7 +23,11 @@ interface Product {
   }
 }
 
-export function RoyalMarinesProducts() {
+interface RoyalMarinesProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function RoyalMarinesProducts({ onProductCountChange }: RoyalMarinesProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -94,6 +98,15 @@ export function RoyalMarinesProducts() {
       }
     })
 
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredAndSortedProducts.length)
+    }
+  }, [filteredAndSortedProducts.length, loading, onProductCountChange])
+
+  const formatPrice = (price: number) => `£${price.toFixed(2)}`
+
   if (loading) {
     return (
       <div className="space-y-8">
@@ -124,8 +137,6 @@ export function RoyalMarinesProducts() {
       </div>
     )
   }
-
-  const formatPrice = (price: number) => `£${price.toFixed(2)}`
 
   return (
     <div className="space-y-8">

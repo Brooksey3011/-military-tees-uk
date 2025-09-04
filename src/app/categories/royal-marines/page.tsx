@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Anchor, Waves } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,21 +8,10 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { RoyalMarinesProducts } from "@/components/pages/royal-marines-products"
 
-export const metadata: Metadata = {
-  title: "Royal Marines Collection | Military Tees UK",
-  description: "Discover our premium Royal Marines themed apparel collection. Commando and amphibious warfare designs celebrating elite marine traditions.",
-  keywords: [
-    "Royal Marines t-shirts", "marine clothing", "commando apparel", "amphibious warfare", 
-    "British Marines", "elite forces clothing", "military commando designs"
-  ],
-  openGraph: {
-    title: "Royal Marines Collection | Military Tees UK",
-    description: "Premium Royal Marines themed apparel - Commando and amphibious warfare designs",
-    type: "website",
-  },
-}
 
 export default function RoyalMarinesPage() {
+  const [productCount, setProductCount] = useState<number>(0)
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -70,7 +61,7 @@ export default function RoyalMarinesPage() {
                   Royal Marines
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (5 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -86,7 +77,7 @@ export default function RoyalMarinesPage() {
               ))}
             </div>
           }>
-            <RoyalMarinesProducts />
+            <RoyalMarinesProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

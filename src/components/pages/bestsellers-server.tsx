@@ -44,8 +44,17 @@ async function getBestsellers(): Promise<Product[]> {
   }
 }
 
-export async function BestsellersServer() {
+interface BestsellersServerProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export async function BestsellersServer({ onProductCountChange }: BestsellersServerProps = {}) {
   const products = await getBestsellers()
+
+  // Notify parent of product count
+  if (onProductCountChange && products.length > 0) {
+    onProductCountChange(products.length)
+  }
 
   if (products.length === 0) {
     return (

@@ -23,7 +23,11 @@ interface Product {
   }
 }
 
-export function RoyalNavyProducts() {
+interface RoyalNavyProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function RoyalNavyProducts({ onProductCountChange }: RoyalNavyProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -105,6 +109,13 @@ export function RoyalNavyProducts() {
         return true
     }
   })
+
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredProducts.length)
+    }
+  }, [filteredProducts.length, loading, onProductCountChange])
 
   if (loading) {
     return (

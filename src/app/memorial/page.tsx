@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Heart, Star } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,22 +8,8 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { MemorialProducts } from "@/components/pages/memorial-products"
 
-export const metadata: Metadata = {
-  title: "Memorial Collection | Military Tees UK - Honouring the Fallen",
-  description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Respectful designs honouring fallen heroes, remembrance day apparel & custom memorial tributes.",
-  keywords: [
-    "military memorial clothing", "remembrance day apparel", "fallen heroes tribute", "military tribute shirts",
-    "poppy collection UK", "memorial t-shirts", "remembrance clothing", "military memorial gifts",
-    "custom memorial designs", "battlefield memorial apparel", "service tribute clothing", "UK memorial wear"
-  ],
-  openGraph: {
-    title: "Memorial Collection | Military Tees UK - Honouring the Fallen",
-    description: "Pay tribute to those who made the ultimate sacrifice with our memorial collection. Respectful designs honouring fallen heroes and remembrance day apparel.",
-    type: "website",
-  },
-}
-
 export default function MemorialPage() {
+  const [productCount, setProductCount] = useState<number>(0)
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -64,7 +52,7 @@ export default function MemorialPage() {
                   Memorial Collection
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (6 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -80,7 +68,7 @@ export default function MemorialPage() {
               ))}
             </div>
           }>
-            <MemorialProducts />
+            <MemorialProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

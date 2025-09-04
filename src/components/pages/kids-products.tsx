@@ -29,7 +29,11 @@ interface Product {
   }>
 }
 
-export function KidsProducts() {
+interface KidsProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function KidsProducts({ onProductCountChange }: KidsProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -83,6 +87,13 @@ export function KidsProducts() {
           return 0
       }
     })
+
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredAndSortedProducts.length)
+    }
+  }, [filteredAndSortedProducts.length, loading, onProductCountChange])
 
   if (error) {
     return (

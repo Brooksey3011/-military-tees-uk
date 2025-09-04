@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Medal, Shield, Users } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,21 +8,8 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { VeteransProducts } from "@/components/pages/veterans-products"
 
-export const metadata: Metadata = {
-  title: "Veterans Collection | Military Tees UK",
-  description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
-  keywords: [
-    "veterans clothing UK", "veteran apparel", "military veterans gifts", "UK veterans merchandise",
-    "veteran pride shirts", "military heritage clothing", "British veterans apparel", "served with honour"
-  ],
-  openGraph: {
-    title: "Veterans Collection | Military Tees UK",
-    description: "Premium veteran pride designs and military-themed apparel for UK veterans and their families. Celebrating those who served with honour.",
-    type: "website",
-  },
-}
-
 export default function VeteransPage() {
+  const [productCount, setProductCount] = useState<number>(0)
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -63,7 +52,7 @@ export default function VeteransPage() {
                   Veterans Collection
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (8 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -79,7 +68,7 @@ export default function VeteransPage() {
               ))}
             </div>
           }>
-            <VeteransProducts />
+            <VeteransProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

@@ -1,18 +1,13 @@
+"use client"
+
+import { useState } from "react"
 import { Layout } from "@/components/layout"
 import { BestsellersServer } from "@/components/pages/bestsellers-server"
 import { cn } from "@/lib/utils"
 
-export const metadata = {
-  title: "Bestsellers - Military Tees UK",
-  description: "Our most popular military-themed apparel. Top-rated British Army inspired tees loved by customers nationwide.",
-  openGraph: {
-    title: "Bestsellers - Military Tees UK", 
-    description: "Our most popular military-themed apparel. Top-rated British Army inspired tees loved by customers nationwide.",
-    type: "website",
-  },
-}
 
 export default function BestsellersPage() {
+  const [productCount, setProductCount] = useState<number>(0)
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -28,7 +23,7 @@ export default function BestsellersPage() {
                   Bestsellers
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (6 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -37,7 +32,7 @@ export default function BestsellersPage() {
 
         {/* Products Section */}
         <div className="container mx-auto px-4 py-8">
-          <BestsellersServer />
+          <BestsellersServer onProductCountChange={setProductCount} />
         </div>
       </div>
     </Layout>

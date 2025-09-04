@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Shield, Zap } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,21 +8,10 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { BritishArmyProducts } from "@/components/pages/british-army-products"
 
-export const metadata: Metadata = {
-  title: "British Army Collection | Military Tees UK",
-  description: "Discover our premium British Army themed apparel collection. Infantry, armoured corps, and army regiment designs celebrating British military heritage.",
-  keywords: [
-    "British Army t-shirts", "army clothing", "military infantry", "armoured corps", 
-    "British military apparel", "army regiment designs", "military heritage clothing"
-  ],
-  openGraph: {
-    title: "British Army Collection | Military Tees UK",
-    description: "Premium British Army themed apparel - Infantry, armoured corps, and army regiment designs",
-    type: "website",
-  },
-}
 
 export default function BritishArmyPage() {
+  const [productCount, setProductCount] = useState<number>(0)
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -70,7 +61,7 @@ export default function BritishArmyPage() {
                   British Army
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (10 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -86,7 +77,7 @@ export default function BritishArmyPage() {
               ))}
             </div>
           }>
-            <BritishArmyProducts />
+            <BritishArmyProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

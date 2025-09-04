@@ -23,7 +23,11 @@ interface Product {
   }
 }
 
-export function RoyalAirForceProducts() {
+interface RoyalAirForceProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function RoyalAirForceProducts({ onProductCountChange }: RoyalAirForceProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -110,6 +114,13 @@ export function RoyalAirForceProducts() {
           return 0
       }
     })
+
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredAndSortedProducts.length)
+    }
+  }, [filteredAndSortedProducts.length, loading, onProductCountChange])
 
   if (loading) {
     return (

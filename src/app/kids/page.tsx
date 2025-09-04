@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Baby, Shield, Star } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,21 +8,8 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { KidsProducts } from "@/components/pages/kids-products"
 
-export const metadata: Metadata = {
-  title: "Kids Collection | Military Tees UK",
-  description: "Premium military-themed apparel for young recruits. Comfortable, durable kids clothing celebrating military family heritage.",
-  keywords: [
-    "kids military clothing UK", "children military apparel", "military family kids", "young recruit clothing",
-    "kids army shirts", "military children wear", "British military kids", "proud family apparel"
-  ],
-  openGraph: {
-    title: "Kids Collection | Military Tees UK",
-    description: "Premium military-themed apparel for young recruits. Comfortable, durable kids clothing celebrating military family heritage.",
-    type: "website",
-  },
-}
-
 export default function KidsPage() {
+  const [productCount, setProductCount] = useState<number>(0)
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -63,7 +52,7 @@ export default function KidsPage() {
                   Kids Collection
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (6 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -79,7 +68,7 @@ export default function KidsPage() {
               ))}
             </div>
           }>
-            <KidsProducts />
+            <KidsProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

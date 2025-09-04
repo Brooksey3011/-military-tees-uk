@@ -31,7 +31,11 @@ interface ProductVariant {
   sku: string
 }
 
-export function BritishArmyProducts() {
+interface BritishArmyProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function BritishArmyProducts({ onProductCountChange }: BritishArmyProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -93,6 +97,13 @@ export function BritishArmyProducts() {
           return 0
       }
     })
+
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredAndSortedProducts.length)
+    }
+  }, [filteredAndSortedProducts.length, loading, onProductCountChange])
 
   if (loading) {
     return (

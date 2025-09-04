@@ -1,4 +1,6 @@
-import { Metadata } from "next"
+"use client"
+
+import { useState } from "react"
 import Link from "next/link"
 import { ArrowLeft, Plane, Cloud } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -6,21 +8,10 @@ import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 import { RoyalAirForceProducts } from "@/components/pages/royal-air-force-products"
 
-export const metadata: Metadata = {
-  title: "Royal Air Force Collection | Military Tees UK",
-  description: "Discover our premium Royal Air Force themed apparel collection. RAF squadron and aviation designs celebrating air force traditions.",
-  keywords: [
-    "Royal Air Force t-shirts", "RAF clothing", "aviation apparel", "air force designs", 
-    "squadron clothing", "pilot apparel", "RAF merchandise", "aviation themed clothing"
-  ],
-  openGraph: {
-    title: "Royal Air Force Collection | Military Tees UK",
-    description: "Premium Royal Air Force themed apparel - RAF squadron and aviation designs",
-    type: "website",
-  },
-}
 
 export default function RoyalAirForcePage() {
+  const [productCount, setProductCount] = useState<number>(0)
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
@@ -70,7 +61,7 @@ export default function RoyalAirForcePage() {
                   Royal Air Force
                 </h1>
                 <p className="text-sm text-muted-foreground uppercase tracking-wide">
-                  (8 PRODUCTS)
+                  ({productCount} PRODUCTS)
                 </p>
               </div>
             </div>
@@ -86,7 +77,7 @@ export default function RoyalAirForcePage() {
               ))}
             </div>
           }>
-            <RoyalAirForceProducts />
+            <RoyalAirForceProducts onProductCountChange={setProductCount} />
           </ClientOnly>
         </div>
       </div>

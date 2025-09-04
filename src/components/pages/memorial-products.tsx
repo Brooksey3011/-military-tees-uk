@@ -29,7 +29,11 @@ interface Product {
   }>
 }
 
-export function MemorialProducts() {
+interface MemorialProductsProps {
+  onProductCountChange?: (count: number) => void
+}
+
+export function MemorialProducts({ onProductCountChange }: MemorialProductsProps = {}) {
   const [products, setProducts] = useState<Product[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -83,6 +87,13 @@ export function MemorialProducts() {
           return 0
       }
     })
+
+  // Notify parent of product count changes
+  useEffect(() => {
+    if (onProductCountChange && !loading) {
+      onProductCountChange(filteredAndSortedProducts.length)
+    }
+  }, [filteredAndSortedProducts.length, loading, onProductCountChange])
 
   if (error) {
     return (
