@@ -14,6 +14,7 @@ import { ReviewsSection } from "@/components/product/reviews-section"
 import { ReviewSummary } from "@/components/product/review-summary"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { cn } from "@/lib/utils"
+import { useWishlistAddItem, useWishlistRemoveItem, useWishlistIsIn } from "@/store/wishlist"
 
 interface Product {
   id: string
@@ -61,6 +62,11 @@ export function ProfessionalProductDetail() {
   const [selectedColor, setSelectedColor] = useState<string>("Standard")
   const [selectedImage, setSelectedImage] = useState<string>("")
   const [mounted, setMounted] = useState(false)
+
+  // Wishlist hooks
+  const addToWishlist = useWishlistAddItem()
+  const removeFromWishlist = useWishlistRemoveItem()
+  const isInWishlist = useWishlistIsIn()
 
   useEffect(() => {
     setMounted(true)
@@ -379,31 +385,34 @@ export function ProfessionalProductDetail() {
               <Button 
                 variant="outline" 
                 size="sm" 
-                className="flex-1 rounded-none"
+                className={cn(
+                  "flex-1 rounded-none transition-colors",
+                  isInWishlist(product.id)
+                    ? "bg-red-50 text-red-600 border-red-200 hover:bg-red-100"
+                    : "hover:bg-gray-50"
+                )}
                 onClick={() => {
-                  // Simple wishlist functionality - could be enhanced with actual storage
-                  const wishlistKey = 'military-tees-wishlist'
-                  const existing = JSON.parse(localStorage.getItem(wishlistKey) || '[]')
-                  const productData = {
-                    id: product.id,
-                    name: product.name,
-                    price: product.sale_price || product.price,
-                    image: productImages.main,
-                    slug: product.slug
-                  }
-                  
-                  const isAlreadyInWishlist = existing.some((item: any) => item.id === product.id)
-                  if (!isAlreadyInWishlist) {
-                    existing.push(productData)
-                    localStorage.setItem(wishlistKey, JSON.stringify(existing))
-                    alert('Added to wishlist!')
+                  if (isInWishlist(product.id)) {
+                    removeFromWishlist(product.id)
                   } else {
-                    alert('Already in wishlist!')
+                    addToWishlist({
+                      productId: product.id,
+                      name: product.name,
+                      slug: product.slug,
+                      price: product.sale_price || product.price,
+                      image: productImages.main,
+                      category: product.category?.name || "general",
+                      inStock: (currentVariant?.stock_quantity || product.stock_quantity || 0) > 0,
+                      sizes: product.variants?.map(v => v.size) || ['One Size']
+                    })
                   }
                 }}
               >
-                <Heart className="h-4 w-4 mr-2" />
-                Add to Wishlist
+                <Heart className={cn(
+                  "h-4 w-4 mr-2 transition-colors",
+                  isInWishlist(product.id) ? "fill-current text-red-600" : ""
+                )} />
+                {isInWishlist(product.id) ? "Remove from Wishlist" : "Add to Wishlist"}
               </Button>
               <Button 
                 variant="outline" 

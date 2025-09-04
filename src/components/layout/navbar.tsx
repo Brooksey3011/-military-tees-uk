@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { CartIcon } from "@/components/cart/cart-icon"
 import { SimpleSearchBar } from "@/components/search/simple-search-bar"
 import { cn } from "@/lib/utils"
+import { useWishlistCount } from "@/store/wishlist"
 
 interface NavItem {
   title: string
@@ -75,14 +76,22 @@ const navigation: NavItem[] = [
 
 function WishlistBadge() {
   const [isClient, setIsClient] = React.useState(false)
+  const wishlistCount = useWishlistCount()
   
   // Prevent hydration issues
   React.useEffect(() => {
     setIsClient(true)
   }, [])
   
-  // Temporarily disabled to fix hydration issues
-  return null
+  if (!isClient || wishlistCount === 0) {
+    return null
+  }
+  
+  return (
+    <span className="absolute -top-2 -right-2 h-5 w-5 rounded-full bg-red-600 text-white text-xs flex items-center justify-center font-medium">
+      {wishlistCount > 99 ? '99+' : wishlistCount}
+    </span>
+  )
 }
 
 export function Navbar() {
