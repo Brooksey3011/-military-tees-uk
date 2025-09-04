@@ -2,7 +2,8 @@
 
 import { useState } from "react"
 import { Layout } from "@/components/layout"
-import { ProductsServer } from "@/components/pages/products-server"
+import { AllProducts } from "@/components/pages/all-products"
+import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"
 
 export default function ProductsPage() {
@@ -31,7 +32,15 @@ export default function ProductsPage() {
 
         {/* Products Section */}
         <div className="container mx-auto px-4 py-8">
-          <ProductsServer onProductCountChange={setProductCount} />
+          <ClientOnly fallback={
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {[...Array(12)].map((_, i) => (
+                <div key={i} className="bg-gray-100 h-96 rounded animate-pulse"></div>
+              ))}
+            </div>
+          }>
+            <AllProducts onProductCountChange={setProductCount} />
+          </ClientOnly>
         </div>
       </div>
     </Layout>
