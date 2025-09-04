@@ -6,6 +6,7 @@ import { CookieConsent } from "@/components/ui/cookie-consent";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-simple-cart";
 import { PlausibleProvider } from "@/components/analytics/plausible";
+import { cn } from "@/lib/utils";
 import "./globals.css";
 
 const sourceSans3 = Source_Sans_3({
@@ -202,7 +203,12 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="antialiased">
+      <body className={cn(
+        "antialiased min-h-screen bg-background text-foreground",
+        sourceSans3.variable,
+        robotoSlab.variable,
+        sourceSans3.className
+      )}>
         <PlausibleProvider domain="militarytees.co.uk">
           <SimpleErrorBoundary>
             <AuthProvider>
