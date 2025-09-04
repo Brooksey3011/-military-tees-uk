@@ -7,12 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 const footerLinks = {
-  "Military Tees": [
-    { title: "Download App", href: "/download-app" },
-    { title: "Media Kit", href: "/media-kit" },
-    { title: "Reviews", href: "/reviews" },
-    { title: "Careers", href: "/careers" },
-  ],
   "Support": [
     { title: "FAQ", href: "/faq" },
     { title: "Delivery Options", href: "/delivery" },
@@ -77,7 +71,7 @@ export function Footer() {
     <footer className="bg-muted mt-auto">
       <div className="container mx-auto px-4 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-3 mb-4">
