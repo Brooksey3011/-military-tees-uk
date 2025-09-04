@@ -2,14 +2,10 @@ import Link from "next/link"
 import { Metadata } from "next"
 import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { PromoBanner } from "@/components/ui/promo-banner"
-import { PaymentOptions } from "@/components/ui/payment-options"
 import { OptimizedImage } from "@/components/ui/optimized-image"
-import { NewsletterSignup } from "@/components/marketing/newsletter-signup"
-import { SocialProof, InstagramFeed } from "@/components/social/social-integration"
-import { Truck, Award, Users, Check } from "lucide-react"
+import { LatestArrivals } from "@/components/homepage/latest-arrivals"
+import { Truck, Award, Shield, Check } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
@@ -43,7 +39,6 @@ export default function Home() {
       <PromoBanner />
       
       <div className="min-h-screen">
-
         {/* Hero Section */}
         <section className="relative bg-gradient-to-b from-muted/20 to-background py-8 border-b-2 border-border overflow-hidden">
           {/* Background Logo */}
@@ -70,164 +65,144 @@ export default function Home() {
               </p>
             </div>
             
-            {/* Buttons positioned below logo */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
+            {/* Single Primary CTA */}
+            <div className="flex justify-center">
+              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg" asChild>
                 <Link href="/categories">
-                  Browse Categories
-                </Link>
-              </Button>
-              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
-                <Link href="/custom">
-                  Custom Orders
+                  Shop Military Apparel
                 </Link>
               </Button>
             </div>
           </div>
         </section>
 
-        {/* New Arrivals Section */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
-                Latest Arrivals
-              </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                The newest additions to our military heritage collection. Premium quality designs inspired by British Armed Forces tradition.
-              </p>
-            </div>
-            
-            <div className="text-center">
-              <Button 
-                size="lg"
-                className="bg-primary hover:bg-primary/90 text-primary-foreground font-bold uppercase tracking-wide"
-                asChild
-              >
-                <Link href="/new-arrivals">
-                  View New Arrivals
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
+        {/* Latest Arrivals with Product Cards */}
+        <LatestArrivals />
 
-
-        {/* Why Choose Us - Complementing About Page */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-display font-bold mb-6">
-              Why Choose Military Tees UK?
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12">
-              <strong className="text-foreground">FOUNDED BY SERVING MILITARY, FOR THE MILITARY COMMUNITY:</strong> Authentic 
-              military-themed gear with outstanding service. Every design honours military heritage.
-            </p>
-            
-            {/* Enhanced Guarantees & Features */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                  <Check className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <span className="font-bold text-sm uppercase tracking-wide">30-Day Returns</span>
-                <span className="text-xs text-muted-foreground text-center">No questions asked money back guarantee</span>
-              </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                  <Award className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <span className="font-bold text-sm uppercase tracking-wide">Premium Quality</span>
-                <span className="text-xs text-muted-foreground text-center">Military-grade materials and printing</span>
-              </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                  <Truck className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <span className="font-bold text-sm uppercase tracking-wide">Fast Shipping</span>
-                <span className="text-xs text-muted-foreground text-center">Free UK delivery on orders over £50</span>
-              </div>
-              <div className="flex flex-col items-center space-y-3 p-6 border border-border rounded-sm hover:border-primary transition-colors bg-background">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center">
-                  <Users className="h-6 w-6 text-primary-foreground" />
-                </div>
-                <span className="font-bold text-sm uppercase tracking-wide">Community</span>
-                <span className="text-xs text-muted-foreground text-center">Supporting military personnel and families</span>
-              </div>
-            </div>
-            
-            {/* Link to About page */}
-            <div className="mt-8">
-              <Button variant="outline" size="lg" className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-bold uppercase tracking-wide" asChild>
-                <Link href="/about">
-                  Learn Our Story
-                </Link>
-              </Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Newsletter Signup & Social Proof */}
-        <section className="py-16 bg-background">
-          <div className="container mx-auto px-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
-              <NewsletterSignup 
-                variant="inline" 
-                showDiscount={true}
-                className="h-fit"
-              />
-              <SocialProof />
-            </div>
-          </div>
-        </section>
-
-        {/* Instagram Feed */}
+        {/* Trust Indicators - Streamlined */}
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-display font-bold mb-4">
-                Follow Our Story
+                Military Quality, Guaranteed
               </h2>
-              <p className="text-muted-foreground max-w-2xl mx-auto">
-                Behind-the-scenes content, new design previews, and stories from the military community
+              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                Founded by serving military, for the military community
               </p>
             </div>
-            <div className="max-w-2xl mx-auto">
-              <InstagramFeed />
+            
+            {/* Key Trust Indicators */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Award className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <h3 className="font-bold text-lg uppercase tracking-wide">Premium Quality</h3>
+                <p className="text-sm text-muted-foreground">Military-grade materials and professional printing</p>
+              </div>
+              
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Truck className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <h3 className="font-bold text-lg uppercase tracking-wide">Fast & Free Shipping</h3>
+                <p className="text-sm text-muted-foreground">Free UK delivery on orders over £50</p>
+              </div>
+              
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Shield className="h-8 w-8 text-primary-foreground" />
+                </div>
+                <h3 className="font-bold text-lg uppercase tracking-wide">30-Day Returns</h3>
+                <p className="text-sm text-muted-foreground">No questions asked money back guarantee</p>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Payment Options & Trust */}
+        {/* Popular Categories */}
         <section className="py-16 bg-background">
           <div className="container mx-auto px-4">
-            <PaymentOptions variant="grid" showSecurity={true} />
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-display font-bold mb-4">
+                Shop by Service
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                Authentic designs for every branch of service
+              </p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {/* British Army */}
+              <Link href="/categories/british-army" className="group">
+                <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                  <div className="aspect-square p-8 flex items-center justify-center">
+                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                      British Army
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+              
+              {/* Royal Navy */}
+              <Link href="/categories/royal-navy" className="group">
+                <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                  <div className="aspect-square p-8 flex items-center justify-center">
+                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                      Royal Navy
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+              
+              {/* Royal Air Force */}
+              <Link href="/categories/royal-air-force" className="group">
+                <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                  <div className="aspect-square p-8 flex items-center justify-center">
+                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                      Royal Air Force
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+              
+              {/* Royal Marines */}
+              <Link href="/categories/royal-marines" className="group">
+                <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
+                  <div className="aspect-square p-8 flex items-center justify-center">
+                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                      Royal Marines
+                    </h3>
+                  </div>
+                </div>
+              </Link>
+            </div>
           </div>
         </section>
 
-        {/* Call to Action */}
+        {/* Final CTA */}
         <section className="py-16 bg-muted/30">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl font-display font-bold mb-4 text-foreground">
-              Ready to Join the Ranks?
+              Ready to Serve in Style?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Browse our collection of premium military-themed apparel
+            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Browse our complete collection of premium military-themed apparel
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <Button 
                 size="lg"
-                className="font-bold uppercase tracking-wide"
+                className="font-bold uppercase tracking-wide px-8"
                 asChild
               >
-                <Link href="/categories">
-                  Shop All Categories
+                <Link href="/products">
+                  Shop All Products
                 </Link>
               </Button>
               <Button 
                 variant="outline"
                 size="lg"
-                className="border-2 font-bold uppercase tracking-wide"
+                className="border-2 font-bold uppercase tracking-wide px-8"
                 asChild
               >
                 <Link href="/custom">
