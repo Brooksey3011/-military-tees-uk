@@ -43,7 +43,6 @@ export function ProductCard({
   className
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = React.useState(false)
-  const [currentImageIndex, setCurrentImageIndex] = React.useState(0)
   const [selectedVariant, setSelectedVariant] = React.useState<ProductVariant | null>(
     product.variants?.find(v => (v.stockQuantity || v.stock_quantity) > 0) || product.variants?.[0] || null
   )
@@ -56,32 +55,8 @@ export function ProductCard({
   const isOutOfStock = stockQuantity <= 0
   const isLowStock = stockQuantity <= 5 && stockQuantity > 0
   
-  // Get all available images for carousel
-  const allImages = React.useMemo(() => {
-    const images = []
-    if (product.main_image_url) images.push(product.main_image_url)
-    if (selectedVariant?.imageUrls || selectedVariant?.image_urls) {
-      const variantImages = selectedVariant.imageUrls || selectedVariant.image_urls || []
-      variantImages.forEach(img => {
-        if (img && !images.includes(img)) images.push(img)
-      })
-    }
-    return images.length > 0 ? images : ['/images/products/placeholder-tshirt.svg']
-  }, [product.main_image_url, selectedVariant?.id, selectedVariant?.imageUrls, selectedVariant?.image_urls])
-  
-  // Auto-cycle images on hover - only on client side
-  React.useEffect(() => {
-    if (typeof window === 'undefined') return
-    
-    if (isHovered && allImages.length > 1) {
-      const interval = setInterval(() => {
-        setCurrentImageIndex(prev => (prev + 1) % allImages.length)
-      }, 1500)
-      return () => clearInterval(interval)
-    } else {
-      setCurrentImageIndex(0)
-    }
-  }, [isHovered, allImages.length])
+  // Simplified image handling - just use main image
+  const displayImage = product.main_image_url || '/images/products/placeholder-tshirt.svg'
 
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault()
@@ -101,7 +76,7 @@ export function ProductCard({
         name: product.name,
         slug: product.slug,
         price: product.price,
-        image: product.main_image_url || '/api/placeholder/300/400',
+        image: displayImage,
         category: product.category_id,
         inStock: selectedVariant ? (selectedVariant.stockQuantity || selectedVariant.stock_quantity || 0) > 0 : true,
         sizes: product.variants?.map(v => v.size || 'One Size') || ['One Size']
@@ -124,32 +99,15 @@ export function ProductCard({
     >
       <div className="bg-background border border-border/50 hover:border-border transition-all duration-300 overflow-hidden">
         <div className="relative">
-          {/* Product Image with Carousel */}
+          {/* Product Image */}
           <Link href={`/products/${product.slug}`} className="block relative aspect-[4/5] overflow-hidden bg-muted">
             <Image
-              src={allImages[currentImageIndex]}
+              src={displayImage}
               alt={product.name}
               fill
               className="object-cover transition-all duration-500"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
-            
-            {/* Image indicators */}
-            {allImages.length > 1 && (
-              <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex gap-1">
-                {allImages.map((_, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "w-1.5 h-1.5 rounded-full transition-all duration-300",
-                      index === currentImageIndex 
-                        ? "bg-[#FFAD02]" 
-                        : "bg-white/50"
-                    )}
-                  />
-                ))}
-              </div>
-            )}
             
             {/* Hover Actions */}
             <motion.div 
