@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { cn, formatPrice } from "@/lib/utils"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
 import { ProductVariant } from "./variant-selector"
-import { useWishlistActions } from "@/store/wishlist"
+import { useWishlistAddItem, useWishlistRemoveItem, useWishlistIsIn } from "@/store/wishlist"
 
 interface Product {
   id: string
@@ -47,7 +47,9 @@ export function ProductCard({
     product.variants?.find(v => (v.stockQuantity || v.stock_quantity) > 0) || product.variants?.[0] || null
   )
   
-  const { addItem, removeItem, isInWishlist } = useWishlistActions()
+  const addItem = useWishlistAddItem()
+  const removeItem = useWishlistRemoveItem()
+  const isInWishlist = useWishlistIsIn()
   const isInWishlistState = isInWishlist(product.id)
 
   const averageRating = product.rating || 0

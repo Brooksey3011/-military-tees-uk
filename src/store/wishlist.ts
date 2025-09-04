@@ -92,9 +92,16 @@ export const useWishlistStore = create<WishlistStore>()(
 // Utility hooks for common wishlist operations
 export const useWishlistItems = () => useWishlistStore(state => state.items)
 export const useWishlistCount = () => useWishlistStore(state => state.totalItems)
-export const useWishlistActions = () => useWishlistStore(state => ({
-  addItem: state.addItem,
-  removeItem: state.removeItem,
-  clearWishlist: state.clearWishlist,
-  isInWishlist: state.isInWishlist
-}))
+// Export individual action hooks to prevent re-render issues
+export const useWishlistAddItem = () => useWishlistStore(state => state.addItem)
+export const useWishlistRemoveItem = () => useWishlistStore(state => state.removeItem)
+export const useWishlistClear = () => useWishlistStore(state => state.clearWishlist)
+export const useWishlistIsIn = () => useWishlistStore(state => state.isInWishlist)
+
+// Backward compatibility - but this creates new objects each render
+export const useWishlistActions = () => ({
+  addItem: useWishlistStore(state => state.addItem),
+  removeItem: useWishlistStore(state => state.removeItem),
+  clearWishlist: useWishlistStore(state => state.clearWishlist),
+  isInWishlist: useWishlistStore(state => state.isInWishlist),
+})
