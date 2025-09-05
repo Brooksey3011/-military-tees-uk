@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS shipping_rates (
   countries TEXT[],
   is_active BOOLEAN DEFAULT true,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+  UNIQUE(zone_code, service_type)
 );
 
 -- Step 4: Create inventory_movements table for stock audit trail
@@ -189,7 +190,7 @@ CREATE POLICY "Users can view their order status history" ON order_status_histor
     EXISTS (
       SELECT 1 FROM orders 
       WHERE orders.id = order_status_history.order_id 
-      AND orders.customer_email = auth.email()
+      AND orders.customer_id = auth.uid()
     )
   );
 
