@@ -5,7 +5,7 @@ import { PromoBanner } from "@/components/ui/promo-banner"
 import { OptimizedImage } from "@/components/ui/optimized-image"
 import { AnimatedLogo } from "@/components/ui/animated-logo"
 import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
-import { LazyLatestArrivals } from "@/components/performance/lazy-component"
+import { SimpleLatestArrivals } from "@/components/homepage/simple-latest-arrivals"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
 import { Truck, Award, Shield, Check, Sparkles, Star } from "lucide-react"
 
@@ -84,8 +84,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Latest Arrivals with Product Cards - Lazy Loaded */}
-        <LazyLatestArrivals />
+        {/* Latest Arrivals with Product Cards */}
+        <SimpleLatestArrivals />
 
         {/* Trust Indicators - Streamlined */}
         <section className="py-16 bg-muted/30 relative overflow-hidden">
