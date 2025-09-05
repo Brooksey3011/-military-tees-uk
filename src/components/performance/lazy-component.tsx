@@ -2,6 +2,7 @@
 
 import { lazy, Suspense, ComponentType } from 'react'
 import { Skeleton } from '@/components/ui/skeleton'
+import { NoSSR } from '@/components/ui/no-ssr'
 
 interface LazyComponentProps {
   fallback?: React.ReactNode
@@ -36,8 +37,8 @@ export function withLazyLoading<T extends {}>(
   }
 }
 
-// Specific lazy loading components
-export const LazyLatestArrivals = withLazyLoading(
+// Safe lazy loading component for Latest Arrivals
+const LazyLatestArrivalsComponent = withLazyLoading(
   () => import('@/components/homepage/latest-arrivals'),
   <div className="py-16">
     <div className="container mx-auto px-4">
@@ -57,3 +58,31 @@ export const LazyLatestArrivals = withLazyLoading(
     </div>
   </div>
 )
+
+export function LazyLatestArrivals() {
+  const fallback = (
+    <div className="py-16">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <div className="h-8 w-48 mx-auto mb-4 bg-muted rounded animate-pulse" />
+          <div className="h-4 w-96 mx-auto bg-muted rounded animate-pulse" />
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {Array.from({ length: 3 }).map((_, i) => (
+            <div key={i} className="space-y-4">
+              <div className="h-64 w-full bg-muted rounded animate-pulse" />
+              <div className="h-4 w-3/4 bg-muted rounded animate-pulse" />
+              <div className="h-4 w-1/2 bg-muted rounded animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+
+  return (
+    <NoSSR fallback={fallback}>
+      <LazyLatestArrivalsComponent />
+    </NoSSR>
+  )
+}
