@@ -1,16 +1,14 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { ArrowRight, Star } from "lucide-react"
+import { ArrowRight } from "lucide-react"
 
 export function SimpleLatestArrivals() {
   return (
     <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-display font-bold mb-4 flex items-center justify-center gap-2">
-            <Star className="text-primary" />
+          <h2 className="text-3xl font-display font-bold mb-4">
             Latest Arrivals
-            <Star className="text-primary" />
           </h2>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
             Discover our newest military-themed apparel and accessories
@@ -21,7 +19,6 @@ export function SimpleLatestArrivals() {
           {/* Featured Product Cards */}
           <div className="bg-muted/30 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <Star className="h-8 w-8 text-primary-foreground" />
             </div>
             <h3 className="font-bold text-lg mb-2">New Military Collection</h3>
             <p className="text-sm text-muted-foreground mb-4">
@@ -32,7 +29,6 @@ export function SimpleLatestArrivals() {
           
           <div className="bg-muted/30 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <Star className="h-8 w-8 text-primary-foreground" />
             </div>
             <h3 className="font-bold text-lg mb-2">Premium T-Shirts</h3>
             <p className="text-sm text-muted-foreground mb-4">
@@ -43,7 +39,6 @@ export function SimpleLatestArrivals() {
           
           <div className="bg-muted/30 rounded-lg p-8 text-center hover:shadow-lg transition-shadow">
             <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mx-auto mb-4">
-              <Star className="h-8 w-8 text-primary-foreground" />
             </div>
             <h3 className="font-bold text-lg mb-2">Tactical Accessories</h3>
             <p className="text-sm text-muted-foreground mb-4">

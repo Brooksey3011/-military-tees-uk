@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
-import { ArrowLeft, Heart, Star } from "lucide-react"
+import { ArrowLeft, Heart } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { ClientOnly } from "@/components/ui/client-only"
 import { cn } from "@/lib/utils"

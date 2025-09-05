@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Layout } from "@/components/layout/layout"
-import { Tag, Clock, Star, TrendingDown, Percent, Gift } from "lucide-react"
+import { Tag, Clock, TrendingDown, Percent, Gift } from "lucide-react"
 
 export const metadata: Metadata = {
   title: "Launch Deals - Military Tees UK",
@@ -24,7 +24,7 @@ export default function SalePage() {
     {
       title: "Launch Special",
       description: "Exclusive pricing for early supporters",
-      icon: <Star className="h-8 w-8" />,
+      icon: <Tag className="h-8 w-8" />,
       href: "/products?category=launch-special",
       discount: "15% off"
     },
@@ -178,7 +178,6 @@ export default function SalePage() {
           <div className="container mx-auto px-4">
             <div className="text-center">
               <div className="flex items-center justify-center gap-2 mb-2">
-                <Star className="h-5 w-5" />
                 <span className="font-display font-bold uppercase tracking-wide text-sm">
                   Launch Special
                 </span>

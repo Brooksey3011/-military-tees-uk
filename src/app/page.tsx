@@ -7,7 +7,7 @@ import { AnimatedLogo } from "@/components/ui/animated-logo"
 import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
 import { SimpleLatestArrivals } from "@/components/homepage/simple-latest-arrivals"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
-import { Truck, Award, Shield, Check, Sparkles, Star } from "lucide-react"
+import { Truck, Award, Shield, Check } from "lucide-react"
 
 export const metadata = generateEnhancedMetadata({
   title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
@@ -50,20 +50,13 @@ export default function Home() {
             {/* Centered H1 in logo area */}
             <div className="flex flex-col items-center justify-center mb-8">
               <AnimatedText delay={0.2}>
-                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6 relative">
-                  <span className="relative inline-block">
-                    Military Tees UK
-                    <div className="absolute -top-2 -right-2 text-yellow-500">
-                      <Sparkles size={20} className="animate-pulse" />
-                    </div>
-                  </span>
+                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6">
+                  Military Tees UK
                 </h1>
               </AnimatedText>
               <AnimatedText delay={0.4}>
-                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide flex items-center gap-2">
-                  <Shield size={24} className="text-primary" />
+                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide">
                   Proudly serving those who serve
-                  <Shield size={24} className="text-primary" />
                 </p>
               </AnimatedText>
             </div>
@@ -72,10 +65,8 @@ export default function Home() {
             <AnimatedButton delay={0.6} className="flex justify-center">
               <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg relative overflow-hidden group" asChild>
                 <Link href="/categories">
-                  <span className="relative z-10 flex items-center gap-2">
-                    <Star size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+                  <span className="relative z-10">
                     Shop Military Apparel
-                    <Star size={20} className="group-hover:-rotate-12 transition-transform duration-300" />
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                 </Link>
@@ -92,10 +83,8 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
           <div className="container mx-auto px-4 relative">
             <AnimatedText delay={0.2} className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4 flex items-center justify-center gap-3">
-                <Award className="text-primary animate-pulse" />
+              <h2 className="text-3xl font-display font-bold mb-4">
                 Military Quality, Guaranteed
-                <Award className="text-primary animate-pulse" />
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Founded by serving military, for the military community
