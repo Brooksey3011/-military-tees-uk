@@ -1,8 +1,26 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Skip TypeScript checking during build if environment variable is set
+  typescript: {
+    ignoreBuildErrors: !!process.env.SKIP_TYPE_CHECK,
+  },
+  
   // Performance optimizations
   compress: true,
   poweredByHeader: false,
+  
+  // Bundle analyzer (only in development)
+  ...(process.env.ANALYZE === 'true' && {
+    webpack: (config, { isServer }) => {
+      if (!isServer) {
+        config.resolve.fallback = {
+          ...config.resolve.fallback,
+          fs: false,
+        }
+      }
+      return config
+    },
+  }),
   
   // Image optimization
   images: {
@@ -86,12 +104,14 @@ const nextConfig = {
       '@radix-ui/react-icons',
       'framer-motion'
     ],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
+  },
+
+  // Turbopack configuration (stable)
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
       },
     },
   },

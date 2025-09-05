@@ -68,11 +68,11 @@ export async function GET(request: NextRequest) {
 
         return {
           variant_id: variant.id,
-          product_id: variant.products.id,
-          product_name: variant.products.name,
-          product_slug: variant.products.slug,
-          product_image: variant.products.main_image_url,
-          product_price: variant.products.price,
+          product_id: (variant.products as any)?.id,
+          product_name: (variant.products as any)?.name,
+          product_slug: (variant.products as any)?.slug,
+          product_image: (variant.products as any)?.main_image_url,
+          product_price: (variant.products as any)?.price,
           sku: variant.sku,
           size: variant.size,
           color: variant.color,
@@ -183,12 +183,12 @@ async function sendLowStockAlertEmail(supabase: any) {
   }
 
   // Filter for low stock items
-  const lowStockItems = variants.filter(variant => {
+  const lowStockItems = variants.filter((variant: any) => {
     const threshold = variant.low_stock_threshold || 5
     return variant.stock_quantity <= threshold
   })
 
-  const criticalItems = lowStockItems.filter(variant => variant.stock_quantity === 0)
+  const criticalItems = lowStockItems.filter((variant: any) => variant.stock_quantity === 0)
 
   if (lowStockItems.length === 0) {
     return NextResponse.json({
@@ -238,7 +238,7 @@ async function sendLowStockAlertEmail(supabase: any) {
         ${criticalItems.length > 0 ? `
         <div class="alert-critical">
           <h3>🔴 CRITICAL: Out of Stock</h3>
-          ${criticalItems.map(item => `
+          ${criticalItems.map((item: any) => `
             <div class="item">
               <div class="item-info">
                 <strong>${item.products.name}</strong><br>
@@ -251,10 +251,10 @@ async function sendLowStockAlertEmail(supabase: any) {
         </div>
         ` : ''}
 
-        ${lowStockItems.filter(item => item.stock_quantity > 0).length > 0 ? `
+        ${lowStockItems.filter((item: any) => item.stock_quantity > 0).length > 0 ? `
         <div class="alert-warning">
           <h3>🟡 WARNING: Low Stock</h3>
-          ${lowStockItems.filter(item => item.stock_quantity > 0).map(item => `
+          ${lowStockItems.filter((item: any) => item.stock_quantity > 0).map((item: any) => `
             <div class="item">
               <div class="item-info">
                 <strong>${item.products.name}</strong><br>

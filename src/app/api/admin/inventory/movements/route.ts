@@ -207,14 +207,14 @@ export async function POST(request: NextRequest) {
       }, { status: 500 })
     }
 
-    console.log(`✅ Inventory movement created: ${variant.products.name} (${previousStock} → ${newStock})`)
+    console.log(`✅ Inventory movement created: ${(variant.products as any)?.name} (${previousStock} → ${newStock})`)
 
     return NextResponse.json({
       success: true,
       message: 'Inventory movement recorded',
       movement_id: movement.id,
       variant_id: product_variant_id,
-      product_name: variant.products.name,
+      product_name: (variant.products as any)?.name,
       previous_stock: previousStock,
       new_stock: newStock,
       quantity_change,
