@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import nodemailer from 'nodemailer'
-import { Resend } from 'resend'
+import { EmailAutomation, EmailTemplateData } from '@/lib/email-automation'
+import { EnhancedShippingCalculator } from '@/lib/enhanced-shipping-calculator'
 
 // Email service setup - supports both Hostinger SMTP and Resend
 let emailService: 'hostinger' | 'resend' | null = null
@@ -50,27 +50,57 @@ export async function POST(request: NextRequest) {
       total
     } = body
 
-    // Check if email service is available
-    if (!emailService) {
-      console.log('❌ EMAIL SERVICE NOT CONFIGURED')
-      console.log('⚠️  To enable email confirmations with Hostinger:')
-      console.log('1. Add these environment variables:')
-      console.log('   HOSTINGER_EMAIL_HOST=mail.yourdomain.com')
-      console.log('   HOSTINGER_EMAIL_USER=orders@yourdomain.com')
-      console.log('   HOSTINGER_EMAIL_PASS=your-email-password')
-      console.log('   HOSTINGER_EMAIL_PORT=587')
-      console.log('2. Customer will NOT receive email confirmation until configured')
-      
-      return NextResponse.json({ 
-        success: false, 
-        message: 'Email service not configured - customer will not receive confirmation email',
-        instructions: 'Add Hostinger SMTP credentials to environment variables'
-      }, { status: 200 })
+    console.log(`📧 Sending enhanced order confirmation email to: ${customerEmail}`)
+
+    // Check if this is a BFPO address
+    const isBFPO = EnhancedShippingCalculator.isBFPOAddress(shippingAddress)
+    
+    // Prepare email template data
+    const emailData: EmailTemplateData = {
+      orderNumber,
+      customerName,
+      customerEmail,
+      orderDate: new Date().toLocaleDateString('en-GB'),
+      estimatedDelivery: isBFPO 
+        ? new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB')
+        : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toLocaleDateString('en-GB'),
+      items,
+      subtotal,
+      shipping,
+      tax,
+      total,
+      shippingAddress,
+      isBFPO,
+      militaryUnit: isBFPO ? shippingAddress.line2 : undefined
     }
 
-    console.log(`Sending order confirmation email to: ${customerEmail} using ${emailService}`)
+    // Send email using enhanced automation system
+    const result = await EmailAutomation.sendEmail('order_confirmation', emailData, true)
 
-    // Create HTML email content
+    if (result.success) {
+      console.log('✅ Enhanced order confirmation email sent successfully')
+      return NextResponse.json({
+        success: true,
+        messageId: result.messageId,
+        service: 'enhanced_email_automation',
+        bfpo_detected: isBFPO,
+        features: [
+          'BFPO address detection',
+          'Military-themed templates',
+          'Enhanced delivery estimates',
+          'Automatic admin copy'
+        ]
+      })
+    } else {
+      console.error('❌ Enhanced email sending failed:', result.error)
+      return NextResponse.json({
+        success: false,
+        error: result.error,
+        fallback: 'Email automation system failed'
+      }, { status: 500 })
+    }
+
+    // Legacy code below - keeping for fallback
     const emailHtml = `
       <!DOCTYPE html>
       <html>
