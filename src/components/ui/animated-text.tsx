@@ -1,6 +1,7 @@
 'use client'
 
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode } from 'react'
+import { NoSSR } from './no-ssr'
 
 interface AnimatedTextProps {
   children: ReactNode
@@ -8,38 +9,23 @@ interface AnimatedTextProps {
   delay?: number
 }
 
+function AnimatedTextContent({ children, className }: { children: ReactNode, className?: string }) {
+  return (
+    <div className={`${className} animate-fade-in`}>
+      {children}
+    </div>
+  )
+}
+
 export function AnimatedText({ children, className, delay = 0 }: AnimatedTextProps) {
-  const [motion, setMotion] = useState<any>(null)
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-    import('framer-motion').then((mod) => {
-      setMotion(mod.motion)
-    }).catch(() => {
-      // Framer Motion not available
-    })
-  }, [])
-
-  if (!isClient || !motion) {
-    return <div className={className}>{children}</div>
-  }
-
-  const MotionDiv = motion.div
+  const fallback = <div className={className}>{children}</div>
 
   return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-      animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-      transition={{ 
-        duration: 0.8, 
-        delay,
-        ease: [0.21, 1, 0.81, 1]
-      }}
-      className={className}
-    >
-      {children}
-    </MotionDiv>
+    <NoSSR fallback={fallback}>
+      <AnimatedTextContent className={className}>
+        {children}
+      </AnimatedTextContent>
+    </NoSSR>
   )
 }
 
@@ -51,19 +37,12 @@ interface AnimatedButtonProps {
   onClick?: () => void
 }
 
-export function AnimatedButton({ children, className, delay = 0, href, onClick }: AnimatedButtonProps) {
-  const [motion, setMotion] = useState<any>(null)
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-    import('framer-motion').then((mod) => {
-      setMotion(mod.motion)
-    }).catch(() => {
-      // Framer Motion not available
-    })
-  }, [])
-
+function AnimatedButtonContent({ children, className, href, onClick }: { 
+  children: ReactNode
+  className?: string 
+  href?: string
+  onClick?: () => void
+}) {
   const content = href ? (
     <a href={href} className="block w-full h-full">
       {children}
@@ -74,29 +53,31 @@ export function AnimatedButton({ children, className, delay = 0, href, onClick }
     </button>
   )
 
-  if (!isClient || !motion) {
-    return <div className={className}>{content}</div>
-  }
+  return (
+    <div className={`${className} animate-fade-in hover:scale-105 transition-transform duration-300`}>
+      {content}
+    </div>
+  )
+}
 
-  const MotionDiv = motion.div
+export function AnimatedButton({ children, className, delay = 0, href, onClick }: AnimatedButtonProps) {
+  const content = href ? (
+    <a href={href} className="block w-full h-full">
+      {children}
+    </a>
+  ) : (
+    <button onClick={onClick} className="w-full h-full">
+      {children}
+    </button>
+  )
+
+  const fallback = <div className={className}>{content}</div>
 
   return (
-    <MotionDiv
-      initial={{ opacity: 0, y: 30, scale: 0.9 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      whileHover={{ 
-        scale: 1.05,
-        boxShadow: "0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1)"
-      }}
-      whileTap={{ scale: 0.95 }}
-      transition={{ 
-        duration: 0.8, 
-        delay,
-        ease: [0.21, 1, 0.81, 1]
-      }}
-      className={className}
-    >
-      {content}
-    </MotionDiv>
+    <NoSSR fallback={fallback}>
+      <AnimatedButtonContent className={className} href={href} onClick={onClick}>
+        {children}
+      </AnimatedButtonContent>
+    </NoSSR>
   )
 }
