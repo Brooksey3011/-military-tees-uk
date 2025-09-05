@@ -204,15 +204,18 @@ export async function GET(request: NextRequest) {
     console.log('📦 Test 4: Testing inventory management APIs...')
     
     try {
+      // Get base URL for API calls
+      const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+      
       // Test inventory fetch endpoint
-      const inventoryResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/inventory?limit=5`, {
+      const inventoryResponse = await fetch(`${baseUrl}/api/admin/inventory?limit=5`, {
         method: 'GET'
       })
       
       const inventoryData = inventoryResponse.ok ? await inventoryResponse.json() : null
 
       // Test low stock alerts
-      const alertsResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/admin/inventory/alerts?limit=5`, {
+      const alertsResponse = await fetch(`${baseUrl}/api/admin/inventory/alerts?limit=5`, {
         method: 'GET'
       })
       
