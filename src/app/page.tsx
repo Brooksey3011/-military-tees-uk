@@ -1,55 +1,47 @@
 import Link from "next/link"
-import { Metadata } from "next"
 import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
 import { PromoBanner } from "@/components/ui/promo-banner"
 import { OptimizedImage } from "@/components/ui/optimized-image"
-import { LatestArrivals } from "@/components/homepage/latest-arrivals"
-import { Truck, Award, Shield, Check } from "lucide-react"
+import { AnimatedLogo } from "@/components/ui/animated-logo"
+import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
+import { LazyLatestArrivals } from "@/components/performance/lazy-component"
+import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
+import { Truck, Award, Shield, Check, Sparkles, Star } from "lucide-react"
 
-export const metadata: Metadata = {
+export const metadata = generateEnhancedMetadata({
   title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
   description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50. Shop veterans, memorial & custom military clothing.",
-  keywords: [
-    "military t-shirts UK", "British Army apparel", "military clothing", "veterans clothing", 
-    "army merchandise", "military themed shirts", "British military gear", "army t-shirts",
-    "memorial clothing", "custom military designs", "military fashion UK", "army veterans gifts"
-  ],
-  openGraph: {
-    title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
-    description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50.",
-    images: ["/og-image.jpg"],
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Military Tees UK | Premium British Army Themed Apparel & Clothing",
-    description: "Premium British military-themed t-shirts, hoodies & apparel. Authentic designs inspired by the British Army. Free UK delivery over £50.",
-    images: ["/twitter-image.jpg"],
-  },
-  alternates: {
-    canonical: "/",
-  },
-}
+  canonicalUrl: "/",
+})
 
 export default function Home() {
+  const structuredData = generateStructuredData('homepage')
+  
   return (
     <Layout>
+      {/* Enhanced Structured Data for SEO */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
+      />
       {/* Promotional Banner */}
       <PromoBanner />
       
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-b from-muted/20 to-background py-8 border-b-2 border-border overflow-hidden">
+        <section className="relative bg-gradient-to-br from-muted/30 via-muted/20 to-background py-12 border-b-2 border-border overflow-hidden">
+          {/* Animated background pattern */}
+          <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           {/* Background Logo */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <OptimizedImage
+            <AnimatedLogo
               src="/logowhite.png" 
               alt="Military Tees UK Background Logo" 
               width={1200}
               height={800}
-              priority={true}
-              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] opacity-12 object-contain select-none"
+              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] object-contain"
             />
           </div>
           
@@ -57,39 +49,58 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center relative z-10 flex flex-col justify-center" style={{minHeight: '500px'}}>
             {/* Centered H1 in logo area */}
             <div className="flex flex-col items-center justify-center mb-8">
-              <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6">
-                Military Tees UK
-              </h1>
-              <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide">
-                Proudly serving those who serve
-              </p>
+              <AnimatedText delay={0.2}>
+                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6 relative">
+                  <span className="relative inline-block">
+                    Military Tees UK
+                    <div className="absolute -top-2 -right-2 text-yellow-500">
+                      <Sparkles size={20} className="animate-pulse" />
+                    </div>
+                  </span>
+                </h1>
+              </AnimatedText>
+              <AnimatedText delay={0.4}>
+                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide flex items-center gap-2">
+                  <Shield size={24} className="text-primary" />
+                  Proudly serving those who serve
+                  <Shield size={24} className="text-primary" />
+                </p>
+              </AnimatedText>
             </div>
             
             {/* Single Primary CTA */}
-            <div className="flex justify-center">
-              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg" asChild>
+            <AnimatedButton delay={0.6} className="flex justify-center">
+              <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg relative overflow-hidden group" asChild>
                 <Link href="/categories">
-                  Shop Military Apparel
+                  <span className="relative z-10 flex items-center gap-2">
+                    <Star size={20} className="group-hover:rotate-12 transition-transform duration-300" />
+                    Shop Military Apparel
+                    <Star size={20} className="group-hover:-rotate-12 transition-transform duration-300" />
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                 </Link>
               </Button>
-            </div>
+            </AnimatedButton>
           </div>
         </section>
 
-        {/* Latest Arrivals with Product Cards */}
-        <LatestArrivals />
+        {/* Latest Arrivals with Product Cards - Lazy Loaded */}
+        <LazyLatestArrivals />
 
         {/* Trust Indicators - Streamlined */}
-        <section className="py-16 bg-muted/30">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
+        <section className="py-16 bg-muted/30 relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
+          <div className="container mx-auto px-4 relative">
+            <AnimatedText delay={0.2} className="text-center mb-12">
+              <h2 className="text-3xl font-display font-bold mb-4 flex items-center justify-center gap-3">
+                <Award className="text-primary animate-pulse" />
                 Military Quality, Guaranteed
+                <Award className="text-primary animate-pulse" />
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Founded by serving military, for the military community
               </p>
-            </div>
+            </AnimatedText>
             
             {/* Key Trust Indicators */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
