@@ -2,7 +2,6 @@
 
 import * as React from "react"
 import { ShoppingCart } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { useSimpleCart } from "@/hooks/use-simple-cart"
 import { cn } from "@/lib/utils"
@@ -36,22 +35,16 @@ export function CartIcon({
       <ShoppingCart className="h-4 w-4" />
       
       {showBadge && isClient && totalItems > 0 && (
-        <AnimatePresence>
-          <motion.div
-            initial={{ scale: 0, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0, opacity: 0 }}
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+          <div
             className={cn(
-              "absolute -top-1 -right-1 flex items-center justify-center rounded-full text-xs font-medium min-w-[18px] h-[18px] px-1",
+              "absolute -top-1 -right-1 flex items-center justify-center rounded-full text-xs font-medium min-w-[18px] h-[18px] px-1 animate-fade-in",
               variant === "default" 
                 ? "bg-primary text-primary-foreground" 
                 : "bg-destructive text-destructive-foreground"
             )}
           >
             {totalItems > 99 ? "99+" : totalItems}
-          </motion.div>
-        </AnimatePresence>
+          </div>
       )}
       
       <span className="sr-only">
