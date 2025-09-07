@@ -33,7 +33,8 @@ async function getProductDetails(items: DirectCheckoutRequest['items']) {
       .single()
 
     if (error || !variant) {
-      throw new Error(`Product not available`)
+      console.error(`Product variant not found: ${item.variantId}`, error)
+      throw new Error(`Product variant ${item.variantId} not available. Please refresh your cart.`)
     }
 
     // Quick stock check
