@@ -3,7 +3,6 @@
 import * as React from "react"
 import Link from "next/link"
 import { X, Minus, Plus, ShoppingBag, Trash2 } from "lucide-react"
-import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { ProductImage } from "@/components/ui/product-image"
@@ -78,28 +77,18 @@ export function CartDrawer({ className }: CartDrawerProps) {
   const remainingForFreeShipping = Math.max(shippingThreshold - totalPrice, 0)
 
   return (
-    <AnimatePresence mode="wait">
+    <>
       {isOpen && (
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className={cn("fixed inset-0 z-50 flex", className)}
-        >
+        <div className={cn("fixed inset-0 z-50 flex", className)}>
           {/* Backdrop */}
           <div
-            className="absolute inset-0 bg-black/50 cursor-pointer"
+            className="absolute inset-0 bg-black/50 cursor-pointer animate-fade-in"
             onClick={handleBackdropClick}
           />
 
           {/* Drawer */}
-          <motion.div
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="ml-auto h-full w-full max-w-md bg-background border-l shadow-xl flex flex-col relative z-10"
+          <div
+            className="ml-auto h-full w-full max-w-md bg-background border-l shadow-xl flex flex-col relative z-10 animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
@@ -141,11 +130,9 @@ export function CartDrawer({ className }: CartDrawerProps) {
                     </span>
                   </div>
                   <div className="w-full bg-muted rounded-full h-2">
-                    <motion.div
-                      className="bg-primary h-2 rounded-full"
-                      initial={{ width: 0 }}
-                      animate={{ width: `${shippingProgress}%` }}
-                      transition={{ duration: 0.5 }}
+                    <div
+                      className="bg-primary h-2 rounded-full transition-all duration-500 ease-out"
+                      style={{ width: `${shippingProgress}%` }}
                     />
                   </div>
                 </div>
@@ -167,15 +154,10 @@ export function CartDrawer({ className }: CartDrawerProps) {
                 <EmptyCart onClose={closeCart} />
               ) : (
                 <div className="p-4 space-y-4">
-                  <AnimatePresence mode="popLayout">
                     {items.map((item) => (
-                      <motion.div
+                      <div
                         key={item.id}
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="flex gap-3 p-3 border rounded-lg"
+                        className="flex gap-3 p-3 border rounded-lg animate-fade-in"
                       >
                         {/* Product Image */}
                         <ProductImage
@@ -259,9 +241,8 @@ export function CartDrawer({ className }: CartDrawerProps) {
                             {formatPrice(item.price * item.quantity)}
                           </div>
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
-                  </AnimatePresence>
 
                   {/* Clear Cart */}
                   {items.length > 1 && (
@@ -318,10 +299,10 @@ export function CartDrawer({ className }: CartDrawerProps) {
                 </div>
               </div>
             )}
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       )}
-    </AnimatePresence>
+    </>
   )
 }
 
