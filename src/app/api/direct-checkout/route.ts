@@ -16,13 +16,17 @@ const directCheckoutSchema = z.object({
 
 type DirectCheckoutRequest = z.infer<typeof directCheckoutSchema>
 
-// Fast product lookup for immediate checkout
+// Fast product lookup for immediate checkout - handles both product IDs and variant IDs
 async function getProductDetails(items: DirectCheckoutRequest['items']) {
   const supabase = createSupabaseAdmin()
   const productDetails = []
 
   for (const item of items) {
-    const { data: variant, error } = await supabase
+    let variant = null
+    let error = null
+
+    // First, try to find it as a variant ID
+    const variantResult = await supabase
       .from('product_variants')
       .select(`
         id, sku, stock_quantity, price, size, color,
@@ -32,14 +36,41 @@ async function getProductDetails(items: DirectCheckoutRequest['items']) {
       .eq('is_active', true)
       .single()
 
+    if (variantResult.data) {
+      variant = variantResult.data
+    } else {
+      // If not found as variant ID, try as product ID and get first available variant
+      console.log(`Variant ID ${item.variantId} not found, checking if it's a product ID...`)
+      
+      const productVariantResult = await supabase
+        .from('product_variants')
+        .select(`
+          id, sku, stock_quantity, price, size, color,
+          products!inner (id, name, price, main_image_url)
+        `)
+        .eq('products.id', item.variantId)
+        .eq('is_active', true)
+        .gt('stock_quantity', 0)
+        .order('id')
+        .limit(1)
+        .single()
+
+      if (productVariantResult.data) {
+        variant = productVariantResult.data
+        console.log(`Found product ${item.variantId}, using first variant: ${variant.id}`)
+      } else {
+        error = productVariantResult.error
+      }
+    }
+
     if (error || !variant) {
-      console.error(`Product variant not found: ${item.variantId}`, error)
-      throw new Error(`Product variant ${item.variantId} not available. Please refresh your cart.`)
+      console.error(`Product/variant not found: ${item.variantId}`, error)
+      throw new Error(`Product ${item.variantId} not available. Please refresh your cart.`)
     }
 
     // Quick stock check
     if (variant.stock_quantity < item.quantity) {
-      throw new Error(`Insufficient stock`)
+      throw new Error(`Insufficient stock for ${variant.products.name}`)
     }
 
     const product = variant.products as any
