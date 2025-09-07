@@ -11,7 +11,7 @@ interface AnimatedTextProps {
 
 function AnimatedTextContent({ children, className }: { children: ReactNode, className?: string }) {
   return (
-    <div className={`${className} animate-fade-in`}>
+    <div className={className ? `${className} animate-fade-in` : 'animate-fade-in'}>
       {children}
     </div>
   )
@@ -54,7 +54,7 @@ function AnimatedButtonContent({ children, className, href, onClick }: {
   )
 
   return (
-    <div className={`${className} animate-fade-in hover:scale-105 transition-transform duration-300`}>
+    <div className={className ? `${className} animate-fade-in hover:scale-105 transition-transform duration-300` : 'animate-fade-in hover:scale-105 transition-transform duration-300'}>
       {content}
     </div>
   )

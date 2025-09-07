@@ -13,7 +13,7 @@ interface AnimatedLogoProps {
 
 function AnimatedLogoContent({ src, alt, width, height, className }: AnimatedLogoProps) {
   return (
-    <div className={`${className} animate-pulse`}>
+    <div className={className ? `${className} animate-pulse` : 'animate-pulse'}>
       <OptimizedImage
         src={src}
         alt={alt}
@@ -27,6 +27,7 @@ function AnimatedLogoContent({ src, alt, width, height, className }: AnimatedLog
 }
 
 export function AnimatedLogo(props: AnimatedLogoProps) {
+  // Make fallback match exactly what client will render (without animation)
   const fallback = (
     <div className={props.className}>
       <OptimizedImage

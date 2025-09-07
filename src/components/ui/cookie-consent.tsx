@@ -17,6 +17,7 @@ interface CookiePreferences {
 export function CookieConsent() {
   const [isVisible, setIsVisible] = React.useState(false)
   const [showPreferences, setShowPreferences] = React.useState(false)
+  const [isMounted, setIsMounted] = React.useState(false)
   const [preferences, setPreferences] = React.useState<CookiePreferences>({
     necessary: true, // Always required
     analytics: false,
@@ -25,6 +26,8 @@ export function CookieConsent() {
   })
 
   React.useEffect(() => {
+    setIsMounted(true)
+    
     // Check if user has already made a choice
     if (typeof window !== 'undefined') {
       const consent = localStorage.getItem('cookie-consent')
@@ -97,7 +100,8 @@ export function CookieConsent() {
     }))
   }
 
-  if (!isVisible) return null
+  // Don't render anything until mounted to prevent hydration mismatch
+  if (!isMounted || !isVisible) return null
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center p-4">
