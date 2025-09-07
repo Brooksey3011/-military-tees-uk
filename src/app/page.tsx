@@ -3,8 +3,9 @@ import { Layout } from "@/components/layout/layout"
 import { Button } from "@/components/ui/button"
 import { PromoBanner } from "@/components/ui/promo-banner"
 import { OptimizedImage } from "@/components/ui/optimized-image"
-import { AnimatedLogo } from "@/components/ui/animated-logo"
-import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
+// Temporarily removed animated components to fix hydration
+// import { AnimatedLogo } from "@/components/ui/animated-logo"
+// import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
 import { SimpleLatestArrivals } from "@/components/homepage/simple-latest-arrivals"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
 import { Truck, Award, Shield, Check } from "lucide-react"
@@ -36,12 +37,13 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           {/* Background Logo */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <AnimatedLogo
+            <OptimizedImage
               src="/logowhite.png" 
               alt="Military Tees UK Background Logo" 
               width={1200}
               height={800}
-              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] object-contain"
+              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] object-contain opacity-15 select-none pointer-events-none"
+              priority={false}
             />
           </div>
           
@@ -49,20 +51,16 @@ export default function Home() {
           <div className="container mx-auto px-4 text-center relative z-10 flex flex-col justify-center" style={{minHeight: '500px'}}>
             {/* Centered H1 in logo area */}
             <div className="flex flex-col items-center justify-center mb-8">
-              <AnimatedText delay={0.2}>
                 <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6">
                   Military Tees UK
                 </h1>
-              </AnimatedText>
-              <AnimatedText delay={0.4}>
                 <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide">
                   Proudly serving those who serve
                 </p>
-              </AnimatedText>
             </div>
             
             {/* Single Primary CTA */}
-            <AnimatedButton delay={0.6} className="flex justify-center">
+            <div className="flex justify-center">
               <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg relative overflow-hidden group" asChild>
                 <Link href="/categories">
                   <span className="relative z-10">
@@ -71,7 +69,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-primary/40 translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-500" />
                 </Link>
               </Button>
-            </AnimatedButton>
+            </div>
           </div>
         </section>
 
@@ -82,14 +80,14 @@ export default function Home() {
         <section className="py-16 bg-muted/30 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
           <div className="container mx-auto px-4 relative">
-            <AnimatedText delay={0.2} className="text-center mb-12">
+            <div className="text-center mb-12">
               <h2 className="text-3xl font-display font-bold mb-4">
                 Military Quality, Guaranteed
               </h2>
               <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
                 Founded by serving military, for the military community
               </p>
-            </AnimatedText>
+            </div>
             
             {/* Key Trust Indicators */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
