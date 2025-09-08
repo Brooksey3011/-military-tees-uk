@@ -35,16 +35,28 @@ export default function Home() {
           {/* Animated background pattern */}
           <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
-          {/* Background Logo */}
+          {/* Background Logo - Performance Optimized */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <OptimizedImage
-              src="/logowhite.png" 
-              alt="Military Tees UK Background Logo" 
-              width={1200}
-              height={800}
-              className="w-[600px] h-auto md:w-[800px] lg:w-[1000px] xl:w-[1200px] object-contain opacity-15 select-none pointer-events-none"
-              priority={false}
-            />
+            <picture className="w-[400px] h-auto md:w-[600px] lg:w-[800px] opacity-15 select-none pointer-events-none">
+              <source
+                srcSet="/logowhite-400w.webp 400w, /logowhite-800w.webp 800w"
+                sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
+                type="image/webp"
+              />
+              <source
+                srcSet="/logowhite.avif"
+                type="image/avif"
+              />
+              <OptimizedImage
+                src="/logowhite.webp"
+                alt="Military Tees UK Background Logo"
+                width={800}
+                height={533}
+                className="w-full h-auto object-contain"
+                priority={true}
+                sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
+              />
+            </picture>
           </div>
           
           {/* Hero Content */}
