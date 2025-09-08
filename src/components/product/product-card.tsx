@@ -99,163 +99,81 @@ export function ProductCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-background border-2 border-border/50 hover:border-border hover:shadow-lg rounded-none transition-all duration-300 overflow-hidden">
-        <div className="relative">
+      <div className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
+        <div className="relative aspect-square overflow-hidden">
           {/* Product Image */}
-          <Link href={`/products/${product.slug}`} className="block relative aspect-[4/5] overflow-hidden bg-muted">
+          <Link href={`/products/${product.slug}`} className="block">
             <Image
               src={displayImage}
               alt={product.name}
               fill
-              className="object-cover transition-all duration-500"
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             
-            {/* Hover Actions */}
-            <motion.div 
-              className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: isHovered ? 1 : 0 }}
-            >
-              <button
-                onClick={handleQuickView}
-                className="w-8 h-8 bg-black/70 hover:bg-black/90 text-white rounded-full flex items-center justify-center transition-colors"
-              >
-                <Eye className="w-4 h-4" />
-              </button>
-              
-              <button
-                onClick={handleToggleFavorite}
-                className={cn(
-                  "w-8 h-8 rounded-full flex items-center justify-center transition-colors",
-                  isFavorite 
-                    ? "bg-red-500 hover:bg-red-600 text-white" 
-                    : "bg-black/70 hover:bg-black/90 text-white"
-                )}
-              >
-                <Heart className={cn("w-4 h-4", isInWishlistState && "fill-current text-red-600")} />
-              </button>
-            </motion.div>
-
-            {/* Stock Badges */}
-            {(isOutOfStock || isLowStock) && (
-              <div className="absolute top-2 left-2">
-                {isOutOfStock && (
-                  <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-sm font-medium">
-                    Out of Stock
-                  </span>
-                )}
-                {isLowStock && (
-                  <span className="bg-orange-500 text-white text-xs px-2 py-1 rounded-sm font-medium">
-                    Low Stock
-                  </span>
-                )}
+            {/* Sale Badge */}
+            {product.sale_price && (
+              <div className="absolute top-2 right-2">
+                <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
               </div>
             )}
-          </Link>
 
-          {/* Variant Color Swatches */}
-          {product.variants && product.variants.length > 1 && (
-            <div className="absolute bottom-4 left-2 flex gap-1">
-              {product.variants.slice(0, 5).map((variant) => {
-                const colorMap: { [key: string]: string } = {
-                  'black': '#000000',
-                  'olive green': '#4B5320',
-                  'white': '#FFFFFF',
-                  'navy': '#1E3A8A',
-                  'maroon': '#800000',
-                  'brown': '#8B4513',
-                  'sand': '#C2B280',
-                  'green': '#16A34A'
-                }
-                
-                const bgColor = colorMap[variant.color?.toLowerCase() || ''] || '#6b7280'
-                
-                return (
-                  <button
-                    key={variant.id}
-                    onClick={(e) => {
-                      e.preventDefault()
-                      setSelectedVariant(variant)
-                    }}
-                    className={cn(
-                      "w-4 h-4 rounded-full border-2 transition-all duration-200",
-                      selectedVariant?.id === variant.id 
-                        ? "border-[#FFAD02] ring-2 ring-[#FFAD02]/30" 
-                        : "border-white/70 hover:border-white hover:scale-110"
-                    )}
-                    style={{ backgroundColor: bgColor }}
-                    title={`${variant.color} - ${variant.size}`}
-                  />
-                )
-              })}
-              {product.variants.length > 5 && (
-                <span className="text-xs text-white bg-black/60 px-1.5 py-0.5 rounded-sm">
-                  +{product.variants.length - 5}
-                </span>
+            {/* Wishlist Heart Button */}
+            <button
+              onClick={handleToggleFavorite}
+              className={cn(
+                "absolute top-2 left-2 p-2 rounded-full transition-colors",
+                isInWishlistState 
+                  ? "bg-red-500 text-white hover:bg-red-600" 
+                  : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-500"
               )}
-            </div>
-          )}
+              title={isInWishlistState ? "Remove from wishlist" : "Add to wishlist"}
+            >
+              <Heart className={cn("h-4 w-4", isInWishlistState && "fill-current")} />
+            </button>
+
+          </Link>
         </div>
 
-        {/* Product Info */}
         <div className="p-4 space-y-3">
-          {/* Product Name - Lowercase style like Forcewear */}
-          <Link href={`/products/${product.slug}`}>
-            <h3 className="text-sm font-normal text-foreground hover:text-[#FFAD02] transition-colors line-clamp-2 lowercase tracking-wide">
-              {product.name.toLowerCase()}
-            </h3>
-          </Link>
-
-          {/* Price - "From" format like Forcewear */}
-          <div className="text-sm text-muted-foreground">
-            from <span className="text-foreground font-medium">{formatPrice(product.price)} GBP</span>
+          <div>
+            <Link href={`/products/${product.slug}`}>
+              <h3 className="font-display font-bold text-sm uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
+                {product.name}
+              </h3>
+            </Link>
+            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              {product.description}
+            </p>
           </div>
-
-          {/* Reviews - if available */}
-          {product.review_count && product.review_count > 0 && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <div className="flex items-center">
-                {[...Array(5)].map((_, i) => (
-                  <Star
-                    key={i}
-                    className={cn(
-                      "h-3 w-3",
-                      i < Math.floor(averageRating) 
-                        ? "text-[#FFAD02] fill-current" 
-                        : "text-gray-300"
-                    )}
-                  />
-                ))}
+          
+          <div className="flex items-center justify-between">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-lg">{formatPrice(product.price)}</span>
+                {product.sale_price && (
+                  <span className="text-sm text-muted-foreground line-through">
+                    {formatPrice(product.price)}
+                  </span>
+                )}
               </div>
-              <span>({product.review_count})</span>
             </div>
-          )}
-
-          {/* Choose Options Button - Forcewear style */}
+          </div>
+          
           <div className="pt-2">
-            {selectedVariant ? (
-              <Link href={`/products/${product.slug}`}>
-                <Button
-                  className={cn(
-                    "w-full h-9 text-xs font-medium uppercase tracking-wide transition-all duration-300",
-                    isOutOfStock 
-                      ? "bg-gray-400 hover:bg-gray-400 cursor-not-allowed text-white"
-                      : "bg-[#FFAD02] hover:bg-[#FFAD02]/90 text-black hover:text-black"
-                  )}
-                  disabled={isOutOfStock}
-                >
-                  {isOutOfStock ? 'Out of Stock' : 'Choose Options'}
-                </Button>
-              </Link>
-            ) : (
-              <Button
-                className="w-full h-9 text-xs font-medium uppercase tracking-wide bg-gray-400 hover:bg-gray-400 cursor-not-allowed text-white"
-                disabled
-              >
-                Unavailable
-              </Button>
-            )}
+            <AddToCartButton
+              productId={product.id}
+              variantId={selectedVariant?.id || product.id}
+              name={product.name}
+              price={product.sale_price || product.price}
+              image={displayImage}
+              size={selectedVariant?.size || "One Size"}
+              color={selectedVariant?.color || "Standard"}
+              maxQuantity={10}
+              className="w-full rounded-none text-xs"
+              buttonSize="sm"
+              showIcon={true}
+            />
           </div>
         </div>
       </div>
