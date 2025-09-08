@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import * as React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { AddToCartButton } from "@/components/cart/add-to-cart-button"
-import { OptimizedImage } from "@/components/ui/optimized-image"
-import { ArrowRight } from "lucide-react"
+import { ProductCard } from "@/components/product/product-card"
+import { ArrowRight, Loader2 } from "lucide-react"
+import { motion } from "framer-motion"
 
 interface Product {
   id: string
@@ -14,176 +13,160 @@ interface Product {
   slug: string
   description?: string
   price: number
-  sale_price?: number
   main_image_url: string
   category_id: string
-  variants?: Array<{
+  variants: {
     id: string
     size: string
     color: string
     stock_quantity: number
-    sku: string
     price: number
-  }>
+    sku: string
+  }[]
+  rating?: number
+  review_count?: number
+  created_at: string
 }
 
 export function LatestArrivals() {
-  const [products, setProducts] = useState<Product[]>([])
-  const [loading, setLoading] = useState(true)
-  const [mounted, setMounted] = useState(false)
+  const [products, setProducts] = React.useState<Product[]>([])
+  const [loading, setLoading] = React.useState(true)
+  const [error, setError] = React.useState<string | null>(null)
 
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  useEffect(() => {
-    if (!mounted) return
-
-    async function fetchLatestProducts() {
+  React.useEffect(() => {
+    const fetchLatestProducts = async () => {
       try {
-        const response = await fetch('/api/products?limit=6&sort=created_at&order=desc')
-        if (response.ok) {
-          const data = await response.json()
-          setProducts(data.products || [])
+        setLoading(true)
+        setError(null)
+        
+        const response = await fetch('/api/products?limit=6&sort=newest', {
+          credentials: 'include'
+        })
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch products')
         }
+        
+        const data = await response.json()
+        
+        if (data.success && Array.isArray(data.products)) {
+          setProducts(data.products.slice(0, 6)) // Ensure we only show 6 products
+        } else {
+          throw new Error('Invalid response format')
+        }
+        
       } catch (error) {
-        console.error('Failed to fetch latest products:', error)
+        console.error('Error fetching latest products:', error)
+        setError('Failed to load latest arrivals')
       } finally {
         setLoading(false)
       }
     }
 
     fetchLatestProducts()
-  }, [mounted])
-
-  const formatPrice = (price: number) => `£${price.toFixed(2)}`
-
-  if (!mounted || loading) {
-    return (
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-wider uppercase">
-              Latest Arrivals
-            </h2>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[...Array(6)].map((_, i) => (
-              <div key={i} className="bg-muted/20 h-96 animate-pulse"></div>
-            ))}
-          </div>
-        </div>
-      </section>
-    )
-  }
-
-  if (!products.length) {
-    return null
-  }
+  }, [])
 
   return (
-    <section className="py-20 bg-background">
+    <section className="py-16 bg-background">
       <div className="container mx-auto px-4">
-        {/* Section Header - Left Aligned */}
-        <div className="flex items-center justify-between mb-12">
-          <h2 className="text-3xl md:text-4xl font-display font-bold text-foreground tracking-wider uppercase">
+        <div className="text-center mb-12">
+          <motion.h2 
+            className="text-3xl font-display font-bold mb-4"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
             Latest Arrivals
-          </h2>
-          <Button 
-            variant="ghost" 
-            className="text-primary hover:text-primary/90 font-medium group"
-            asChild
+          </motion.h2>
+          <motion.p 
+            className="text-lg text-muted-foreground max-w-2xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <Link href="/new-arrivals" className="flex items-center gap-2">
-              View All
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+            Discover our newest military-themed apparel and accessories
+          </motion.p>
         </div>
         
-        {/* Larger Product Cards Grid - Matching Site Design */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {products.map((product) => {
-            const displayPrice = product.sale_price || product.price
-
-            return (
-              <div key={product.id} className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
-                <div className="relative aspect-square overflow-hidden">
-                  <Link href={`/products/${product.slug}`}>
-                    <OptimizedImage
-                      src={product.main_image_url}
-                      alt={product.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </Link>
-                  
-                  {product.sale_price && (
-                    <div className="absolute top-2 right-2">
-                      <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
-                    </div>
-                  )}
-                </div>
-                
-                <div className="p-6 space-y-4">
-                  <div>
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-display font-bold text-base uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">
-                      {product.description}
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-xl">{formatPrice(displayPrice)}</span>
-                        {product.sale_price && (
-                          <span className="text-base text-muted-foreground line-through">
-                            {formatPrice(product.price)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <AddToCartButton
-                      productId={product.id}
-                      variantId={product.id}
-                      name={product.name}
-                      price={displayPrice}
-                      image={product.main_image_url}
-                      size="One Size"
-                      color="Standard"
-                      maxQuantity={10}
-                      className="w-full rounded-none text-sm"
-                      buttonSize="default"
-                      showIcon={true}
-                    />
-                  </div>
-                </div>
-              </div>
-            )
-          })}
-        </div>
+        {loading && (
+          <div className="flex justify-center items-center py-12">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <span className="ml-2 text-muted-foreground">Loading latest arrivals...</span>
+          </div>
+        )}
         
-        {/* Call to Action */}
-        <div className="text-center mt-12">
-          <Button 
-            size="lg"
-            className="font-bold uppercase tracking-wide px-8 py-3"
-            asChild
-          >
-            <Link href="/products">
-              Shop All Products
-            </Link>
-          </Button>
-        </div>
+        {error && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <Button 
+              onClick={() => window.location.reload()} 
+              variant="outline"
+            >
+              Try Again
+            </Button>
+          </div>
+        )}
+        
+        {!loading && !error && products.length > 0 && (
+          <>
+            {/* Product Grid - Consistent with product listing pages */}
+            <motion.div 
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ 
+                    duration: 0.6, 
+                    delay: 0.3 + (index * 0.1) // Stagger animation
+                  }}
+                >
+                  <ProductCard
+                    product={product}
+                    variant="default"
+                    className="h-full"
+                  />
+                </motion.div>
+              ))}
+            </motion.div>
+            
+            {/* CTA Button */}
+            <motion.div 
+              className="text-center"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <Button 
+                size="lg" 
+                className="font-display font-bold uppercase tracking-wide px-8 py-3 rounded-none border-2 border-primary hover:border-primary/80 transition-all duration-300 group" 
+                asChild
+              >
+                <Link href="/products">
+                  <span className="relative z-10">View All Products</span>
+                  <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </motion.div>
+          </>
+        )}
+        
+        {!loading && !error && products.length === 0 && (
+          <div className="text-center py-12">
+            <h3 className="text-xl font-semibold mb-4">No Products Available</h3>
+            <p className="text-muted-foreground mb-6">
+              We're working hard to stock our barracks. Check back soon!
+            </p>
+            <Button asChild>
+              <Link href="/products">Browse All Categories</Link>
+            </Button>
+          </div>
+        )}
       </div>
     </section>
   )

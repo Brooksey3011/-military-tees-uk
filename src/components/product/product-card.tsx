@@ -99,7 +99,7 @@ export function ProductCard({
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="bg-background border border-border/50 hover:border-border transition-all duration-300 overflow-hidden">
+      <div className="bg-background border-2 border-border/50 hover:border-border hover:shadow-lg rounded-none transition-all duration-300 overflow-hidden">
         <div className="relative">
           {/* Product Image */}
           <Link href={`/products/${product.slug}`} className="block relative aspect-[4/5] overflow-hidden bg-muted">

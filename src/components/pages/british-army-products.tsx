@@ -2,13 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import { Filter, SortAsc, Heart } from "lucide-react"
+import { Filter, SortAsc } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
-import { AddToCartButton } from "@/components/cart/add-to-cart-button"
+import { ProductCard } from "@/components/product/product-card"
 import { cn } from "@/lib/utils"
-import { OptimizedImage } from "@/components/ui/optimized-image"
-import { useWishlistAddItem, useWishlistRemoveItem, useWishlistIsIn } from "@/store/wishlist"
 
 interface Product {
   id: string
@@ -18,17 +15,23 @@ interface Product {
   main_image_url: string
   description: string
   slug: string
+  category_id: string
   category?: {
     name: string
     slug: string
   }
-  variants?: Array<{
+  variants: Array<{
     id: string
     size: string
     color: string
     stock_quantity: number
+    stockQuantity?: number
     sku: string
+    price: number
   }>
+  rating?: number
+  review_count?: number
+  created_at?: string
 }
 
 interface BritishArmyProductsProps {
@@ -104,30 +107,6 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
       onProductCountChange(filteredAndSortedProducts.length)
     }
   }, [filteredAndSortedProducts.length, loading, onProductCountChange])
-
-  const formatPrice = (price: number) => `£${price.toFixed(2)}`
-
-  // Wishlist hooks
-  const addToWishlist = useWishlistAddItem()
-  const removeFromWishlist = useWishlistRemoveItem()
-  const isInWishlist = useWishlistIsIn()
-
-  const handleWishlistToggle = (product: Product) => {
-    if (isInWishlist(product.id)) {
-      removeFromWishlist(product.id)
-    } else {
-      addToWishlist({
-        productId: product.id,
-        name: product.name,
-        slug: product.slug,
-        price: product.price,
-        image: product.main_image_url,
-        category: product.category?.name || "british-army",
-        inStock: true,
-        sizes: product.variants?.map(v => v.size || 'One Size') || ['One Size']
-      })
-    }
-  }
 
   if (loading) {
     return (
@@ -217,87 +196,24 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredAndSortedProducts.map((product) => {
-            const displayPrice = product.sale_price || product.price
-            const isProductInWishlist = isInWishlist(product.id)
+            // Ensure product has the right structure for ProductCard
+            const normalizedProduct = {
+              ...product,
+              category_id: product.category_id || product.category?.slug || 'british-army',
+              variants: product.variants?.map(variant => ({
+                ...variant,
+                stockQuantity: variant.stock_quantity || variant.stockQuantity || 0,
+                price: variant.price || 0
+              })) || []
+            }
 
             return (
-              <div key={product.id} className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
-                <div className="relative aspect-square overflow-hidden">
-                  <Link href={`/products/${product.slug}`}>
-                    <OptimizedImage
-                      src={product.main_image_url}
-                      alt={product.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </Link>
-                  
-                  {product.sale_price && (
-                    <div className="absolute top-2 right-2">
-                      <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
-                    </div>
-                  )}
-
-                  {/* Wishlist Heart Button */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleWishlistToggle(product)
-                    }}
-                    className={cn(
-                      "absolute top-2 left-2 p-2 rounded-full transition-colors",
-                      isProductInWishlist 
-                        ? "bg-red-500 text-white hover:bg-red-600" 
-                        : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-500"
-                    )}
-                    title={isProductInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-                  >
-                    <Heart className={cn("h-4 w-4", isProductInWishlist && "fill-current")} />
-                  </button>
-                </div>
-                
-                <div className="p-4 space-y-3">
-                  <div>
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-display font-bold text-sm uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                      {product.description}
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-lg">{formatPrice(displayPrice)}</span>
-                        {product.sale_price && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            {formatPrice(product.price)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <AddToCartButton
-                      productId={product.id}
-                      variantId={product.id}
-                      name={product.name}
-                      price={displayPrice}
-                      image={product.main_image_url}
-                      size="One Size"
-                      color="Standard"
-                      maxQuantity={10}
-                      className="w-full rounded-none text-xs"
-                      buttonSize="sm"
-                      showIcon={true}
-                    />
-                  </div>
-                </div>
-              </div>
+              <ProductCard
+                key={product.id}
+                product={normalizedProduct}
+                variant="default"
+                className="h-full"
+              />
             )
           })}
         </div>

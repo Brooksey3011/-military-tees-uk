@@ -6,7 +6,7 @@ import { OptimizedImage } from "@/components/ui/optimized-image"
 // Temporarily removed animated components to fix hydration
 // import { AnimatedLogo } from "@/components/ui/animated-logo"
 // import { AnimatedText, AnimatedButton } from "@/components/ui/animated-text"
-import { SimpleLatestArrivals } from "@/components/homepage/simple-latest-arrivals"
+import { LatestArrivals } from "@/components/homepage/latest-arrivals"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
 import { Truck, Award, Shield, Check } from "lucide-react"
 
@@ -85,8 +85,8 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Latest Arrivals with Product Cards */}
-        <SimpleLatestArrivals />
+        {/* Latest Arrivals with Real Product Cards */}
+        <LatestArrivals />
 
         {/* Trust Indicators - Streamlined */}
         <section className="py-16 bg-muted/30 relative overflow-hidden">
