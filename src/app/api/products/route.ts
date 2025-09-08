@@ -26,7 +26,13 @@ export async function GET(request: NextRequest) {
     queryParams.sort = searchParams.get('sortBy') || 'created_at';
     queryParams.order = searchParams.get('sortOrder') || 'desc';
     queryParams.page = parseInt(searchParams.get('page') || '1');
-    queryParams.limit = Math.min(parseInt(searchParams.get('limit') || '20'), 50);
+    // Handle "all" parameter for show all products - use 1000 as "show all"
+    const limitParam = searchParams.get('limit');
+    if (limitParam === 'all') {
+      queryParams.limit = 1000;
+    } else {
+      queryParams.limit = Math.min(parseInt(limitParam || '20'), 1000);
+    }
     
     const minPrice = searchParams.get('min_price');
     if (minPrice) queryParams.min_price = parseFloat(minPrice);
