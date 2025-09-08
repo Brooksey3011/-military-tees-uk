@@ -11,12 +11,39 @@ import { cn } from "@/lib/utils"
 import { useAuth } from "@/hooks/use-auth"
 import { useState, useEffect } from "react"
 
+// Types for real data
+interface OrderHistory {
+  orders: Array<{
+    id: string
+    order_number: string
+    status: string
+    total_amount: number
+    created_at: string
+    order_items: Array<{
+      product_name: string
+      quantity: number
+      price_at_purchase: number
+    }>
+  }>
+  total: number
+}
+
+interface UserStats {
+  totalOrders: number
+  totalSpent: number
+  militarySavings: number
+}
+
 // Force dynamic rendering for this auth-dependent page
 export const dynamic = 'force-dynamic'
 
 export default function AccountPage() {
   const { user, signOut, loading } = useAuth()
   const [isSigningOut, setIsSigningOut] = useState(false)
+  const [orderHistory, setOrderHistory] = useState<OrderHistory | null>(null)
+  const [userStats, setUserStats] = useState<UserStats>({ totalOrders: 0, totalSpent: 0, militarySavings: 0 })
+  const [dataLoading, setDataLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   // Redirect unauthenticated users to login
   useEffect(() => {
@@ -24,6 +51,56 @@ export default function AccountPage() {
       window.location.href = '/login'
     }
   }, [user, loading])
+
+  // Fetch real user data
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user) return
+
+      try {
+        setDataLoading(true)
+        setError(null)
+
+        // Fetch order history
+        const response = await fetch('/api/orders/history', {
+          credentials: 'include',
+        })
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch order data')
+        }
+
+        const data: OrderHistory = await response.json()
+        setOrderHistory(data)
+
+        // Calculate user stats from real data
+        const stats = calculateUserStats(data)
+        setUserStats(stats)
+
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+        setError('Failed to load account data')
+        // Keep default values for graceful degradation
+      } finally {
+        setDataLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [user])
+
+  // Calculate user statistics from order data
+  const calculateUserStats = (data: OrderHistory): UserStats => {
+    const totalOrders = data.orders.length
+    const totalSpent = data.orders.reduce((sum, order) => sum + order.total_amount, 0)
+    const militarySavings = totalSpent * 0.1 // Assume 10% military discount
+    
+    return {
+      totalOrders,
+      totalSpent: Math.round(totalSpent * 100) / 100, // Round to 2 decimal places
+      militarySavings: Math.round(militarySavings * 100) / 100
+    }
+  }
 
   const handleSignOut = async () => {
     if (isSigningOut || !signOut) return
@@ -41,48 +118,29 @@ export default function AccountPage() {
     }
   }
 
-  // Use authenticated user data or fallback to mock for demonstration
-  const userData = user ? {
-    name: user.customer?.first_name ? `${user.customer.first_name} ${user.customer.last_name || ''}`.trim() : user.email || "User",
-    email: user.email || "",
-    rank: "British Army (Ret.)", // Military branch would be stored in customer profile
-    memberSince: user.customer?.created_at ? new Date(user.customer.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) : "March 2023",
-    isVerifiedMilitary: false, // Military verification status would be stored in customer profile
-    totalOrders: 8, // Would come from orders table
-    totalSpent: 189.92 // Would come from orders calculation
-  } : {
-    name: "Sergeant John Smith",
-    email: "j.smith@example.com",
-    rank: "British Army (Ret.)",
-    memberSince: "March 2023",
-    isVerifiedMilitary: true,
-    totalOrders: 8,
-    totalSpent: 189.92
+  // Build user data from authenticated user
+  const userData = {
+    name: user?.customer?.first_name 
+      ? `${user.customer.first_name} ${user.customer.last_name || ''}`.trim() 
+      : user?.email || "User",
+    email: user?.email || "",
+    rank: "British Army (Ret.)", // Would be stored in customer profile
+    memberSince: user?.customer?.created_at 
+      ? new Date(user.customer.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' }) 
+      : "Recently joined",
+    isVerifiedMilitary: false, // Would be stored in customer profile
+    totalOrders: userStats.totalOrders,
+    totalSpent: userStats.totalSpent
   }
 
-  const recentOrders = [
-    {
-      id: "MT-UK-12345",
-      date: "2024-01-15",
-      status: "Delivered",
-      total: 47.98,
-      items: 2
-    },
-    {
-      id: "MT-UK-12344", 
-      date: "2024-01-08",
-      status: "Delivered",
-      total: 24.99,
-      items: 1
-    },
-    {
-      id: "MT-UK-12343",
-      date: "2023-12-20",
-      status: "Delivered", 
-      total: 69.97,
-      items: 3
-    }
-  ]
+  // Get recent orders from real data (last 3 orders)
+  const recentOrders = orderHistory?.orders.slice(0, 3).map(order => ({
+    id: order.order_number,
+    date: new Date(order.created_at).toLocaleDateString('en-GB'),
+    status: order.status,
+    total: order.total_amount,
+    items: order.order_items.length
+  })) || []
 
   // Show loading or redirect if not authenticated
   if (loading) {
@@ -192,22 +250,49 @@ export default function AccountPage() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <Card className="border-2 border-border rounded-none text-center">
                     <CardContent className="p-6">
-                      <div className="text-2xl font-bold text-primary">{userData.totalOrders}</div>
-                      <div className="text-sm text-muted-foreground">Total Orders</div>
+                      {dataLoading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-muted rounded mb-2"></div>
+                          <div className="h-4 bg-muted rounded"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-2xl font-bold text-primary">{userData.totalOrders}</div>
+                          <div className="text-sm text-muted-foreground">Total Orders</div>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                   
                   <Card className="border-2 border-border rounded-none text-center">
                     <CardContent className="p-6">
-                      <div className="text-2xl font-bold text-primary">£{userData.totalSpent}</div>
-                      <div className="text-sm text-muted-foreground">Total Spent</div>
+                      {dataLoading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-muted rounded mb-2"></div>
+                          <div className="h-4 bg-muted rounded"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-2xl font-bold text-primary">£{userData.totalSpent.toFixed(2)}</div>
+                          <div className="text-sm text-muted-foreground">Total Spent</div>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                   
                   <Card className="border-2 border-border rounded-none text-center">
                     <CardContent className="p-6">
-                      <div className="text-2xl font-bold text-primary">£19.00</div>
-                      <div className="text-sm text-muted-foreground">Military Savings</div>
+                      {dataLoading ? (
+                        <div className="animate-pulse">
+                          <div className="h-8 bg-muted rounded mb-2"></div>
+                          <div className="h-4 bg-muted rounded"></div>
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-2xl font-bold text-primary">£{userStats.militarySavings.toFixed(2)}</div>
+                          <div className="text-sm text-muted-foreground">Military Savings</div>
+                        </>
+                      )}
                     </CardContent>
                   </Card>
                 </div>
@@ -272,29 +357,74 @@ export default function AccountPage() {
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-4">
-                      {recentOrders.map((order) => (
-                        <div key={order.id} className="flex items-center justify-between p-4 border border-border rounded-none">
-                          <div>
-                            <div className="font-medium text-foreground">Order #{order.id}</div>
-                            <div className="text-sm text-muted-foreground">
-                              {order.date} • {order.items} item{order.items > 1 ? 's' : ''}
+                    {dataLoading ? (
+                      <div className="space-y-4">
+                        {[1, 2, 3].map((i) => (
+                          <div key={i} className="animate-pulse p-4 border border-border rounded-none">
+                            <div className="flex justify-between">
+                              <div className="space-y-2 flex-1">
+                                <div className="h-4 bg-muted rounded w-1/3"></div>
+                                <div className="h-3 bg-muted rounded w-1/2"></div>
+                              </div>
+                              <div className="space-y-2">
+                                <div className="h-4 bg-muted rounded w-16"></div>
+                                <div className="h-6 bg-muted rounded w-20"></div>
+                              </div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="font-medium text-foreground">£{order.total}</div>
-                            <Badge 
-                              className={cn(
-                                "rounded-none text-xs",
-                                order.status === "Delivered" && "bg-green-600 hover:bg-green-700"
-                              )}
-                            >
-                              {order.status}
-                            </Badge>
+                        ))}
+                      </div>
+                    ) : error ? (
+                      <div className="text-center py-8">
+                        <p className="text-muted-foreground">{error}</p>
+                        <Button 
+                          variant="outline" 
+                          className="mt-4" 
+                          onClick={() => window.location.reload()}
+                        >
+                          Try Again
+                        </Button>
+                      </div>
+                    ) : recentOrders.length > 0 ? (
+                      <div className="space-y-4">
+                        {recentOrders.map((order) => (
+                          <div key={order.id} className="flex items-center justify-between p-4 border border-border rounded-none">
+                            <div>
+                              <div className="font-medium text-foreground">Order #{order.id}</div>
+                              <div className="text-sm text-muted-foreground">
+                                {order.date} • {order.items} item{order.items > 1 ? 's' : ''}
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="font-medium text-foreground">£{order.total.toFixed(2)}</div>
+                              <Badge 
+                                className={cn(
+                                  "rounded-none text-xs",
+                                  order.status === "delivered" && "bg-green-600 hover:bg-green-700",
+                                  order.status === "processing" && "bg-yellow-600 hover:bg-yellow-700",
+                                  order.status === "in_transit" && "bg-blue-600 hover:bg-blue-700"
+                                )}
+                              >
+                                {order.status}
+                              </Badge>
+                            </div>
                           </div>
-                        </div>
-                      ))}
-                    </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-8">
+                        <Package className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                        <p className="text-muted-foreground mb-2">No orders yet</p>
+                        <p className="text-sm text-muted-foreground mb-4">
+                          Start shopping to see your order history here
+                        </p>
+                        <Button asChild>
+                          <Link href="/categories">
+                            Start Shopping
+                          </Link>
+                        </Button>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
 
@@ -364,8 +494,17 @@ export default function AccountPage() {
                       
                       <div className="space-y-2">
                         <h4 className="font-medium text-foreground">Total Savings</h4>
-                        <div className="text-2xl font-bold text-green-600">£19.00</div>
-                        <p className="text-sm text-muted-foreground">Saved through military discount</p>
+                        {dataLoading ? (
+                          <div className="animate-pulse">
+                            <div className="h-8 bg-muted rounded mb-2 w-20"></div>
+                            <div className="h-4 bg-muted rounded w-32"></div>
+                          </div>
+                        ) : (
+                          <>
+                            <div className="text-2xl font-bold text-green-600">£{userStats.militarySavings.toFixed(2)}</div>
+                            <p className="text-sm text-muted-foreground">Saved through military discount</p>
+                          </>
+                        )}
                       </div>
                     </div>
                   </CardContent>
