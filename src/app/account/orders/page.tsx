@@ -1,6 +1,5 @@
 "use client"
 
-import { Metadata } from "next"
 import Link from "next/link"
 import { Package, Search, Eye, Download, ArrowLeft } from "lucide-react"
 import { Layout } from "@/components/layout"
@@ -40,15 +39,6 @@ interface OrderHistory {
   orders: Order[]
   total: number
   has_more: boolean
-}
-
-export const metadata: Metadata = {
-  title: "My Orders | Military Tees UK",
-  description: "View and manage your Military Tees UK orders. Track deliveries, download invoices, and reorder your favorite items.",
-  robots: {
-    index: false,
-    follow: false,
-  }
 }
 
 export default function OrdersPage() {
