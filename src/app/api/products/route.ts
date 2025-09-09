@@ -70,8 +70,7 @@ export async function GET(request: NextRequest) {
         category:categories(id, name, slug),
         variants:product_variants(*)
       `, { count: 'exact' })
-      .eq('is_active', true)
-      .range(offset, offset + params.limit - 1);
+      .eq('is_active', true);
 
     // Handle category filtering
     if (params.category) {
@@ -109,6 +108,9 @@ export async function GET(request: NextRequest) {
     const allowedSortFields = ['name', 'price', 'created_at', 'updated_at'];
     const sortField = allowedSortFields.includes(params.sort) ? params.sort : 'created_at';
     query = query.order(sortField, { ascending: params.order === 'asc' });
+
+    // Apply pagination range after all filtering and sorting
+    query = query.range(offset, offset + params.limit - 1);
 
     // Execute optimized query
     const { data: products, error, count } = await query;
