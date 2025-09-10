@@ -35,7 +35,7 @@ export class EmailService {
       const emailText = this.generateOrderConfirmationText(data)
 
       const result = await resend.emails.send({
-        from: process.env.EMAIL_FROM || 'Military Tees UK <orders@militarytees.co.uk>',
+        from: process.env.EMAIL_FROM || 'Military Tees UK <info@militarytees.co.uk>',
         to: [data.customerEmail],
         subject: `Order Confirmation - ${data.orderNumber} - Military Tees UK`,
         html: emailHtml,
@@ -95,7 +95,7 @@ export class EmailService {
       const emailText = this.generateOrderConfirmationText(data)
 
       const result = await resend.emails.send({
-        from: process.env.EMAIL_FROM || 'Military Tees UK <orders@militarytees.co.uk>',
+        from: process.env.EMAIL_FROM || 'Military Tees UK <info@militarytees.co.uk>',
         to: [data.customerEmail],
         subject: `Order Confirmation - ${data.orderNumber} - Military Tees UK`,
         html: emailHtml,
@@ -286,10 +286,10 @@ Military Tees UK - Proudly serving those who serve
 
   private async sendAdminOrderNotification(data: OrderConfirmationData): Promise<void> {
     try {
-      const adminEmail = process.env.ADMIN_EMAIL || 'admin@militarytees.co.uk'
+      const adminEmail = process.env.ADMIN_EMAIL || 'info@militarytees.co.uk'
       
       await resend.emails.send({
-        from: process.env.EMAIL_FROM || 'Military Tees UK <orders@militarytees.co.uk>',
+        from: process.env.EMAIL_FROM || 'Military Tees UK <info@militarytees.co.uk>',
         to: [adminEmail],
         subject: `🎉 New Order - ${data.orderNumber} - £${data.totalAmount.toFixed(2)}`,
         html: `
@@ -312,6 +312,123 @@ Military Tees UK - Proudly serving those who serve
       console.log('✅ Admin order notification sent')
     } catch (error) {
       console.error('❌ Failed to send admin notification:', error)
+    }
+  }
+
+  async sendWelcomeEmail(data: { name: string; email: string }): Promise<{ success: boolean; error?: string }> {
+    try {
+      console.log('📧 Preparing welcome email for:', data.email)
+
+      const result = await resend.emails.send({
+        from: process.env.EMAIL_FROM || 'Military Tees UK <info@militarytees.co.uk>',
+        to: [data.email],
+        subject: 'Welcome to Military Tees UK - Your Journey Begins!',
+        html: `
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Welcome to Military Tees UK</title>
+          </head>
+          <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background-color: #f9fafb;">
+            <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);">
+              
+              <!-- Header -->
+              <div style="background: linear-gradient(135deg, #16a34a 0%, #15803d 100%); padding: 32px 24px; text-align: center;">
+                <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: bold; letter-spacing: 1px;">MILITARY TEES UK</h1>
+                <div style="margin-top: 8px; padding: 8px 16px; background-color: rgba(255,255,255,0.2); border-radius: 20px; display: inline-block;">
+                  <span style="color: #ffffff; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Welcome Aboard</span>
+                </div>
+              </div>
+
+              <!-- Welcome Message -->
+              <div style="padding: 32px 24px; text-align: center; border-bottom: 2px solid #f3f4f6;">
+                <div style="width: 64px; height: 64px; background-color: #dcfce7; border: 3px solid #16a34a; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center;">
+                  <div style="color: #16a34a; font-size: 32px; font-weight: bold;">🎖️</div>
+                </div>
+                <h2 style="margin: 0 0 8px 0; color: #111827; font-size: 24px; font-weight: bold;">Welcome to the Battalion, ${data.name}!</h2>
+                <p style="margin: 0; color: #6b7280; font-size: 16px;">Your journey with Military Tees UK begins now. Premium military apparel for those who serve and those who appreciate quality.</p>
+              </div>
+
+              <!-- What's Next -->
+              <div style="padding: 24px; background-color: #f8fafc;">
+                <h3 style="margin: 0 0 16px 0; color: #111827; font-size: 18px; font-weight: bold;">What's Next</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;">
+                  <div style="text-align: center; padding: 16px;">
+                    <div style="width: 48px; height: 48px; background-color: #dbeafe; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #2563eb; font-size: 24px;">🛍️</span>
+                    </div>
+                    <div style="font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 4px;">Explore Collection</div>
+                    <div style="color: #6b7280; font-size: 12px;">Browse our premium range</div>
+                  </div>
+                  
+                  <div style="text-align: center; padding: 16px;">
+                    <div style="width: 48px; height: 48px; background-color: #fef3c7; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #d97706; font-size: 24px;">💂</span>
+                    </div>
+                    <div style="font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 4px;">Military Discount</div>
+                    <div style="color: #6b7280; font-size: 12px;">Special rates for service</div>
+                  </div>
+                  
+                  <div style="text-align: center; padding: 16px;">
+                    <div style="width: 48px; height: 48px; background-color: #dcfce7; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center;">
+                      <span style="color: #16a34a; font-size: 24px;">🚚</span>
+                    </div>
+                    <div style="font-weight: 600; color: #111827; font-size: 14px; margin-bottom: 4px;">Free Shipping</div>
+                    <div style="color: #6b7280; font-size: 12px;">Orders over £50</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer -->
+              <div style="padding: 24px; text-align: center; background-color: #111827; color: #ffffff;">
+                <div style="margin-bottom: 16px;">
+                  <h4 style="margin: 0 0 8px 0; color: #ffffff; font-size: 16px;">Ready to Serve in Style?</h4>
+                  <p style="margin: 0; color: #9ca3af; font-size: 14px;">Start shopping our premium military collection today.</p>
+                </div>
+                
+                <div style="margin-bottom: 16px;">
+                  <a href="https://militarytees.co.uk/products" style="display: inline-block; background-color: #16a34a; color: #ffffff; padding: 12px 24px; text-decoration: none; font-weight: 600; border-radius: 6px;">Shop Now</a>
+                </div>
+                
+                <div style="font-size: 12px; color: #6b7280;">
+                  <p style="margin: 0;">Military Tees UK - Proudly serving those who serve</p>
+                  <p style="margin: 8px 0 0 0;">© 2025 Military Tees UK. All rights reserved.</p>
+                </div>
+              </div>
+            </div>
+          </body>
+          </html>
+        `,
+        text: `
+Welcome to Military Tees UK, ${data.name}!
+
+Your journey with Military Tees UK begins now. Premium military apparel for those who serve and those who appreciate quality.
+
+What's Next:
+- Explore our premium collection
+- Take advantage of military discounts  
+- Enjoy free shipping on orders over £50
+
+Ready to serve in style? Start shopping at https://militarytees.co.uk/products
+
+Military Tees UK - Proudly serving those who serve
+© 2025 Military Tees UK. All rights reserved.
+        `.trim()
+      })
+
+      if (result.data) {
+        console.log('✅ Welcome email sent:', result.data.id)
+        return { success: true }
+      } else {
+        console.error('❌ Failed to send welcome email:', result.error)
+        return { success: false, error: result.error?.message || 'Unknown error' }
+      }
+    } catch (error) {
+      console.error('❌ Welcome email error:', error)
+      return { success: false, error: error instanceof Error ? error.message : 'Unknown error' }
     }
   }
 }

@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
 
     // Send email via Resend
     const result = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Military Tees UK <noreply@militarytees.co.uk>',
+      from: process.env.EMAIL_FROM || 'Military Tees UK <info@militarytees.co.uk>',
       to: [email],
       subject: 'Password Reset - Military Tees UK',
       html: htmlContent,

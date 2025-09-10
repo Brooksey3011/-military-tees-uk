@@ -199,7 +199,7 @@ async function sendLowStockAlertEmail(supabase: any) {
   }
 
   // Prepare email data
-  const adminEmail = process.env.ADMIN_EMAIL || 'admin@militarytees.co.uk'
+  const adminEmail = process.env.ADMIN_EMAIL || 'info@militarytees.co.uk'
   
   const emailHtml = `
     <!DOCTYPE html>
