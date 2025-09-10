@@ -7,6 +7,8 @@ import { Select } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { ProductGrid } from "@/components/product/product-grid"
 import { FilterControls } from "@/components/product/filter-controls"
+import { ProductViewToggle } from "@/components/ui/product-view-toggle"
+import { useProductView } from "@/hooks/use-product-view"
 import { cn } from "@/lib/utils"
 import { getSearchService } from "@/lib/search/search-provider"
 import type { SearchResult, SearchFilters } from "@/lib/search/search-service"
@@ -46,8 +48,10 @@ export function SearchResults({
   const [total, setTotal] = React.useState(0)
   const [page, setPage] = React.useState(0)
   const [sortBy, setSortBy] = React.useState<string>('relevance')
-  const [viewMode, setViewMode] = React.useState<'grid' | 'list'>('grid')
   const [showFilters, setShowFilters] = React.useState(false)
+  
+  // Use global product view state
+  const { view, setView } = useProductView()
   
   // Filter state
   const [activeFilters, setActiveFilters] = React.useState<ActiveFilter[]>([])
@@ -265,25 +269,8 @@ export function SearchResults({
             </div>
             
             <div className="flex items-center gap-3">
-              {/* View Mode Toggle */}
-              <div className="flex border-2 border-border rounded-none overflow-hidden">
-                <Button
-                  size="sm"
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  className="rounded-none"
-                  onClick={() => setViewMode('grid')}
-                >
-                  <Grid className="h-4 w-4" />
-                </Button>
-                <Button
-                  size="sm"
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  className="rounded-none"
-                  onClick={() => setViewMode('list')}
-                >
-                  <List className="h-4 w-4" />
-                </Button>
-              </div>
+              {/* Super Visible View Toggle */}
+              <ProductViewToggle onViewChange={setView} />
 
               {/* Sort Dropdown */}
               <Select
@@ -341,21 +328,29 @@ export function SearchResults({
               </div>
             ) : results.length > 0 ? (
               <div className="space-y-6">
-                <ProductGrid 
-                  products={results.map(result => ({
-                    id: result.id,
-                    name: result.title,
-                    price: result.price || 0,
-                    image: result.image || '',
-                    category: result.category || '',
-                    rating: result.rating || 0,
-                    reviewCount: result.reviewCount || 0,
-                    isNew: result.isNew,
-                    isSale: result.isSale,
-                    slug: result.url.replace('/products/', '')
-                  }))}
-                  viewMode={viewMode}
-                />
+                <div className={cn(
+                  view === 'grid' ? 'product-grid-view' : 'product-list-view',
+                  "transition-all duration-300 ease-in-out"
+                )}>
+                  <ProductGrid 
+                    products={results.map(result => ({
+                      id: result.id,
+                      name: result.title,
+                      price: result.price || 0,
+                      image: result.image || '',
+                      category: result.category || '',
+                      rating: result.rating || 0,
+                      reviewCount: result.reviewCount || 0,
+                      isNew: result.isNew,
+                      isSale: result.isSale,
+                      slug: result.url.replace('/products/', '')
+                    }))}
+                    className={cn(
+                      "product-card h-full",
+                      view === 'list' ? 'list-card' : 'grid-card'
+                    )}
+                  />
+                </div>
 
                 {/* Load More / Pagination */}
                 {total > results.length && (

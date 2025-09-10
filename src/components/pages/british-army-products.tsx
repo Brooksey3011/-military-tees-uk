@@ -5,6 +5,8 @@ import Link from "next/link"
 import { Filter, SortAsc } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ProductCard } from "@/components/product/product-card"
+import { ProductViewToggle } from "@/components/ui/product-view-toggle"
+import { useProductView } from "@/hooks/use-product-view"
 import { cn } from "@/lib/utils"
 
 interface Product {
@@ -44,6 +46,9 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<string>('name')
   const [priceFilter, setPriceFilter] = useState<string>('all')
+  
+  // Product view management
+  const { view, setView } = useProductView()
 
   useEffect(() => {
     async function fetchProducts() {
@@ -146,44 +151,53 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
 
   return (
     <div className="space-y-8">
-      {/* Filters and Sorting */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
-            <span className="text-sm font-medium">Filter by price:</span>
-            <select 
-              value={priceFilter} 
-              onChange={(e) => setPriceFilter(e.target.value)}
-              className="text-sm border border-border rounded-none bg-background px-2 py-1"
-            >
-              <option value="all">All prices</option>
-              <option value="under-20">Under £20</option>
-              <option value="20-30">£20 - £30</option>
-              <option value="30-40">£30 - £40</option>
-              <option value="over-40">Over £40</option>
-            </select>
+      {/* Filters, Sorting, and View Toggle */}
+      <div className="flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-4 bg-muted/10 border border-border rounded-none">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <Filter className="h-4 w-4" />
+              <span className="text-sm font-medium">Filter by price:</span>
+              <select 
+                value={priceFilter} 
+                onChange={(e) => setPriceFilter(e.target.value)}
+                className="text-sm border border-border rounded-none bg-background px-2 py-1"
+              >
+                <option value="all">All prices</option>
+                <option value="under-20">Under £20</option>
+                <option value="20-30">£20 - £30</option>
+                <option value="30-40">£30 - £40</option>
+                <option value="over-40">Over £40</option>
+              </select>
+            </div>
           </div>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <SortAsc className="h-4 w-4" />
-          <span className="text-sm font-medium">Sort by:</span>
-          <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-            className="text-sm border border-border rounded-none bg-background px-2 py-1"
-          >
-            <option value="name">Name A-Z</option>
-            <option value="price-low">Price Low-High</option>
-            <option value="price-high">Price High-Low</option>
-          </select>
+          
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
+              <SortAsc className="h-4 w-4" />
+              <span className="text-sm font-medium">Sort by:</span>
+              <select 
+                value={sortBy} 
+                onChange={(e) => setSortBy(e.target.value)}
+                className="text-sm border border-border rounded-none bg-background px-2 py-1"
+              >
+                <option value="name">Name A-Z</option>
+                <option value="price-low">Price Low-High</option>
+                <option value="price-high">Price High-Low</option>
+              </select>
+            </div>
+            
+            {/* View Toggle */}
+            <ProductViewToggle onViewChange={setView} />
+          </div>
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Products Grid/List */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={cn(
+          view === 'grid' ? 'product-grid-view' : 'product-list-view'
+        )}>
           {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-muted/20 h-96 animate-pulse rounded-none border-2 border-border"></div>
           ))}
@@ -194,7 +208,10 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
           <p className="text-muted-foreground">Try adjusting your filters or check back later for new products.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={cn(
+          view === 'grid' ? 'product-grid-view' : 'product-list-view',
+          "transition-all duration-300 ease-in-out"
+        )}>
           {filteredAndSortedProducts.map((product) => {
             // Ensure product has the right structure for ProductCard
             const normalizedProduct = {
@@ -212,7 +229,10 @@ export function BritishArmyProducts({ onProductCountChange }: BritishArmyProduct
                 key={product.id}
                 product={normalizedProduct}
                 variant="default"
-                className="h-full"
+                className={cn(
+                  "h-full product-card",
+                  view === 'list' ? 'list-card' : 'grid-card'
+                )}
               />
             )
           })}
