@@ -40,55 +40,50 @@ body {
     color: #2c3e50;
 }
 
-/* Layout Toggle Styles */
-.layout-toggle {
+/* Mobile-First View Toggle */
+.view-toggle-container {
     display: flex;
-    background-color: #f1f3f4;
-    border-radius: 8px;
-    padding: 4px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    padding: 2px;
     gap: 2px;
-    border: 2px solid #007bff;
 }
 
-.toggle-btn {
+.view-toggle-btn {
     background: none;
     border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
+    padding: 8px 10px;
+    border-radius: 4px;
     cursor: pointer;
     transition: all 0.2s ease;
     color: #6c757d;
-    font-size: 14px;
-    min-height: 48px;
-    min-width: 70px;
+    min-height: 44px;
+    min-width: 44px;
     display: flex;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    position: relative;
 }
 
-.toggle-label {
-    font-size: 11px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.3px;
-}
-
-.toggle-btn:hover {
+.view-toggle-btn:hover {
     background-color: #e9ecef;
     color: #495057;
 }
 
-.toggle-btn.active {
+.view-toggle-btn.active {
     background-color: #007bff;
     color: white;
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+    box-shadow: 0 1px 3px rgba(0, 123, 255, 0.2);
 }
 
-.toggle-btn:focus {
+.view-toggle-btn:focus {
     outline: 2px solid #007bff;
     outline-offset: 2px;
+}
+
+.view-toggle-btn svg {
+    transition: all 0.2s ease;
 }
 
 /* Filter Section */

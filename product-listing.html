@@ -14,39 +14,32 @@
         <header class="header">
             <h1 class="page-title">Products</h1>
             
-            <!-- Layout Toggle - Enhanced visibility -->
-            <div class="layout-toggle" role="tablist" aria-label="Product view options">
+            <!-- Mobile-First Layout Toggle (Default: Grid) -->
+            <div class="view-toggle-container">
                 <button 
-                    class="toggle-btn active" 
-                    data-view="list" 
-                    role="tab" 
-                    aria-selected="true" 
-                    aria-controls="product-container"
-                    aria-label="List view"
-                    title="List View"
-                >
-                    <i class="fas fa-list" aria-hidden="true"></i>
-                    <span class="toggle-label">List</span>
-                </button>
-                <button 
-                    class="toggle-btn" 
+                    class="view-toggle-btn" 
                     data-view="grid" 
-                    role="tab" 
-                    aria-selected="false" 
-                    aria-controls="product-container"
-                    aria-label="Grid view"
+                    id="grid-toggle"
+                    aria-label="Grid view - 2 columns"
                     title="Grid View"
                 >
-                    <i class="fas fa-th" aria-hidden="true"></i>
-                    <span class="toggle-label">Grid</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm0 9h7v7h-7v-7z"/>
+                    </svg>
+                </button>
+                <button 
+                    class="view-toggle-btn" 
+                    data-view="list"
+                    id="list-toggle" 
+                    aria-label="List view - 1 column"
+                    title="List View"
+                >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6h2v2H4V6zm0 5h2v2H4v-2zm0 5h2v2H4v-2zm4-10h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2z"/>
+                    </svg>
                 </button>
             </div>
         </header>
-
-        <!-- View Status Indicator for debugging -->
-        <div class="view-status" id="view-status" style="text-align: center; padding: 10px; background-color: #e3f2fd; margin-bottom: 20px; border-radius: 6px; font-weight: 600; color: #1976d2;">
-            Currently viewing: List View
-        </div>
 
         <!-- Filter/Sort Section -->
         <div class="filters">
@@ -64,8 +57,8 @@
             </div>
         </div>
 
-        <!-- Product Container -->
-        <div class="product-container list-view" id="product-container" role="main" aria-live="polite">
+        <!-- Product Container - Default: Grid View -->
+        <div class="product-container grid-view" id="product-container" role="main" aria-live="polite">
             
             <!-- Product Card Template -->
             <article class="product-card" tabindex="0" role="article">

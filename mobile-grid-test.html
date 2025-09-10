@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mobile Grid Test - Military Tees UK</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 16px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            margin-bottom: 20px;
+            background-color: white;
+            padding: 16px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* Mobile-First Toggle */
+        .view-toggle-container {
+            display: flex;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            padding: 2px;
+            gap: 2px;
+        }
+
+        .view-toggle-btn {
+            background: none;
+            border: none;
+            padding: 8px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6c757d;
+            min-height: 44px;
+            min-width: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .view-toggle-btn:hover {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .view-toggle-btn.active {
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 1px 3px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Product Container */
+        .product-container {
+            margin-top: 20px;
+        }
+
+        /* Grid View - DEFAULT */
+        .product-container.grid-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-view .product-card {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .grid-view .product-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .grid-view .product-info {
+            padding: 12px;
+        }
+
+        .grid-view .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .grid-view .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 8px;
+        }
+
+        .grid-view .add-to-cart {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* List View */
+        .product-container.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .list-view .product-card {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .list-view .product-image {
+            width: 120px;
+            height: 150px;
+            object-fit: cover;
+            flex-shrink: 0;
+        }
+
+        .list-view .product-info {
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .list-view .product-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .list-view .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 12px;
+        }
+
+        .list-view .add-to-cart {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        .current-view {
+            text-align: center;
+            padding: 10px;
+            margin: 10px 0;
+            background-color: #e3f2fd;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #1976d2;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">Products</h1>
+        
+        <!-- Mobile Toggle -->
+        <div class="view-toggle-container">
+            <button class="view-toggle-btn active" data-view="grid" id="grid-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm0 9h7v7h-7v-7z"/>
+                </svg>
+            </button>
+            <button class="view-toggle-btn" data-view="list" id="list-btn">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 6h2v2H4V6zm0 5h2v2H4v-2zm0 5h2v2H4v-2zm4-10h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2z"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <div class="current-view" id="current-view">
+        Current View: Grid (2x2) - Default
+    </div>
+
+    <!-- Product Container - DEFAULT: Grid View -->
+    <div class="product-container grid-view" id="product-container">
+        
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop" alt="Combat T-Shirt" class="product-image">
+            <div class="product-info">
+                <div class="product-title">Combat T-Shirt</div>
+                <div class="product-price">£24.99</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1583743814966-8936f37f4042?w=400&h=400&fit=crop" alt="Tactical Pants" class="product-image">
+            <div class="product-info">
+                <div class="product-title">Tactical Cargo Pants</div>
+                <div class="product-price">£49.99</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=400&fit=crop" alt="Military Hoodie" class="product-image">
+            <div class="product-info">
+                <div class="product-title">Boot Camp Hoodie</div>
+                <div class="product-price">£39.99</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+
+        <div class="product-card">
+            <img src="https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400&h=400&fit=crop" alt="Field Jacket" class="product-image">
+            <div class="product-info">
+                <div class="product-title">Field Jacket</div>
+                <div class="product-price">£79.99</div>
+                <button class="add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        class SimpleToggle {
+            constructor() {
+                this.container = document.getElementById('product-container');
+                this.gridBtn = document.getElementById('grid-btn');
+                this.listBtn = document.getElementById('list-btn');
+                this.currentViewEl = document.getElementById('current-view');
+                this.currentView = 'grid'; // DEFAULT
+
+                this.setupListeners();
+                console.log('Simple toggle initialized - Default: Grid');
+            }
+
+            setupListeners() {
+                this.gridBtn.addEventListener('click', () => this.switchView('grid'));
+                this.listBtn.addEventListener('click', () => this.switchView('list'));
+            }
+
+            switchView(view) {
+                if (view === this.currentView) return;
+
+                console.log(`Switching from ${this.currentView} to ${view}`);
+
+                // Update buttons
+                this.gridBtn.classList.remove('active');
+                this.listBtn.classList.remove('active');
+                
+                if (view === 'grid') {
+                    this.gridBtn.classList.add('active');
+                } else {
+                    this.listBtn.classList.add('active');
+                }
+
+                // Update container
+                this.container.className = `product-container ${view}-view`;
+                this.currentView = view;
+
+                // Update indicator
+                this.currentViewEl.textContent = `Current View: ${view === 'grid' ? 'Grid (2x2)' : 'List (1 column)'} - ${view === 'grid' ? 'Default' : 'Switched'}`;
+
+                console.log(`Successfully switched to ${view} view`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new SimpleToggle();
+        });
+    </script>
+</body>
+</html>

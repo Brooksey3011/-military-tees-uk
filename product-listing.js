@@ -8,39 +8,48 @@ class ProductListing {
 
     init() {
         this.productContainer = document.getElementById('product-container');
-        this.toggleBtns = document.querySelectorAll('.toggle-btn');
+        this.gridToggle = document.getElementById('grid-toggle');
+        this.listToggle = document.getElementById('list-toggle');
         this.addToCartBtns = document.querySelectorAll('.add-to-cart-btn');
         this.loadMoreBtn = document.querySelector('.load-more-btn');
         this.sortSelect = document.getElementById('sort-select');
         this.resultsCount = document.getElementById('results-count');
-        this.viewStatus = document.getElementById('view-status');
         
-        this.currentView = 'list';
+        // Default to grid view (mobile-first)
+        this.currentView = 'grid';
         this.isLoading = false;
         
-        console.log('ProductListing initialized');
-        console.log('Toggle buttons found:', this.toggleBtns.length);
+        console.log('ProductListing initialized with grid view as default');
+        console.log('Grid toggle:', this.gridToggle);
+        console.log('List toggle:', this.listToggle);
         console.log('Product container:', this.productContainer);
         
         this.setupInitialState();
     }
 
     setupInitialState() {
+        // Set grid as active by default
+        this.setActiveToggle(this.gridToggle);
         this.updateViewClass();
-        this.updateViewStatus();
+        console.log('Initial state set: Grid view active');
     }
 
     setupEventListeners() {
         console.log('Setting up event listeners...');
         
-        this.toggleBtns.forEach((btn, index) => {
-            console.log(`Adding listener to button ${index}:`, btn.dataset.view);
-            btn.addEventListener('click', (e) => {
-                console.log('Toggle clicked:', e.currentTarget.dataset.view);
+        if (this.gridToggle) {
+            this.gridToggle.addEventListener('click', (e) => {
+                console.log('Grid toggle clicked');
                 this.handleViewToggle(e);
             });
-            btn.addEventListener('keydown', this.handleToggleKeydown.bind(this));
-        });
+        }
+
+        if (this.listToggle) {
+            this.listToggle.addEventListener('click', (e) => {
+                console.log('List toggle clicked');
+                this.handleViewToggle(e);
+            });
+        }
 
         this.addToCartBtns.forEach(btn => {
             btn.addEventListener('click', this.handleAddToCart.bind(this));
@@ -76,7 +85,6 @@ class ProductListing {
         this.setActiveToggle(btn);
         this.currentView = view;
         this.updateViewClass();
-        this.updateViewStatus();
         this.announceViewChange(view);
         this.addFadeInAnimation();
         
@@ -92,13 +100,20 @@ class ProductListing {
     }
 
     setActiveToggle(activeBtn) {
-        this.toggleBtns.forEach(btn => {
-            btn.classList.remove('active');
-            btn.setAttribute('aria-selected', 'false');
-        });
+        // Remove active class from both buttons
+        if (this.gridToggle) {
+            this.gridToggle.classList.remove('active');
+        }
+        if (this.listToggle) {
+            this.listToggle.classList.remove('active');
+        }
         
-        activeBtn.classList.add('active');
-        activeBtn.setAttribute('aria-selected', 'true');
+        // Add active class to the clicked button
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
+        
+        console.log('Active toggle set to:', activeBtn ? activeBtn.dataset.view : 'none');
     }
 
     updateViewClass() {
@@ -106,12 +121,6 @@ class ProductListing {
         console.log('Updated container class:', this.productContainer.className);
     }
 
-    updateViewStatus() {
-        if (this.viewStatus) {
-            this.viewStatus.textContent = `Currently viewing: ${this.currentView === 'list' ? 'List' : 'Grid'} View`;
-            console.log('Updated view status:', this.viewStatus.textContent);
-        }
-    }
 
     announceViewChange(view) {
         const announcement = document.createElement('div');
