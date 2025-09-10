@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🪖 Military Theme Toggle - Professional & Refined</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        :root {
+          /* Military-themed color palette - Matching your website */
+          --military-olive: #4a5a2a;
+          --military-khaki: #8b7355;
+          --military-forest: #355e3b;
+          --military-camo: #5c6b2b;
+          --military-sand: #c19a6b;
+          --military-slate: #2f4f4f;
+          
+          /* Brand colors - Matching your website */
+          --primary: var(--military-olive);
+          --primary-foreground: #ffffff;
+          --secondary: var(--military-khaki);
+          --secondary-foreground: #ffffff;
+          --accent: var(--military-sand);
+          --accent-foreground: #ffffff;
+          
+          /* UI colors - Dark Theme - Matching your website */
+          --background: #000000;
+          --foreground: #ffffff;
+          --muted: #1a1a1a;
+          --muted-foreground: #9ca3af;
+          --card: #111111;
+          --card-foreground: #ffffff;
+          --border: #333333;
+          --input: #1a1a1a;
+          --ring: var(--military-olive);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .test-header {
+            background: linear-gradient(135deg, var(--military-olive) 0%, var(--military-forest) 100%);
+            color: var(--primary-foreground);
+            padding: 30px;
+            border-radius: 0; /* Military sharp edges */
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+        }
+
+        .test-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .test-subtitle {
+            font-size: 16px;
+            opacity: 0.9;
+            color: var(--military-sand);
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .comparison-card {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 0;
+            border: 1px solid var(--border);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+
+        .comparison-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .old-toggle {
+            text-align: center;
+            opacity: 0.5;
+        }
+
+        .old-label {
+            color: #dc2626;
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .new-label {
+            color: var(--military-sand);
+            font-size: 14px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        /* NEW MILITARY TOGGLE STYLES */
+        .product-view-toggle-container {
+            display: flex;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 0; /* Military sharp edges */
+            padding: 2px;
+            gap: 0;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            position: relative;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        .product-view-toggle-btn {
+            background: var(--muted);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 0; /* Military sharp edges */
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--muted-foreground);
+            min-height: 36px;
+            min-width: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            font-weight: 500;
+            border-right: 1px solid var(--border);
+        }
+
+        .product-view-toggle-btn:last-child {
+            border-right: none;
+        }
+
+        .product-view-toggle-btn:hover {
+            background: var(--military-olive);
+            color: var(--primary-foreground);
+            box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-view-toggle-btn.active {
+            background: linear-gradient(to bottom, var(--military-olive), var(--military-forest));
+            color: var(--primary-foreground);
+            box-shadow: 
+                inset 0 1px 2px rgba(0, 0, 0, 0.2),
+                0 1px 1px rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .product-view-toggle-btn.active::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--military-sand);
+            box-shadow: 0 0 3px var(--military-sand);
+        }
+
+        .product-view-toggle-btn:focus {
+            outline: 2px solid var(--military-olive);
+            outline-offset: 1px;
+        }
+
+        .product-view-toggle-btn svg {
+            transition: all 0.2s ease;
+            width: 16px;
+            height: 16px;
+            opacity: 0.8;
+        }
+
+        .product-view-toggle-btn:hover svg,
+        .product-view-toggle-btn.active svg {
+            opacity: 1;
+        }
+
+        /* OLD OVERKILL TOGGLE (for comparison) */
+        .old-toggle-container {
+            display: flex;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 4px solid #007bff;
+            border-radius: 16px;
+            padding: 8px;
+            gap: 6px;
+            box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+            animation: pulse-glow 2s infinite;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4); }
+            50% { box-shadow: 0 8px 28px rgba(0, 123, 255, 0.6); }
+        }
+
+        .old-toggle-btn {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border: 3px solid #dee2e6;
+            padding: 16px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            color: #495057;
+            min-height: 60px;
+            min-width: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .old-toggle-btn.active {
+            background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+            color: white;
+            transform: scale(1.15);
+        }
+
+        .old-toggle-btn svg {
+            width: 28px;
+            height: 28px;
+        }
+
+        /* Demo products grid */
+        .demo-section {
+            background: var(--card);
+            padding: 25px;
+            border: 1px solid var(--border);
+            margin-top: 30px;
+        }
+
+        .demo-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .product-grid-view {
+            display: grid;
+            gap: 12px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 767px) {
+            .product-grid-view {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1023px) {
+            .product-grid-view {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 12px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .product-grid-view {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 16px;
+            }
+        }
+
+        .product-list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            width: 100%;
+        }
+
+        .product-card {
+            background: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 0;
+            padding: 20px;
+            transition: all 0.2s ease;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--muted-foreground);
+        }
+
+        .product-grid-view .product-card {
+            height: 100px;
+        }
+
+        .product-list-view .product-card {
+            height: 60px;
+        }
+
+        .product-card:hover {
+            background: var(--military-olive);
+            color: var(--primary-foreground);
+        }
+
+        .current-status {
+            text-align: center;
+            padding: 15px;
+            background: var(--military-forest);
+            border: 1px solid var(--military-sand);
+            margin: 20px 0;
+            font-weight: 600;
+            color: var(--primary-foreground);
+            font-size: 16px;
+        }
+
+        .features-list {
+            background: var(--card);
+            padding: 20px;
+            border: 1px solid var(--border);
+            margin-top: 30px;
+        }
+
+        .features-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--military-sand);
+            margin-bottom: 15px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            color: var(--muted-foreground);
+        }
+
+        .feature-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--military-olive);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="test-header">
+        <div class="test-title">🪖 Military Theme Toggle</div>
+        <div class="test-subtitle">Professional, Refined & Theme-Consistent</div>
+    </div>
+
+    <div class="comparison-grid">
+        <div class="comparison-card old-toggle">
+            <div class="comparison-title">❌ Old (Too Flashy)</div>
+            <div class="old-label">Overkill - Doesn't Match Theme</div>
+            <div class="old-toggle-container">
+                <button class="old-toggle-btn active">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm0 9h7v7h-7v-7z"/>
+                    </svg>
+                </button>
+                <button class="old-toggle-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6h2v2H4V6zm0 5h2v2H4v-2zm0 5h2v2H4v-2zm4-10h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="comparison-card">
+            <div class="comparison-title">✅ New (Military Theme)</div>
+            <div class="new-label">Perfect - Matches Your Website</div>
+            <div class="product-view-toggle-container">
+                <button class="product-view-toggle-btn active" data-view="grid" id="grid-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm0 9h7v7h-7v-7z"/>
+                    </svg>
+                </button>
+                <button class="product-view-toggle-btn" data-view="list" id="list-btn">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M4 6h2v2H4V6zm0 5h2v2H4v-2zm0 5h2v2H4v-2zm4-10h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="current-status" id="current-status">
+        Current View: Grid (2x2 Mobile / 4 Column Desktop) - Military Theme
+    </div>
+
+    <!-- Live Demo -->
+    <div class="demo-section">
+        <div class="demo-title">🎯 Live Demo - Military Themed Toggle</div>
+        
+        <div class="product-view-toggle-container">
+            <button class="product-view-toggle-btn active" data-view="grid" id="demo-grid">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 4h7v7H4V4zm0 9h7v7H4v-7zm9-9h7v7h-7V4zm0 9h7v7h-7v-7z"/>
+                </svg>
+            </button>
+            <button class="product-view-toggle-btn" data-view="list" id="demo-list">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M4 6h2v2H4V6zm0 5h2v2H4v-2zm0 5h2v2H4v-2zm4-10h12v2H8V6zm0 5h12v2H8v-2zm0 5h12v2H8v-2z"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="product-grid-view" id="demo-products">
+            <div class="product-card">Product 1</div>
+            <div class="product-card">Product 2</div>
+            <div class="product-card">Product 3</div>
+            <div class="product-card">Product 4</div>
+            <div class="product-card">Product 5</div>
+            <div class="product-card">Product 6</div>
+        </div>
+    </div>
+
+    <!-- Features List -->
+    <div class="features-list">
+        <div class="features-title">🎖️ Military Theme Features</div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Sharp military edges (border-radius: 0)</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Military olive/forest green color scheme</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Dark theme with proper contrast</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Subtle sand-colored accent on active state</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Professional 36px height (down from 60px)</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Matches existing button design system</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Clean, professional appearance</div>
+        </div>
+        
+        <div class="feature-item">
+            <div class="feature-icon">✓</div>
+            <div>Still highly visible and functional</div>
+        </div>
+    </div>
+
+    <script>
+        class MilitaryToggleDemo {
+            constructor() {
+                this.container = document.getElementById('demo-products');
+                this.gridBtn = document.getElementById('demo-grid');
+                this.listBtn = document.getElementById('demo-list');
+                this.status = document.getElementById('current-status');
+                this.currentView = 'grid';
+
+                this.setupListeners();
+                console.log('🪖 Military Toggle Demo Initialized');
+            }
+
+            setupListeners() {
+                this.gridBtn.addEventListener('click', () => this.switchView('grid'));
+                this.listBtn.addEventListener('click', () => this.switchView('list'));
+            }
+
+            switchView(view) {
+                if (view === this.currentView) return;
+
+                console.log(`🔄 Military Toggle: ${this.currentView.toUpperCase()} → ${view.toUpperCase()}`);
+                
+                this.currentView = view;
+                this.updateView(view);
+            }
+
+            updateView(view) {
+                // Update buttons
+                this.gridBtn.classList.remove('active');
+                this.listBtn.classList.remove('active');
+                
+                if (view === 'grid') {
+                    this.gridBtn.classList.add('active');
+                } else {
+                    this.listBtn.classList.add('active');
+                }
+
+                // Update container
+                this.container.className = view === 'grid' ? 'product-grid-view' : 'product-list-view';
+                
+                // Update status
+                const isMobile = window.innerWidth <= 767;
+                const deviceInfo = isMobile ? 'Mobile' : 'Desktop';
+                const layoutInfo = view === 'grid' 
+                    ? (isMobile ? '2x2 Grid' : '4 Column Grid')
+                    : '1 Column List';
+                
+                this.status.textContent = `Current View: ${layoutInfo} (${deviceInfo}) - Military Theme ✓`;
+                
+                console.log(`✅ Military theme view: ${view.toUpperCase()}`);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            new MilitaryToggleDemo();
+        });
+    </script>
+</body>
+</html>
