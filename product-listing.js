@@ -13,21 +13,32 @@ class ProductListing {
         this.loadMoreBtn = document.querySelector('.load-more-btn');
         this.sortSelect = document.getElementById('sort-select');
         this.resultsCount = document.getElementById('results-count');
+        this.viewStatus = document.getElementById('view-status');
         
         this.currentView = 'list';
         this.isLoading = false;
+        
+        console.log('ProductListing initialized');
+        console.log('Toggle buttons found:', this.toggleBtns.length);
+        console.log('Product container:', this.productContainer);
         
         this.setupInitialState();
     }
 
     setupInitialState() {
         this.updateViewClass();
-        this.announceViewChange(this.currentView);
+        this.updateViewStatus();
     }
 
     setupEventListeners() {
-        this.toggleBtns.forEach(btn => {
-            btn.addEventListener('click', this.handleViewToggle.bind(this));
+        console.log('Setting up event listeners...');
+        
+        this.toggleBtns.forEach((btn, index) => {
+            console.log(`Adding listener to button ${index}:`, btn.dataset.view);
+            btn.addEventListener('click', (e) => {
+                console.log('Toggle clicked:', e.currentTarget.dataset.view);
+                this.handleViewToggle(e);
+            });
             btn.addEventListener('keydown', this.handleToggleKeydown.bind(this));
         });
 
@@ -55,14 +66,21 @@ class ProductListing {
         const btn = event.currentTarget;
         const view = btn.dataset.view;
         
-        if (view === this.currentView) return;
+        console.log(`Attempting to switch to ${view} view from ${this.currentView} view`);
+        
+        if (view === this.currentView) {
+            console.log('Same view selected, ignoring');
+            return;
+        }
         
         this.setActiveToggle(btn);
         this.currentView = view;
         this.updateViewClass();
+        this.updateViewStatus();
         this.announceViewChange(view);
         this.addFadeInAnimation();
         
+        console.log(`Successfully switched to ${view} view`);
         this.logEvent('view_toggle', { view: view });
     }
 
@@ -85,6 +103,14 @@ class ProductListing {
 
     updateViewClass() {
         this.productContainer.className = `product-container ${this.currentView}-view`;
+        console.log('Updated container class:', this.productContainer.className);
+    }
+
+    updateViewStatus() {
+        if (this.viewStatus) {
+            this.viewStatus.textContent = `Currently viewing: ${this.currentView === 'list' ? 'List' : 'Grid'} View`;
+            console.log('Updated view status:', this.viewStatus.textContent);
+        }
     }
 
     announceViewChange(view) {

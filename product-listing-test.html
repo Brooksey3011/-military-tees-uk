@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Listing Test - Military Tees UK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+
+        .container {
+            max-width: 100%;
+            padding: 0 16px;
+            margin: 0 auto;
+        }
+
+        /* Header with Toggle */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            background-color: #fff;
+            border-bottom: 1px solid #e9ecef;
+            margin: 0 -16px 16px;
+            padding-left: 16px;
+            padding-right: 16px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .page-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+
+        /* Toggle Button Styling */
+        .layout-toggle {
+            display: flex;
+            background-color: #f1f3f4;
+            border-radius: 8px;
+            padding: 4px;
+            gap: 2px;
+            border: 2px solid #007bff; /* Added border for visibility */
+        }
+
+        .toggle-btn {
+            background: none;
+            border: none;
+            padding: 12px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #6c757d;
+            font-size: 18px;
+            min-height: 48px;
+            min-width: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .toggle-btn:hover {
+            background-color: #e9ecef;
+            color: #495057;
+        }
+
+        .toggle-btn.active {
+            background-color: #007bff;
+            color: white;
+            box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Product Container */
+        .product-container {
+            margin-bottom: 32px;
+        }
+
+        /* List View - Default */
+        .product-container.list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .list-view .product-card {
+            display: flex;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            min-height: 150px;
+        }
+
+        .list-view .product-image-wrapper {
+            flex: 0 0 120px;
+            height: 150px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .list-view .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .list-view .product-info {
+            flex: 1;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .list-view .product-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+
+        .list-view .product-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 12px;
+        }
+
+        .list-view .add-to-cart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            align-self: flex-start;
+        }
+
+        /* Grid View */
+        .product-container.grid-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        .grid-view .product-card {
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .grid-view .product-image-wrapper {
+            position: relative;
+            aspect-ratio: 1;
+            overflow: hidden;
+        }
+
+        .grid-view .product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .grid-view .product-info {
+            padding: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .grid-view .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 6px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .grid-view .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #007bff;
+            margin-bottom: 8px;
+            flex-grow: 1;
+        }
+
+        .grid-view .add-to-cart-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        /* Status indicator */
+        .view-status {
+            text-align: center;
+            padding: 10px;
+            background-color: #e3f2fd;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #1976d2;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 20px;
+            }
+            
+            .toggle-btn {
+                min-height: 44px;
+                min-width: 44px;
+                font-size: 16px;
+                padding: 10px 12px;
+            }
+            
+            .product-container.grid-view {
+                gap: 12px;
+            }
+            
+            .list-view .product-image-wrapper {
+                flex: 0 0 100px;
+                height: 125px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Section -->
+        <header class="header">
+            <h1 class="page-title">Products</h1>
+            
+            <!-- Layout Toggle - Made more prominent -->
+            <div class="layout-toggle" role="tablist" aria-label="Product view options">
+                <button 
+                    class="toggle-btn active" 
+                    data-view="list" 
+                    role="tab" 
+                    aria-selected="true" 
+                    aria-controls="product-container"
+                    aria-label="List view"
+                    title="List View"
+                >
+                    <i class="fas fa-list" aria-hidden="true"></i>
+                </button>
+                <button 
+                    class="toggle-btn" 
+                    data-view="grid" 
+                    role="tab" 
+                    aria-selected="false" 
+                    aria-controls="product-container"
+                    aria-label="Grid view"
+                    title="Grid View"
+                >
+                    <i class="fas fa-th" aria-hidden="true"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- View Status Indicator -->
+        <div class="view-status" id="view-status">
+            Currently viewing: List View
+        </div>
+
+        <!-- Product Container -->
+        <div class="product-container list-view" id="product-container">
+            
+            <!-- Product Card 1 -->
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img 
+                        src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=500&fit=crop" 
+                        alt="Military Combat T-Shirt"
+                        class="product-image"
+                    >
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">Military Combat T-Shirt</h2>
+                    <div class="product-price">£24.99</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product Card 2 -->
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img 
+                        src="https://images.unsplash.com/photo-1583743814966-8936f37f4042?w=400&h=500&fit=crop" 
+                        alt="Tactical Cargo Pants"
+                        class="product-image"
+                    >
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">Tactical Cargo Pants</h2>
+                    <div class="product-price">£49.99</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product Card 3 -->
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img 
+                        src="https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=400&h=500&fit=crop" 
+                        alt="Military Hoodie"
+                        class="product-image"
+                    >
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">Military Boot Camp Hoodie</h2>
+                    <div class="product-price">£39.99</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+            <!-- Product Card 4 -->
+            <div class="product-card">
+                <div class="product-image-wrapper">
+                    <img 
+                        src="https://images.unsplash.com/photo-1594633313593-bab3825d0caf?w=400&h=500&fit=crop" 
+                        alt="Camouflage Jacket"
+                        class="product-image"
+                    >
+                </div>
+                <div class="product-info">
+                    <h2 class="product-title">Camouflage Field Jacket</h2>
+                    <div class="product-price">£79.99</div>
+                    <button class="add-to-cart-btn">Add to Cart</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        class ProductToggle {
+            constructor() {
+                this.productContainer = document.getElementById('product-container');
+                this.toggleBtns = document.querySelectorAll('.toggle-btn');
+                this.viewStatus = document.getElementById('view-status');
+                this.currentView = 'list';
+                
+                this.setupEventListeners();
+                console.log('ProductToggle initialized');
+            }
+
+            setupEventListeners() {
+                this.toggleBtns.forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        console.log('Toggle button clicked:', e.currentTarget.dataset.view);
+                        this.handleViewToggle(e);
+                    });
+                });
+            }
+
+            handleViewToggle(event) {
+                const btn = event.currentTarget;
+                const view = btn.dataset.view;
+                
+                console.log(`Switching to ${view} view`);
+                
+                if (view === this.currentView) return;
+                
+                // Update active button
+                this.toggleBtns.forEach(b => {
+                    b.classList.remove('active');
+                    b.setAttribute('aria-selected', 'false');
+                });
+                
+                btn.classList.add('active');
+                btn.setAttribute('aria-selected', 'true');
+                
+                // Update view
+                this.currentView = view;
+                this.productContainer.className = `product-container ${view}-view`;
+                this.viewStatus.textContent = `Currently viewing: ${view === 'list' ? 'List' : 'Grid'} View`;
+                
+                console.log(`View changed to: ${view}`);
+            }
+        }
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing ProductToggle');
+            const toggle = new ProductToggle();
+        });
+    </script>
+</body>
+</html>

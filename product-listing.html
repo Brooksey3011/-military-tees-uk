@@ -14,7 +14,7 @@
         <header class="header">
             <h1 class="page-title">Products</h1>
             
-            <!-- Layout Toggle -->
+            <!-- Layout Toggle - Enhanced visibility -->
             <div class="layout-toggle" role="tablist" aria-label="Product view options">
                 <button 
                     class="toggle-btn active" 
@@ -23,8 +23,10 @@
                     aria-selected="true" 
                     aria-controls="product-container"
                     aria-label="List view"
+                    title="List View"
                 >
                     <i class="fas fa-list" aria-hidden="true"></i>
+                    <span class="toggle-label">List</span>
                 </button>
                 <button 
                     class="toggle-btn" 
@@ -33,11 +35,18 @@
                     aria-selected="false" 
                     aria-controls="product-container"
                     aria-label="Grid view"
+                    title="Grid View"
                 >
-                    <i class="fas fa-th-large" aria-hidden="true"></i>
+                    <i class="fas fa-th" aria-hidden="true"></i>
+                    <span class="toggle-label">Grid</span>
                 </button>
             </div>
         </header>
+
+        <!-- View Status Indicator for debugging -->
+        <div class="view-status" id="view-status" style="text-align: center; padding: 10px; background-color: #e3f2fd; margin-bottom: 20px; border-radius: 6px; font-weight: 600; color: #1976d2;">
+            Currently viewing: List View
+        </div>
 
         <!-- Filter/Sort Section -->
         <div class="filters">

@@ -47,22 +47,32 @@ body {
     border-radius: 8px;
     padding: 4px;
     gap: 2px;
+    border: 2px solid #007bff;
 }
 
 .toggle-btn {
     background: none;
     border: none;
-    padding: 10px 12px;
+    padding: 8px 12px;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
     color: #6c757d;
-    font-size: 16px;
-    min-height: 44px;
-    min-width: 44px;
+    font-size: 14px;
+    min-height: 48px;
+    min-width: 70px;
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 4px;
+}
+
+.toggle-label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 
 .toggle-btn:hover {
