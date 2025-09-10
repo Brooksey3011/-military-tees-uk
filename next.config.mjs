@@ -99,6 +99,36 @@ const nextConfig = {
           },
         ],
       },
+      // Cache fonts for extended periods
+      {
+        source: '/fonts/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache favicons and manifest
+      {
+        source: '/(favicon|apple-touch-icon|manifest)(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=86400',
+          },
+        ],
+      },
+      // Cache API responses for short periods
+      {
+        source: '/api/products',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=300, stale-while-revalidate=60',
+          },
+        ],
+      },
     ]
   },
 
@@ -107,7 +137,10 @@ const nextConfig = {
     optimizePackageImports: [
       'lucide-react',
       '@radix-ui/react-icons',
-      'framer-motion'
+      'framer-motion',
+      '@supabase/supabase-js',
+      'zustand',
+      'react-hook-form'
     ],
   },
 

@@ -32,3 +32,11 @@ yarn-error.log*
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Debug files (should not be in production)
+debug-*.html
+dev.log
+*.log
+*.tmp
+*.temp
+.DS_Store

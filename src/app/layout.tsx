@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Source_Sans_3, Roboto_Slab } from "next/font/google";
+import { Inter, Roboto_Slab } from "next/font/google";
 import { CartDrawer } from "@/components/cart/cart-drawer";
 import { SimpleErrorBoundary } from "@/components/ui/simple-error-boundary";
 import { CookieConsent } from "@/components/ui/cookie-consent";
@@ -9,10 +9,9 @@ import { PlausibleProvider } from "@/components/analytics/plausible";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-const sourceSans3 = Source_Sans_3({
+const inter = Inter({
   subsets: ["latin"],
   variable: "--font-sans",
-  weight: ["300", "400", "600", "700"],
   display: "swap",
 });
 
@@ -194,7 +193,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${sourceSans3.variable} ${robotoSlab.variable}`}>
+    <html lang="en" className={`${inter.variable} ${robotoSlab.variable}`}>
       <head>
         <script
           type="application/ld+json"
@@ -205,9 +204,9 @@ export default function RootLayout({
       </head>
       <body className={cn(
         "antialiased min-h-screen bg-background text-foreground",
-        sourceSans3.variable,
+        inter.variable,
         robotoSlab.variable,
-        sourceSans3.className
+        inter.className
       )}>
         <PlausibleProvider domain="militarytees.co.uk">
           <SimpleErrorBoundary>
