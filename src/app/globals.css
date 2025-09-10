@@ -295,7 +295,6 @@ input, textarea, select {
   border-radius: 0; /* Military sharp edges */
   padding: 2px;
   gap: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 

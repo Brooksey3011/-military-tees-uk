@@ -183,8 +183,11 @@ export default function WishlistPage() {
                           <div>
                             <p className="text-xs text-muted-foreground mb-1">Available sizes:</p>
                             <div className="flex flex-wrap gap-1">
-                              {item.sizes.map((size) => (
-                                <Badge key={size} variant="outline" className="rounded-none text-xs">
+                              {[...new Set(item.sizes)].sort((a, b) => {
+                                const sizeOrder = ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'];
+                                return sizeOrder.indexOf(a) - sizeOrder.indexOf(b);
+                              }).map((size) => (
+                                <Badge key={size} variant="outline" className="rounded-none text-xs border-border hover:bg-muted/20 transition-colors">
                                   {size}
                                 </Badge>
                               ))}
