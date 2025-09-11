@@ -111,7 +111,7 @@ export function Footer() {
           {/* Links Sections */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <h4 className="font-semibold text-foreground mb-4">{category}</h4>
+              <div className="font-semibold text-foreground mb-4 text-base">{category}</div>
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.title}>
@@ -132,7 +132,7 @@ export function Footer() {
         <div className="mt-12 pt-8 border-t border-border">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="flex-1 max-w-md">
-              <h4 className="font-semibold text-foreground mb-2">Join Our Newsletter</h4>
+              <div className="font-semibold text-foreground mb-2 text-base">Join Our Newsletter</div>
               <p className="text-sm text-muted-foreground mb-4">
                 Get updates on new products, exclusive offers, and military gear insights.
               </p>
