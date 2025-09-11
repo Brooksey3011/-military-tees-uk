@@ -15,6 +15,7 @@ interface OptimizedImageProps {
   sizes?: string
   placeholder?: "blur" | "empty"
   blurDataURL?: string
+  fetchPriority?: "high" | "low" | "auto"
 }
 
 export function OptimizedImage({ 
@@ -27,7 +28,8 @@ export function OptimizedImage({
   fill = false,
   sizes,
   placeholder = "empty",
-  blurDataURL
+  blurDataURL,
+  fetchPriority = "auto"
 }: OptimizedImageProps) {
   const [isLoading, setIsLoading] = useState(true)
   const [hasError, setHasError] = useState(false)
@@ -53,6 +55,7 @@ export function OptimizedImage({
         sizes={sizes}
         placeholder={placeholder}
         blurDataURL={blurDataURL}
+        fetchPriority={fetchPriority}
         className={cn(
           "transition-opacity duration-300",
           isLoading ? "opacity-0" : "opacity-100",

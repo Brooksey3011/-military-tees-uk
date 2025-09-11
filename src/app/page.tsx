@@ -54,6 +54,7 @@ export default function Home() {
                 height={533}
                 className="w-full h-auto object-contain"
                 priority={true}
+                fetchPriority="high"
                 sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
               />
             </picture>

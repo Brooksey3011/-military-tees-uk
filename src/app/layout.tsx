@@ -224,6 +224,14 @@ export default function RootLayout({
           />
         </noscript>
 
+        {/* Preload LCP image for immediate discovery */}
+        <link
+          rel="preload"
+          href="/logowhite.webp"
+          as="image"
+          fetchPriority="high"
+        />
+
         {/* DNS prefetch for external resources */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
