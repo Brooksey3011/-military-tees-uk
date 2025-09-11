@@ -6,6 +6,7 @@ import { CookieConsent } from "@/components/ui/cookie-consent";
 import { AuthProvider } from "@/hooks/use-auth";
 import { CartProvider } from "@/hooks/use-simple-cart";
 import { PlausibleProvider } from "@/components/analytics/plausible";
+import { WebVitals } from "@/components/performance/web-vitals";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -195,6 +196,75 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${robotoSlab.variable}`}>
       <head>
+        {/* Preload critical fonts for better performance */}
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          as="style"
+          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet"
+          />
+        </noscript>
+        
+        <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700;900&display=swap"
+          as="style"
+          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <noscript>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700;900&display=swap"
+            rel="stylesheet"
+          />
+        </noscript>
+
+        {/* DNS prefetch for external resources */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+
+        {/* Critical CSS for above-the-fold content */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            /* Critical CSS for immediate rendering */
+            html { 
+              scroll-behavior: smooth; 
+              font-family: ${inter.style.fontFamily}, system-ui, sans-serif;
+            }
+            body { 
+              margin: 0; 
+              padding: 0; 
+              background: var(--background, #000000); 
+              color: var(--foreground, #ffffff);
+              font-family: inherit;
+              line-height: 1.6;
+              -webkit-font-smoothing: antialiased;
+              -moz-osx-font-smoothing: grayscale;
+            }
+            * { 
+              box-sizing: border-box; 
+              font-family: inherit;
+            }
+            .font-display { 
+              font-family: ${robotoSlab.style.fontFamily}, ui-serif, Georgia, serif; 
+            }
+            /* Hide content until styles load */
+            .animate-fade-in { 
+              opacity: 0; 
+              animation: fadeIn 0.3s ease-out forwards; 
+            }
+            @keyframes fadeIn { 
+              to { opacity: 1; } 
+            }
+          `
+        }} />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -209,6 +279,7 @@ export default function RootLayout({
         inter.className
       )}>
         <PlausibleProvider domain="militarytees.co.uk">
+          <WebVitals />
           <SimpleErrorBoundary>
             <AuthProvider>
               <CartProvider>

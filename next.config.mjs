@@ -142,6 +142,8 @@ const nextConfig = {
       'zustand',
       'react-hook-form'
     ],
+    optimizeCss: true,
+    webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB'],
   },
 
   // Turbopack configuration (stable)
