@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Metadata } from "next"
+import Image from "next/image"
 import { Palette, Users, Award, Clock, CheckCircle, Phone, Mail, MessageCircle } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
@@ -87,9 +88,11 @@ export default function CustomOrdersPage() {
       <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-24">
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-8">
-            <img 
-              src="/logowhite.png" 
+            <Image 
+              src="/logowhite.svg" 
               alt="Military Tees UK Logo" 
+              width={96}
+              height={96}
               className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
               style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
             />

@@ -9,14 +9,19 @@
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "/favicon.svg", 
-      "sizes": "any",
-      "type": "image/svg+xml"
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
     },
     {
-      "src": "/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
       "purpose": "any maskable"
     }
   ],
@@ -30,21 +35,21 @@
       "short_name": "Veterans",
       "description": "Browse our veterans apparel collection",
       "url": "/veterans",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Memorial Collection",
       "short_name": "Memorial", 
       "description": "Memorial and remembrance clothing",
       "url": "/memorial",
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Custom Orders",
       "short_name": "Custom",
       "description": "Create custom military designs",
       "url": "/custom", 
-      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+      "icons": [{ "src": "/android-chrome-192x192.png", "sizes": "192x192" }]
     }
   ]
 }

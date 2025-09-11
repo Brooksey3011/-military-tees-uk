@@ -29,7 +29,7 @@ const nextConfig = {
   
   // Image optimization
   images: {
-    formats: ['image/webp', 'image/avif'],
+    formats: ['image/avif', 'image/webp'], // AVIF first for better compression
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 year
@@ -132,6 +132,13 @@ const nextConfig = {
     ]
   },
 
+  // Modern JavaScript targeting to reduce polyfills
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
+
+  // SWC configuration for modern browsers (swcMinify is enabled by default in Next.js 15)
+  
   // Experimental features for better performance
   experimental: {
     optimizePackageImports: [
@@ -144,6 +151,7 @@ const nextConfig = {
     ],
     optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB'],
+    forceSwcTransforms: true,
   },
 
   // Turbopack configuration (stable)

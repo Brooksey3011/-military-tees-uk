@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Menu, X, Search, User, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CartIcon } from "@/components/cart/cart-icon"
@@ -152,10 +153,13 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
-            <img 
-              src="/logowhite.png" 
+            <Image 
+              src="/logowhite.svg" 
               alt="Military Tees UK Logo" 
-              className="h-12 w-auto" 
+              width={48}
+              height={48}
+              className="h-12 w-auto"
+              priority
             />
             <div className="hidden sm:block">
               <div className="text-xl font-display font-semibold text-foreground tracking-wider">Military Tees UK</div>

@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Facebook, Instagram, Mail, MapPin } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -75,9 +76,11 @@ export function Footer() {
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-3 mb-4">
-              <img 
-                src="/logowhite.png" 
+              <Image 
+                src="/logowhite.svg" 
                 alt="Military Tees UK Logo" 
+                width={48}
+                height={48}
                 className="h-12 w-auto" 
               />
               <div>

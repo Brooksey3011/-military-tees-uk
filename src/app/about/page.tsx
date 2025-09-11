@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { Shield, Target, Heart, Users, Award, Clock, Mail } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { Button } from "@/components/ui/button"
@@ -88,9 +89,11 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 py-16">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
-              <img 
-                src="/logowhite.png" 
+              <Image 
+                src="/logowhite.svg" 
                 alt="Military Tees UK Logo" 
+                width={48}
+                height={48}
                 className="h-12 w-12 object-contain mb-6 mr-4"
                 style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
               />

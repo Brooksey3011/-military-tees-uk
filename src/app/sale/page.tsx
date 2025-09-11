@@ -1,5 +1,6 @@
 import { Metadata } from "next"
 import Link from "next/link"
+import Image from "next/image"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -66,9 +67,11 @@ export default function SalePage() {
         <section className="bg-gradient-to-b from-red-600/10 to-background py-24 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-8">
-              <img 
-                src="/logowhite.png" 
+              <Image 
+                src="/logowhite.svg" 
                 alt="Military Tees UK Logo" 
+                width={96}
+                height={96}
                 className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
                 style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
               />

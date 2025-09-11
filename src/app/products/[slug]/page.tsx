@@ -2,7 +2,7 @@ import { Metadata } from "next"
 import { Layout } from "@/components/layout"
 import { ProfessionalProductDetail } from "@/components/pages/professional-product-detail"
 import { ClientOnly } from "@/components/ui/client-only"
-import { createSupabaseClient } from "@/lib/supabase"
+import { createSupabaseServer } from "@/lib/supabase"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
 import { notFound } from "next/navigation"
 
@@ -13,7 +13,7 @@ interface ProductPageProps {
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
-  const supabase = createSupabaseClient()
+  const supabase = createSupabaseServer()
   
   try {
     const { data: product } = await supabase
@@ -82,7 +82,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
-  const supabase = createSupabaseClient()
+  const supabase = createSupabaseServer()
   
   let productSchema = null
   

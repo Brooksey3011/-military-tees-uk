@@ -49,7 +49,8 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.svg', sizes: 'any', type: 'image/svg+xml' },
+      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
       { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' }
     ],
     shortcut: '/favicon.ico',
@@ -119,7 +120,7 @@ export default function RootLayout({
     "url": "https://militarytees.co.uk",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://militarytees.co.uk/logowhite.png",
+      "url": "https://militarytees.co.uk/logowhite.webp",
       "width": 500,
       "height": 200
     },

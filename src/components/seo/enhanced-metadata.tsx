@@ -101,7 +101,7 @@ export function generateStructuredData(pageType: 'homepage' | 'product' | 'categ
     "url": "https://militarytees.co.uk",
     "logo": {
       "@type": "ImageObject",
-      "url": "https://militarytees.co.uk/logowhite.png",
+      "url": "https://militarytees.co.uk/logowhite.webp",
       "width": 500,
       "height": 200
     },
