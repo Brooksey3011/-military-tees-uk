@@ -251,7 +251,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="md:hidden"
+              className="md:hidden min-h-[48px] min-w-[48px]"
               onClick={() => setIsSearchOpen(!isSearchOpen)}
             >
               <Search className="h-4 w-4" />
@@ -259,7 +259,7 @@ export function Navbar() {
             </Button>
 
             {/* Favorites */}
-            <Button variant="ghost" size="icon" className="hidden sm:flex relative" asChild>
+            <Button variant="ghost" size="icon" className="hidden sm:flex relative min-h-[48px] min-w-[48px]" asChild>
               <Link href="/account/wishlist">
                 <Heart className="h-4 w-4" />
                 <WishlistBadge />
@@ -268,7 +268,7 @@ export function Navbar() {
             </Button>
 
             {/* User Profile */}
-            <Button variant="ghost" size="icon" asChild>
+            <Button variant="ghost" size="icon" className="min-h-[48px] min-w-[48px]" asChild>
               <Link href="/profile">
                 <User className="h-4 w-4" />
                 <span className="sr-only">Profile</span>
@@ -282,7 +282,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden"
+              className="lg:hidden min-h-[48px] min-w-[48px]"
               onClick={toggleMobileMenu}
             >
               {isMobileMenuOpen ? (

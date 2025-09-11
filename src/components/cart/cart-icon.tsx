@@ -30,7 +30,7 @@ export function CartIcon({
       variant="ghost"
       size="icon"
       onClick={toggleCart}
-      className={cn("relative", className)}
+      className={cn("relative min-h-[48px] min-w-[48px]", className)}
     >
       <ShoppingCart className="h-4 w-4" />
       
