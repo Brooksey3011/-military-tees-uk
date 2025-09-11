@@ -243,7 +243,7 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
   }
 }
 
-// Send order confirmation email
+// Send professional order confirmation email with full order details
 async function sendOrderConfirmationEmail({
   orderNumber,
   customerEmail,
@@ -258,23 +258,97 @@ async function sendOrderConfirmationEmail({
   sessionId: string
 }) {
   try {
-    console.log('📧 Sending order confirmation email to:', customerEmail)
+    console.log('📧 Sending professional order confirmation email to:', customerEmail)
 
-    const { emailService } = await import('@/lib/email-service')
-    
-    await emailService.sendOrderConfirmation({
-      orderNumber,
-      customerEmail,
-      orderItems,
-      totalAmount,
-      sessionId
+    // Get expanded session with shipping details
+    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+      expand: ['shipping_cost', 'total_details']
     })
 
-    console.log('✅ Order confirmation email sent successfully')
+    // Extract customer name from shipping or metadata
+    const customerName = session.shipping?.name || 
+                        session.customer_details?.name || 
+                        session.metadata?.customerName ||
+                        customerEmail.split('@')[0]
+
+    // Calculate breakdown
+    const subtotal = totalAmount
+    const shippingCost = session.shipping_cost?.amount_total ? session.shipping_cost.amount_total / 100 : 0
+    const taxAmount = session.total_details?.amount_tax ? session.total_details.amount_tax / 100 : 0
+    const orderTotal = subtotal + shippingCost + taxAmount
+
+    // Format shipping address
+    const shippingAddress = session.shipping ? {
+      name: session.shipping.name,
+      address_line_1: session.shipping.address?.line1 || '',
+      address_line_2: session.shipping.address?.line2 || undefined,
+      city: session.shipping.address?.city || '',
+      postcode: session.shipping.address?.postal_code || '',
+      country: session.shipping.address?.country || 'United Kingdom'
+    } : {
+      name: customerName,
+      address_line_1: 'Address details pending',
+      city: '',
+      postcode: '',
+      country: 'United Kingdom'
+    }
+
+    // Format order items for professional template
+    const formattedItems = orderItems.map(item => ({
+      name: item.product_name || 'Military Tees UK Product',
+      variant: `${item.size || ''} ${item.color || ''}`.trim() || item.sku || 'Standard',
+      quantity: item.quantity,
+      price: item.price_at_purchase,
+      total: item.total_price
+    }))
+
+    // Use professional email service
+    const { professionalEmailService } = await import('@/lib/email-service-professional')
+    
+    const orderData = {
+      orderNumber,
+      customerName,
+      customerEmail,
+      orderDate: new Date().toLocaleDateString('en-GB', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      }),
+      subtotal,
+      shipping: shippingCost,
+      tax: taxAmount,
+      total: orderTotal,
+      shippingAddress,
+      items: formattedItems
+    }
+
+    // Send customer confirmation
+    await professionalEmailService.sendOrderConfirmation(orderData)
+    
+    // Send admin notification
+    await professionalEmailService.sendOrderNotificationToAdmin(orderData)
+
+    console.log('✅ Professional order confirmation emails sent successfully')
 
   } catch (error) {
-    console.error('❌ Failed to send confirmation email:', error)
+    console.error('❌ Failed to send professional confirmation email:', error)
     // Don't throw - email failure shouldn't stop the order process
+    
+    // Fallback to basic email if professional service fails
+    try {
+      console.log('📧 Attempting fallback email...')
+      const { emailService } = await import('@/lib/email-service')
+      await emailService.sendOrderConfirmation({
+        orderNumber,
+        customerEmail,
+        orderItems,
+        totalAmount,
+        sessionId
+      })
+      console.log('✅ Fallback email sent successfully')
+    } catch (fallbackError) {
+      console.error('❌ Fallback email also failed:', fallbackError)
+    }
   }
 }
 
