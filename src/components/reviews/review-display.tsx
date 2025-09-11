@@ -272,6 +272,7 @@ export function ReviewDisplay({
                 setFilterRating(filterRating === rating ? undefined : rating)
                 handleFilterChange()
               }}
+              aria-label={`Filter by ${rating} star reviews`}
             >
               {rating} <Star className="h-3 w-3 ml-1 fill-current" />
             </Button>
