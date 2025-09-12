@@ -44,11 +44,6 @@ const navigation: NavItem[] = [
     description: "Browse British Armed Forces collections"
   },
   {
-    title: "Sale",
-    href: "/sale",
-    description: "Discounted military apparel and special offers"
-  },
-  {
     title: "Memorial",
     href: "/memorial",
     description: "Honouring the Fallen - tribute and remembrance designs"
@@ -163,7 +158,6 @@ export function Navbar() {
             />
             <div className="hidden sm:block">
               <div className="text-xl font-display font-semibold text-foreground tracking-wider">Military Tees UK</div>
-              <div className="text-xs text-muted-foreground hidden lg:block font-display tracking-wide uppercase">Proudly serving those who serve</div>
             </div>
           </Link>
 

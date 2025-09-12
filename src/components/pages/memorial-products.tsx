@@ -17,7 +17,6 @@ interface Product {
   id: string
   name: string
   price: number
-  sale_price?: number
   main_image_url: string
   description: string
   slug: string
@@ -77,17 +76,17 @@ export function MemorialProducts({ onProductCountChange }: MemorialProductsProps
   const filteredAndSortedProducts = products
     .filter(product => {
       if (priceFilter === 'all') return true
-      if (priceFilter === 'under20') return (product.sale_price || product.price) < 20
-      if (priceFilter === '20-30') return (product.sale_price || product.price) >= 20 && (product.sale_price || product.price) <= 30
-      if (priceFilter === 'over30') return (product.sale_price || product.price) > 30
+      if (priceFilter === 'under20') return product.price < 20
+      if (priceFilter === '20-30') return product.price >= 20 && product.price <= 30
+      if (priceFilter === 'over30') return product.price > 30
       return true
     })
     .sort((a, b) => {
       switch (sortBy) {
         case 'price-low':
-          return (a.sale_price || a.price) - (b.sale_price || b.price)
+          return a.price - b.price
         case 'price-high':
-          return (b.sale_price || b.price) - (a.sale_price || a.price)
+          return b.price - a.price
         case 'name':
           return a.name.localeCompare(b.name)
         default:

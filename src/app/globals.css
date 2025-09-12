@@ -420,31 +420,41 @@ input, textarea, select {
    PRODUCT CARD ADAPTATIONS
    ================================ */
 
-/* Grid View Product Cards */
+/* Grid View Product Cards - Ensure proper column layout */
 .product-grid-view .product-card {
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex !important;
+  flex-direction: column !important;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 0;
   overflow: hidden;
   transition: all 0.3s ease;
-  height: 100%;
+  height: 100% !important;
 }
 
 .product-grid-view .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
+  border-color: var(--primary);
+}
+
+/* Ensure image container maintains aspect ratio in grid */
+.product-grid-view .product-card > div:first-child {
+  position: relative !important;
+  aspect-ratio: 1 !important;
+  width: 100% !important;
+  height: auto !important;
 }
 
 .product-grid-view .product-card img {
-  width: 100%;
+  width: 100% !important;
+  height: 100% !important;
   aspect-ratio: 1;
   object-fit: cover;
 }
 
-.product-grid-view .product-card .product-info {
-  padding: 12px;
+/* Grid view content area */
+.product-grid-view .product-card > div:last-child {
+  padding: 12px !important;
   text-align: center;
   flex: 1;
   display: flex;
@@ -452,10 +462,10 @@ input, textarea, select {
   justify-content: space-between;
 }
 
-.product-grid-view .product-card .product-title {
-  font-size: 14px;
+.product-grid-view .product-card .product-title,
+.product-grid-view .product-card h3 {
+  font-size: 14px !important;
   font-weight: 600;
-  color: #2c3e50;
   margin-bottom: 8px;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -466,90 +476,89 @@ input, textarea, select {
 }
 
 .product-grid-view .product-card .product-price {
-  font-size: 16px;
+  font-size: 16px !important;
   font-weight: 700;
-  color: #007bff;
   margin-bottom: 12px;
 }
 
-.product-grid-view .product-card .add-to-cart {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  font-size: 12px;
+/* Grid view button styling */
+.product-grid-view .add-to-cart,
+.product-grid-view button[class*="add-to-cart"] {
+  font-size: 12px !important;
   transition: all 0.2s ease;
-  width: 100%;
+  width: 100% !important;
+  padding: 8px 12px !important;
 }
 
-.product-grid-view .product-card .add-to-cart:hover {
-  background: #0056b3;
+.product-grid-view .add-to-cart:hover,
+.product-grid-view button[class*="add-to-cart"]:hover {
   transform: scale(1.05);
 }
 
-/* List View Product Cards */
+/* List View Product Cards - Updated for proper layout */
 .product-list-view .product-card {
-  display: flex;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex !important;
+  flex-direction: row !important;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 0;
   overflow: hidden;
   transition: all 0.3s ease;
+  height: auto !important;
+  min-height: 150px;
 }
 
 .product-list-view .product-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary);
+}
+
+/* Override the ProductCard's image container for list view */
+.product-list-view .product-card > div:first-child {
+  position: relative !important;
+  aspect-ratio: unset !important;
+  width: 120px !important;
+  height: 150px !important;
+  flex-shrink: 0;
 }
 
 .product-list-view .product-card img {
-  width: 120px;
-  height: 150px;
+  width: 120px !important;
+  height: 150px !important;
   object-fit: cover;
   flex-shrink: 0;
 }
 
-.product-list-view .product-card .product-info {
-  padding: 16px;
+/* Override the ProductCard's content area for list view */
+.product-list-view .product-card > div:last-child {
+  padding: 16px !important;
   flex: 1;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 }
 
-.product-list-view .product-card .product-title {
-  font-size: 18px;
+.product-list-view .product-card .product-title,
+.product-list-view .product-card h3 {
+  font-size: 18px !important;
   font-weight: 600;
-  color: #2c3e50;
   margin-bottom: 8px;
   line-height: 1.4;
 }
 
 .product-list-view .product-card .product-price {
-  font-size: 20px;
+  font-size: 20px !important;
   font-weight: 700;
-  color: #007bff;
   margin-bottom: 12px;
 }
 
-.product-list-view .product-card .add-to-cart {
-  background: #007bff;
-  color: white;
-  border: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  align-self: flex-start;
-  transition: all 0.2s ease;
-}
-
-.product-list-view .product-card .add-to-cart:hover {
-  background: #0056b3;
-  transform: scale(1.05);
+/* List view button styling */
+.product-list-view .add-to-cart,
+.product-list-view button[class*="add-to-cart"] {
+  align-self: flex-start !important;
+  width: auto !important;
+  padding: 8px 16px !important;
+  font-size: 14px !important;
 }
 
 /* Mobile-specific adjustments - Military theme */

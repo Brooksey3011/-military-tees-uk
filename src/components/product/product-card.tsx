@@ -111,12 +111,6 @@ export function ProductCard({
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
             
-            {/* Sale Badge */}
-            {product.sale_price && (
-              <div className="absolute top-2 right-2">
-                <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
-              </div>
-            )}
 
             {/* Wishlist Heart Button */}
             <button
@@ -151,11 +145,6 @@ export function ProductCard({
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <span className="font-bold text-lg">{formatPrice(product.price)}</span>
-                {product.sale_price && (
-                  <span className="text-sm text-muted-foreground line-through">
-                    {formatPrice(product.price)}
-                  </span>
-                )}
               </div>
             </div>
           </div>
@@ -165,7 +154,7 @@ export function ProductCard({
               productId={product.id}
               variantId={selectedVariant?.id || product.id}
               name={product.name}
-              price={product.sale_price || product.price}
+              price={product.price}
               image={displayImage}
               size={selectedVariant?.size || "One Size"}
               color={selectedVariant?.color || "Standard"}
