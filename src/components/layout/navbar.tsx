@@ -154,11 +154,11 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3">
             <Image 
-              src="/logowhite.svg" 
+              src="/logowhite.webp" 
               alt="Military Tees UK Logo" 
               width={48}
               height={48}
-              className="h-12 w-auto"
+              className="h-12 w-12 object-contain"
               priority
             />
             <div className="hidden sm:block">
