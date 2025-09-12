@@ -25,28 +25,28 @@ export default function SalePage() {
     {
       title: "Launch Special",
       description: "Exclusive pricing for early supporters",
-      icon: <Tag className="h-8 w-8" />,
+      icon: <Tag className="h-6 w-6 md:h-8 md:w-8" />,
       href: "/products?category=launch-special",
       discount: "15% off"
     },
     {
       title: "First Order Discount",
       description: "Welcome offer for new customers",
-      icon: <Gift className="h-8 w-8" />,
+      icon: <Gift className="h-6 w-6 md:h-8 md:w-8" />,
       href: "/products?category=first-order",
       discount: "10% off + Free Shipping"
     },
     {
       title: "Bulk Orders",
       description: "Perfect for units and groups",
-      icon: <TrendingDown className="h-8 w-8" />,
+      icon: <TrendingDown className="h-6 w-6 md:h-8 md:w-8" />,
       href: "/custom",
       discount: "Volume Pricing Available"
     },
     {
       title: "Early Bird Deals",
       description: "Limited time startup pricing",
-      icon: <Clock className="h-8 w-8" />,
+      icon: <Clock className="h-6 w-6 md:h-8 md:w-8" />,
       href: "/products?category=early-bird",
       discount: "Special Pricing"
     }
@@ -64,35 +64,35 @@ export default function SalePage() {
     <Layout>
       <div className="min-h-screen bg-background">
         {/* Hero Section */}
-        <section className="bg-gradient-to-b from-red-600/10 to-background py-24 border-b-2 border-border">
+        <section className="bg-gradient-to-b from-red-600/10 to-background py-12 md:py-24 border-b-2 border-border">
           <div className="container mx-auto px-4 text-center">
-            <div className="flex items-center justify-center mb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-center mb-6 md:mb-8">
               <Image 
                 src="/logowhite.webp" 
                 alt="Military Tees UK Logo" 
                 width={96}
                 height={96}
-                className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
+                className="h-16 w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain mb-4 sm:mb-0 sm:mr-6"
                 style={{filter: 'brightness(0) saturate(100%) invert(20%) sepia(94%) saturate(2756%) hue-rotate(348deg) brightness(93%) contrast(93%)'}}
               />
-              <div className="text-left">
-                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
+              <div className="text-center sm:text-left">
+                <h1 className="text-2xl md:text-4xl lg:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
                   Launch Deals
                 </h1>
-                <p className="text-xl text-muted-foreground font-display tracking-wide">
+                <p className="text-base md:text-xl text-muted-foreground font-display tracking-wide">
                   Exclusive Startup Pricing
                 </p>
               </div>
             </div>
             
-            <div className="max-w-3xl mx-auto mb-10">
-              <p className="text-lg text-muted-foreground leading-relaxed">
+            <div className="max-w-3xl mx-auto mb-8 md:mb-10">
+              <p className="text-base md:text-lg text-muted-foreground leading-relaxed px-4">
                 Exclusive deals for our early supporters. 
                 Premium military-themed apparel at special launch pricing.
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
               <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
                 <Link href="/products">
                   Shop Launch Deals
@@ -108,20 +108,20 @@ export default function SalePage() {
         </section>
 
         {/* Deal Highlights */}
-        <section className="py-16 bg-red-600/5">
+        <section className="py-8 md:py-16 bg-red-600/5">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
+            <div className="text-center mb-8 md:mb-12">
               <div className="flex items-center justify-center gap-2 mb-4">
-                <Percent className="h-6 w-6 text-red-600" />
-                <h2 className="text-3xl font-display font-bold">
+                <Percent className="h-5 w-5 md:h-6 md:w-6 text-red-600" />
+                <h2 className="text-xl md:text-3xl font-display font-bold">
                   Current Offers
                 </h2>
               </div>
               
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 md:gap-4 max-w-5xl mx-auto">
                 {dealHighlights.map((highlight, index) => (
-                  <div key={index} className="bg-background p-4 border-2 border-red-600/20 rounded-none text-center">
-                    <p className="text-sm font-medium">{highlight}</p>
+                  <div key={index} className="bg-background p-3 md:p-4 border-2 border-red-600/20 rounded-none text-center">
+                    <p className="text-xs md:text-sm font-medium">{highlight}</p>
                   </div>
                 ))}
               </div>

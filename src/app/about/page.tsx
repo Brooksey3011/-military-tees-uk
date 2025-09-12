@@ -86,8 +86,8 @@ export default function AboutPage() {
       <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="border-b-2 border-border bg-muted/10">
-        <div className="container mx-auto px-4 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <div className="container mx-auto px-4 py-8 md:py-16">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
             <div>
               <Image 
                 src="/logowhite.webp" 
@@ -99,19 +99,19 @@ export default function AboutPage() {
               />
               
               <h1 className={cn(
-                "text-4xl md:text-5xl font-display font-bold text-foreground mb-6",
+                "text-2xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-4 md:mb-6",
                 "tracking-wider uppercase"
               )}>
                 Our Story
               </h1>
               
-              <p className="text-xl text-muted-foreground leading-relaxed mb-6">
+              <p className="text-base md:text-xl text-muted-foreground leading-relaxed mb-4 md:mb-6">
                 A new venture founded with passion for the military community. We're creating authentic 
                 military-themed apparel that honours British military heritage and 
                 supports those who serve.
               </p>
               
-              <p className="text-muted-foreground leading-relaxed mb-8">
+              <p className="text-sm md:text-base text-muted-foreground leading-relaxed mb-6 md:mb-8">
                 Starting our journey in 2025, we're building something special. Every design tells a story. 
                 Every purchase will support a cause. Every customer becomes part of our growing military family.
               </p>
@@ -133,7 +133,7 @@ export default function AboutPage() {
             </div>
             
             <div className={cn(
-              "bg-card border-2 border-border p-8 rounded-none"
+              "bg-card border-2 border-border p-4 md:p-8 rounded-none"
             )}>
               <h3 className={cn(
                 "text-xl font-display font-semibold text-foreground mb-6",

@@ -85,19 +85,19 @@ export default function CustomOrdersPage() {
     <Layout>
       <div className="min-h-screen bg-background">
       {/* Hero Section */}
-      <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-24">
+      <section className="border-b-2 border-border bg-gradient-to-b from-muted/20 to-background py-12 md:py-24">
         <div className="container mx-auto px-4 text-center">
-          <div className="flex items-center justify-center mb-8">
+          <div className="flex flex-col sm:flex-row items-center justify-center mb-6 md:mb-8">
             <Image 
               src="/logowhite.webp" 
               alt="Military Tees UK Logo" 
               width={96}
               height={96}
-              className="h-20 w-20 md:h-24 md:w-24 object-contain mr-6"
+              className="h-16 w-16 md:h-20 md:w-20 lg:h-24 lg:w-24 object-contain mb-4 sm:mb-0 sm:mr-6"
               style={{filter: 'brightness(0) saturate(100%) invert(41%) sepia(45%) saturate(594%) hue-rotate(75deg) brightness(91%) contrast(91%)'}}
             />
-            <div className="text-left">
-              <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
+            <div className="text-center sm:text-left">
+              <h1 className="text-2xl md:text-4xl lg:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
                 Custom Orders
               </h1>
               <p className="text-xl text-muted-foreground font-display tracking-wide">

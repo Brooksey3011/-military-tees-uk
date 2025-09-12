@@ -25,23 +25,23 @@ export default function ContactPage() {
       <div className="min-h-screen bg-background">
         {/* Header */}
         <section className="border-b-2 border-border bg-muted/10">
-          <div className="container mx-auto px-4 py-16">
+          <div className="container mx-auto px-4 py-8 md:py-16">
             <div className="max-w-4xl mx-auto text-center">
               <div className={cn(
-                "inline-block p-4 mb-6",
+                "inline-block p-2 md:p-4 mb-4 md:mb-6",
                 "border-2 border-primary rounded-none bg-background"
               )}>
-                <HeadphonesIcon className="h-12 w-12 text-primary mx-auto" />
+                <HeadphonesIcon className="h-8 w-8 md:h-12 md:w-12 text-primary mx-auto" />
               </div>
               
               <h1 className={cn(
-                "text-4xl md:text-5xl font-display font-bold text-foreground mb-4",
+                "text-2xl md:text-4xl lg:text-5xl font-display font-bold text-foreground mb-3 md:mb-4",
                 "tracking-wider uppercase"
               )}>
                 Contact Us
               </h1>
               
-              <p className="text-xl text-muted-foreground leading-relaxed">
+              <p className="text-base md:text-xl text-muted-foreground leading-relaxed px-4">
                 Standing by to assist our military community. Get in touch for orders, support, or custom design consultations.
               </p>
             </div>
@@ -49,9 +49,9 @@ export default function ContactPage() {
         </section>
 
         {/* Contact Content */}
-        <section className="container mx-auto px-4 py-16">
+        <section className="container mx-auto px-4 py-8 md:py-16">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
               
               {/* Contact Information */}
               <div className="lg:col-span-1 space-y-6">
@@ -305,7 +305,7 @@ export default function ContactPage() {
             </div>
 
             {/* Additional Help */}
-            <div className="mt-12">
+            <div className="mt-8 md:mt-12">
               <Card className="border-2 border-border rounded-none bg-muted/10">
                 <CardHeader>
                   <CardTitle className={cn(
@@ -315,20 +315,20 @@ export default function ContactPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6 text-center">
                     <div>
-                      <Mail className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <h3 className="font-semibold text-foreground mb-1">Email Support</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <Mail className="h-6 w-6 md:h-8 md:w-8 text-primary mx-auto mb-2" />
+                      <h3 className="text-sm md:text-base font-semibold text-foreground mb-1">Email Support</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         For all support inquiries and assistance
                       </p>
-                      <p className="font-medium text-foreground">info@militarytees.co.uk</p>
+                      <p className="text-sm md:text-base font-medium text-foreground">info@militarytees.co.uk</p>
                     </div>
                     
                     <div>
-                      <Mail className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <h3 className="font-semibold text-foreground mb-1">Email Response</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <Mail className="h-6 w-6 md:h-8 md:w-8 text-primary mx-auto mb-2" />
+                      <h3 className="text-sm md:text-base font-semibold text-foreground mb-1">Email Response</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         We respond to all emails within 24 hours
                       </p>
                       <Button variant="outline" size="sm" className="rounded-none mt-2" asChild>
@@ -339,9 +339,9 @@ export default function ContactPage() {
                     </div>
                     
                     <div>
-                      <Clock className="h-8 w-8 text-primary mx-auto mb-2" />
-                      <h3 className="font-semibold text-foreground mb-1">FAQ</h3>
-                      <p className="text-sm text-muted-foreground">
+                      <Clock className="h-6 w-6 md:h-8 md:w-8 text-primary mx-auto mb-2" />
+                      <h3 className="text-sm md:text-base font-semibold text-foreground mb-1">FAQ</h3>
+                      <p className="text-xs md:text-sm text-muted-foreground">
                         Find answers to common questions instantly
                       </p>
                       <Button variant="outline" size="sm" className="rounded-none mt-2" asChild>
