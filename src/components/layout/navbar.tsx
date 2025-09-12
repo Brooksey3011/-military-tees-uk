@@ -146,25 +146,27 @@ export function Navbar() {
       <div className="container mx-auto px-4">
         {/* Main navbar */}
         <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
-            <Image 
-              src="/logowhite.webp" 
-              alt="Military Tees UK Logo" 
-              width={40}
-              height={40}
-              className="h-10 w-10 object-contain"
-              priority
-            />
-            <div className="hidden sm:flex flex-col">
-              <div className="text-lg font-display font-bold text-foreground tracking-wider leading-tight">
-                Military Tees UK
+          {/* Logo Section */}
+          <div className="flex-shrink-0">
+            <Link href="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
+              <Image 
+                src="/logowhite.webp" 
+                alt="Military Tees UK Logo" 
+                width={40}
+                height={40}
+                className="h-10 w-10 object-contain"
+                priority
+              />
+              <div className="hidden sm:flex flex-col">
+                <div className="text-lg font-display font-bold text-foreground tracking-wider leading-tight">
+                  Military Tees UK
+                </div>
+                <div className="text-xs text-muted-foreground font-sans tracking-wide uppercase leading-none">
+                  Est. 2025
+                </div>
               </div>
-              <div className="text-xs text-muted-foreground font-sans tracking-wide uppercase leading-none">
-                Est. 2025
-              </div>
-            </div>
-          </Link>
+            </Link>
+          </div>
 
           {/* Desktop Navigation */}
           <div className="hidden lg:flex items-center space-x-8">
@@ -245,7 +247,7 @@ export function Navbar() {
           </div>
 
           {/* Right side icons */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 flex-shrink-0">
             {/* Mobile Search Toggle */}
             <Button
               variant="ghost"
