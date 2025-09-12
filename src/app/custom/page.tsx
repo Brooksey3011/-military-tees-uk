@@ -100,44 +100,44 @@ export default function CustomOrdersPage() {
               <h1 className="text-2xl md:text-4xl lg:text-6xl font-display font-bold tracking-wider uppercase text-foreground">
                 Custom Orders
               </h1>
-              <p className="text-xl text-muted-foreground font-display tracking-wide">
+              <p className="text-base md:text-xl text-muted-foreground font-display tracking-wide">
                 Personalized Military-Themed Apparel
               </p>
             </div>
           </div>
           
-          <div className="max-w-3xl mx-auto mb-10">
-            <p className="text-lg text-muted-foreground leading-relaxed">
+          <div className="max-w-3xl mx-auto mb-8 md:mb-10">
+            <p className="text-base md:text-lg text-muted-foreground leading-relaxed px-4">
               Create something truly unique with our custom military apparel service. 
               From unit designs to personal commemoratives, we bring your military-themed 
               vision to life with precision and pride.
             </p>
           </div>
           
-          <div className="flex justify-center items-center gap-12 text-center mt-8">
+          <div className="flex justify-center items-center gap-6 md:gap-12 text-center mt-6 md:mt-8">
             <div>
-              <div className="text-2xl font-bold text-primary">500+</div>
-              <div className="text-sm text-muted-foreground">Custom Designs</div>
+              <div className="text-xl md:text-2xl font-bold text-primary">500+</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Custom Designs</div>
             </div>
-            <div className="h-8 w-px bg-border"></div>
+            <div className="h-6 md:h-8 w-px bg-border"></div>
             <div>
-              <div className="text-2xl font-bold text-primary">48hrs</div>
-              <div className="text-sm text-muted-foreground">Design Response</div>
+              <div className="text-xl md:text-2xl font-bold text-primary">48hrs</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Design Response</div>
             </div>
-            <div className="h-8 w-px bg-border"></div>
+            <div className="h-6 md:h-8 w-px bg-border"></div>
             <div>
-              <div className="text-2xl font-bold text-primary">100%</div>
-              <div className="text-sm text-muted-foreground">Satisfaction</div>
+              <div className="text-xl md:text-2xl font-bold text-primary">100%</div>
+              <div className="text-xs md:text-sm text-muted-foreground">Satisfaction</div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Custom Services */}
-      <section className="container mx-auto px-4 py-16">
-        <div className="text-center mb-12">
+      <section className="container mx-auto px-4 py-8 md:py-16">
+        <div className="text-center mb-8 md:mb-12">
           <h2 className={cn(
-            "text-3xl font-display font-bold text-foreground mb-4",
+            "text-2xl md:text-3xl font-display font-bold text-foreground mb-3 md:mb-4",
             "tracking-wider uppercase"
           )}>
             Custom Services

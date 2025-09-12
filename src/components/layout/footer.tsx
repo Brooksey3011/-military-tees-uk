@@ -70,9 +70,9 @@ export function Footer() {
 
   return (
     <footer className="bg-muted mt-auto">
-      <div className="container mx-auto px-4 py-12">
+      <div className="container mx-auto px-4 py-8 md:py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 md:gap-8">
           {/* Brand Section */}
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-3 mb-4">
@@ -88,21 +88,21 @@ export function Footer() {
                 <div className="text-xs text-muted-foreground font-display tracking-wide uppercase">Est. 2025</div>
               </div>
             </Link>
-            <p className="text-muted-foreground mb-6 max-w-md">
+            <p className="text-sm md:text-base text-muted-foreground mb-4 md:mb-6 max-w-md">
               <strong>MISSION:</strong> Provide high quality military-themed apparel with outstanding customer service. 
               Inspired by the barracks, built for quality.
             </p>
             
             {/* Contact Info */}
-            <div className="space-y-2 text-sm text-muted-foreground">
+            <div className="space-y-2 text-xs md:text-sm text-muted-foreground">
               <div className="flex items-center space-x-2">
-                <Mail className="h-4 w-4" />
+                <Mail className="h-3 w-3 md:h-4 md:w-4" />
                 <a href="mailto:info@militarytees.co.uk" className="hover:text-foreground transition-colors">
                   info@militarytees.co.uk
                 </a>
               </div>
               <div className="flex items-center space-x-2">
-                <MapPin className="h-4 w-4" />
+                <MapPin className="h-3 w-3 md:h-4 md:w-4" />
                 <span>United Kingdom</span>
               </div>
             </div>
@@ -111,13 +111,13 @@ export function Footer() {
           {/* Links Sections */}
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
-              <div className="font-semibold text-foreground mb-4 text-base">{category}</div>
+              <div className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{category}</div>
               <ul className="space-y-2">
                 {links.map((link) => (
                   <li key={link.title}>
                     <Link 
                       href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                      className="text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
                     >
                       {link.title}
                     </Link>
@@ -129,22 +129,22 @@ export function Footer() {
         </div>
 
         {/* Newsletter Section */}
-        <div className="mt-12 pt-8 border-t border-border">
+        <div className="mt-8 md:mt-12 pt-6 md:pt-8 border-t border-border">
           <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
             <div className="flex-1 max-w-md">
-              <div className="font-semibold text-foreground mb-2 text-base">Join Our Newsletter</div>
-              <p className="text-sm text-muted-foreground mb-4">
+              <div className="font-semibold text-foreground mb-2 text-sm md:text-base">Join Our Newsletter</div>
+              <p className="text-xs md:text-sm text-muted-foreground mb-3 md:mb-4">
                 Get updates on new products, exclusive offers, and military gear insights.
               </p>
               
               {subscriptionStatus === "success" && (
-                <div className="mb-4 p-3 bg-green-100 border border-green-300 rounded text-green-800 text-sm">
+                <div className="mb-3 md:mb-4 p-2 md:p-3 bg-green-100 border border-green-300 rounded text-green-800 text-xs md:text-sm">
                   ✅ Successfully subscribed! Welcome to the ranks.
                 </div>
               )}
               
               {subscriptionStatus === "error" && (
-                <div className="mb-4 p-3 bg-red-100 border border-red-300 rounded text-red-800 text-sm">
+                <div className="mb-3 md:mb-4 p-2 md:p-3 bg-red-100 border border-red-300 rounded text-red-800 text-xs md:text-sm">
                   ❌ Subscription failed. Please try again.
                 </div>
               )}
@@ -170,18 +170,18 @@ export function Footer() {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center space-x-4">
-              <span className="text-sm font-medium text-foreground">Follow Us:</span>
+            <div className="flex items-center space-x-3 md:space-x-4">
+              <span className="text-xs md:text-sm font-medium text-foreground">Follow Us:</span>
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 rounded-md bg-background hover:bg-accent transition-colors"
+                  className="p-1.5 md:p-2 rounded-md bg-background hover:bg-accent transition-colors"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-3 w-3 md:h-4 md:w-4" />
                 </a>
               ))}
             </div>
@@ -189,16 +189,16 @@ export function Footer() {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-8 pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="text-sm text-muted-foreground">
+        <div className="mt-6 md:mt-8 pt-4 md:pt-6 border-t border-border flex flex-col sm:flex-row items-center justify-between gap-3 md:gap-4">
+          <div className="text-xs md:text-sm text-muted-foreground">
             © 2025 Military Tees UK. All rights reserved.
           </div>
           
-          <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+          <div className="flex items-center space-x-2 md:space-x-4 text-xs md:text-sm text-muted-foreground">
             <span>Proudly British</span>
-            <div className="w-px h-4 bg-border" />
+            <div className="w-px h-3 md:h-4 bg-border" />
             <span>Quality Guaranteed</span>
-            <div className="w-px h-4 bg-border" />
+            <div className="w-px h-3 md:h-4 bg-border" />
             <span>Fast Delivery</span>
           </div>
         </div>
