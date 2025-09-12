@@ -8,6 +8,7 @@ import { CartProvider } from "@/hooks/use-simple-cart";
 import { PlausibleProvider } from "@/components/analytics/plausible";
 import { WebVitals } from "@/components/performance/web-vitals";
 import { cn } from "@/lib/utils";
+import { generateEarlyHints } from "@/lib/performance-optimizer";
 import "./globals.css";
 
 const inter = Inter({
@@ -197,29 +198,20 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${robotoSlab.variable}`}>
       <head>
-        {/* Preload critical fonts for better performance */}
-        <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
-        />
-        <noscript>
-          <link
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-            rel="stylesheet"
-          />
-        </noscript>
+        {/* Optimize font loading with better resource hints */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         
+        {/* Load critical fonts with optimal strategy */}
         <link
           rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700;900&display=swap"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Slab:wght@400;600;700;900&display=swap"
           as="style"
           onLoad="this.onload=null;this.rel='stylesheet'"
         />
         <noscript>
           <link
-            href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;600;700;900&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Slab:wght@400;600;700;900&display=swap"
             rel="stylesheet"
           />
         </noscript>
@@ -232,11 +224,9 @@ export default function RootLayout({
           fetchPriority="high"
         />
 
-        {/* DNS prefetch for external resources */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        {/* Optimize critical resource loading */}
+        <link rel="dns-prefetch" href="//militarytees.co.uk" />
+        <link rel="dns-prefetch" href="//cdn.militarytees.co.uk" />
 
         {/* Critical CSS for above-the-fold content */}
         <style dangerouslySetInnerHTML={{
@@ -278,6 +268,32 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(organizationSchema),
+          }}
+        />
+        
+        {/* Performance optimization script */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Initialize performance optimizations immediately
+              if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                  navigator.serviceWorker.register('/sw.js')
+                    .catch(() => {/* Silent fail */});
+                });
+              }
+              
+              // Preload critical resources
+              const criticalImages = ['/logowhite.webp'];
+              criticalImages.forEach(src => {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = src;
+                link.fetchPriority = 'high';
+                document.head.appendChild(link);
+              });
+            `
           }}
         />
       </head>

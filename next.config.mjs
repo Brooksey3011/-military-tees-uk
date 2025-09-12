@@ -14,6 +14,15 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   
+  // Enable gzip/brotli compression and response caching
+  generateEtags: true,
+  distDir: '.next',
+  cleanDistDir: true,
+  
+  // Optimize server-side rendering
+  productionBrowserSourceMaps: false,
+  reactStrictMode: true,
+  
   // Bundle analyzer (only in development)
   ...(process.env.ANALYZE === 'true' && {
     webpack: (config, { isServer }) => {
@@ -57,11 +66,20 @@ const nextConfig = {
       {
         source: '/(.*)',
         headers: [
-          // Security headers
+          // Performance headers
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
           },
+          {
+            key: 'Accept-Encoding',
+            value: 'gzip, deflate, br'
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'gzip'
+          },
+          // Security headers
           {
             key: 'Strict-Transport-Security',
             value: 'max-age=31536000; includeSubDomains; preload'
@@ -77,6 +95,11 @@ const nextConfig = {
           {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
+          },
+          // Server push for critical resources
+          {
+            key: 'Link',
+            value: '</logowhite.webp>; rel=preload; as=image, </fonts/inter.woff2>; rel=preload; as=font; crossorigin'
           },
         ],
       },
@@ -119,13 +142,44 @@ const nextConfig = {
           },
         ],
       },
-      // Cache API responses for short periods
+      // Cache HTML pages for better performance
+      {
+        source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=60, stale-while-revalidate=300',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'gzip',
+          },
+        ],
+      },
+      // Cache API responses for optimal performance
       {
         source: '/api/products',
         headers: [
           {
             key: 'Cache-Control',
             value: 'public, max-age=300, stale-while-revalidate=60',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'gzip',
+          },
+        ],
+      },
+      {
+        source: '/api/(categories|search|featured)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=600, stale-while-revalidate=120',
+          },
+          {
+            key: 'Content-Encoding',
+            value: 'gzip',
           },
         ],
       },
@@ -152,6 +206,10 @@ const nextConfig = {
     optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB'],
     forceSwcTransforms: true,
+    // Enable static optimization where possible
+    gzipSize: true,
+    // Improve build performance
+    cpus: 4,
   },
 
   // Turbopack configuration (stable)
