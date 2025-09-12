@@ -5,6 +5,9 @@ import Link from "next/link"
 import { Filter, SortAsc, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { ProductCard } from "@/components/product/product-card"
+import { ProductViewToggle } from "@/components/ui/product-view-toggle"
+import { useProductView } from "@/hooks/use-product-view"
 import { AddToCartButton } from "@/components/cart/add-to-cart-button"
 import { cn } from "@/lib/utils"
 import { OptimizedImage } from "@/components/ui/optimized-image"
@@ -41,6 +44,9 @@ export function VeteransProducts({ onProductCountChange }: VeteransProductsProps
   const [error, setError] = useState<string | null>(null)
   const [sortBy, setSortBy] = useState<string>('name')
   const [priceFilter, setPriceFilter] = useState<string>('all')
+  
+  // Product view management
+  const { view, setView } = useProductView()
 
   useEffect(() => {
     async function fetchProducts() {
@@ -154,24 +160,31 @@ export function VeteransProducts({ onProductCountChange }: VeteransProductsProps
           </div>
         </div>
         
-        <div className="flex items-center gap-2">
-          <SortAsc className="h-4 w-4" />
-          <span className="text-sm font-medium">Sort by:</span>
-          <select 
-            value={sortBy} 
-            onChange={(e) => setSortBy(e.target.value)}
-            className="text-sm border border-border rounded-none bg-background px-2 py-1"
-          >
-            <option value="name">Name A-Z</option>
-            <option value="price-low">Price Low-High</option>
-            <option value="price-high">Price High-Low</option>
-          </select>
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
+            <SortAsc className="h-4 w-4" />
+            <span className="text-sm font-medium">Sort by:</span>
+            <select 
+              value={sortBy} 
+              onChange={(e) => setSortBy(e.target.value)}
+              className="text-sm border border-border rounded-none bg-background px-2 py-1"
+            >
+              <option value="name">Name A-Z</option>
+              <option value="price-low">Price Low-High</option>
+              <option value="price-high">Price High-Low</option>
+            </select>
+          </div>
+          
+          {/* View Toggle */}
+          <ProductViewToggle onViewChange={setView} />
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Products Grid/List */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={cn(
+          view === 'grid' ? 'product-grid-view' : 'product-list-view'
+        )}>
           {[...Array(8)].map((_, i) => (
             <div key={i} className="bg-muted/20 h-96 animate-pulse rounded-none border-2 border-border"></div>
           ))}
@@ -182,89 +195,40 @@ export function VeteransProducts({ onProductCountChange }: VeteransProductsProps
           <p className="text-muted-foreground">Try adjusting your filters or check back later for new products.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className={cn(
+          view === 'grid' ? 'product-grid-view' : 'product-list-view',
+          "transition-all duration-300 ease-in-out"
+        )}>
           {filteredAndSortedProducts.map((product) => {
-            const displayPrice = product.sale_price || product.price
-            const isProductInWishlist = isInWishlist(product.id)
+            // Ensure product has the right structure for ProductCard
+            const normalizedProduct = {
+              ...product,
+              category_id: product.category?.slug || 'veterans',
+              variants: product.variants?.map(variant => ({
+                ...variant,
+                stockQuantity: variant.stock_quantity || 10,
+                price: variant.price || product.price
+              })) || [{
+                id: product.id,
+                size: 'One Size',
+                color: 'Standard', 
+                stock_quantity: 10,
+                stockQuantity: 10,
+                sku: product.id,
+                price: product.price
+              }]
+            }
 
             return (
-              <div key={product.id} className="group border-2 border-border rounded-none bg-background hover:border-primary transition-colors">
-                <div className="relative aspect-square overflow-hidden">
-                  <Link href={`/products/${product.slug}`}>
-                    <OptimizedImage
-                      src={product.main_image_url}
-                      alt={product.name}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </Link>
-                  
-                  {product.sale_price && (
-                    <div className="absolute top-2 right-2">
-                      <Badge className="bg-red-600 text-white rounded-none">SALE</Badge>
-                    </div>
-                  )}
-
-                  {/* Wishlist Heart Button */}
-                  <button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      handleWishlistToggle(product)
-                    }}
-                    className={cn(
-                      "absolute top-2 left-2 p-2 rounded-full transition-colors",
-                      isProductInWishlist 
-                        ? "bg-red-500 text-white hover:bg-red-600" 
-                        : "bg-white/80 text-gray-600 hover:bg-white hover:text-red-500"
-                    )}
-                    title={isProductInWishlist ? "Remove from wishlist" : "Add to wishlist"}
-                  >
-                    <Heart className={cn("h-4 w-4", isProductInWishlist && "fill-current")} />
-                  </button>
-                </div>
-                
-                <div className="p-4 space-y-3">
-                  <div>
-                    <Link href={`/products/${product.slug}`}>
-                      <h3 className="font-display font-bold text-sm uppercase tracking-wide group-hover:text-primary transition-colors line-clamp-2">
-                        {product.name}
-                      </h3>
-                    </Link>
-                    <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-                      {product.description}
-                    </p>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold text-lg">{formatPrice(displayPrice)}</span>
-                        {product.sale_price && (
-                          <span className="text-sm text-muted-foreground line-through">
-                            {formatPrice(product.price)}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <AddToCartButton
-                      productId={product.id}
-                      variantId={product.id}
-                      name={product.name}
-                      price={displayPrice}
-                      image={product.main_image_url}
-                      size="One Size"
-                      color="Standard"
-                      maxQuantity={10}
-                      className="w-full rounded-none text-xs"
-                      buttonSize="sm"
-                      showIcon={true}
-                    />
-                  </div>
-                </div>
-              </div>
+              <ProductCard
+                key={product.id}
+                product={normalizedProduct}
+                variant="default"
+                className={cn(
+                  "h-full product-card",
+                  view === 'list' ? 'list-card' : 'grid-card'
+                )}
+              />
             )
           })}
         </div>
