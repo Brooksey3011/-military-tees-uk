@@ -90,7 +90,7 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
               <Image 
-                src="/logowhite.svg" 
+                src="/logowhite.webp" 
                 alt="Military Tees UK Logo" 
                 width={48}
                 height={48}

@@ -124,30 +124,6 @@ export default function ShippingPage() {
                   </div>
                 </div>
 
-                {/* Next Day Delivery */}
-                <div className="bg-muted/20 p-4 rounded-none border-2 border-border">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="font-semibold text-foreground flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-primary" />
-                      Next Day Delivery
-                    </h3>
-                    <span className="font-bold text-primary">£14.99</span>
-                  </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                    <div>
-                      <p className="font-medium text-foreground">Cut-off Time</p>
-                      <p className="text-muted-foreground">2:00 PM (Mon-Fri)</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Delivery Window</p>
-                      <p className="text-muted-foreground">Before 1:00 PM next day</p>
-                    </div>
-                    <div>
-                      <p className="font-medium text-foreground">Weekend Orders</p>
-                      <p className="text-muted-foreground">Delivered Tuesday</p>
-                    </div>
-                  </div>
-                </div>
               </CardContent>
             </Card>
 

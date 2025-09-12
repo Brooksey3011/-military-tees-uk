@@ -37,7 +37,7 @@ export const SHIPPING_ZONES: ShippingZone[] = [
     standardRate: 4.99,
     expressRate: 9.99,
     freeShippingThreshold: 50.00,
-    standardDays: { min: 3, max: 7 },
+    standardDays: { min: 3, max: 5 },
     expressDays: { min: 1, max: 2 }
   },
   {

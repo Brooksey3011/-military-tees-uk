@@ -77,11 +77,11 @@ export function Footer() {
           <div className="lg:col-span-2">
             <Link href="/" className="flex items-center space-x-3 mb-4">
               <Image 
-                src="/logowhite.svg" 
+                src="/logowhite.webp" 
                 alt="Military Tees UK Logo" 
                 width={48}
                 height={48}
-                className="h-12 w-auto" 
+                className="h-12 w-12 object-contain" 
               />
               <div>
                 <div className="text-xl font-display font-semibold tracking-wider">Military Tees UK</div>

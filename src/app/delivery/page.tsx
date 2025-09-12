@@ -104,19 +104,19 @@ export default function DeliveryPage() {
                     <Package className="h-8 w-8 text-primary" />
                   </div>
                   <CardTitle className={cn("font-display tracking-wide uppercase text-primary")}>
-                    Next Day
+                    Standard
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="text-center space-y-3">
                   <div>
-                    <p className="text-2xl font-bold text-foreground">Before 1PM</p>
-                    <p className="text-sm text-muted-foreground">Next Working Day</p>
+                    <p className="text-2xl font-bold text-foreground">3-5 Days</p>
+                    <p className="text-sm text-muted-foreground">Working Days</p>
                   </div>
                   <Badge variant="outline" className="rounded-none border-primary text-primary">
-                    £14.99
+                    £4.99
                   </Badge>
                   <p className="text-sm text-muted-foreground">
-                    For urgent requirements
+                    Standard delivery option
                   </p>
                 </CardContent>
               </Card>

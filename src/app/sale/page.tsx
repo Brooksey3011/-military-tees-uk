@@ -68,7 +68,7 @@ export default function SalePage() {
           <div className="container mx-auto px-4 text-center">
             <div className="flex items-center justify-center mb-8">
               <Image 
-                src="/logowhite.svg" 
+                src="/logowhite.webp" 
                 alt="Military Tees UK Logo" 
                 width={96}
                 height={96}
