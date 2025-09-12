@@ -147,17 +147,22 @@ export function Navbar() {
         {/* Main navbar */}
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
+          <Link href="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
             <Image 
               src="/logowhite.webp" 
               alt="Military Tees UK Logo" 
-              width={48}
-              height={48}
-              className="h-12 w-12 object-contain"
+              width={40}
+              height={40}
+              className="h-10 w-10 object-contain"
               priority
             />
-            <div className="hidden sm:block">
-              <div className="text-xl font-display font-semibold text-foreground tracking-wider">Military Tees UK</div>
+            <div className="hidden sm:flex flex-col">
+              <div className="text-lg font-display font-bold text-foreground tracking-wider leading-tight">
+                Military Tees UK
+              </div>
+              <div className="text-xs text-muted-foreground font-sans tracking-wide uppercase leading-none">
+                Est. 2025
+              </div>
             </div>
           </Link>
 
