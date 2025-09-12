@@ -31,7 +31,7 @@ export default function Home() {
       
       <div className="min-h-screen">
         {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-muted/30 via-muted/20 to-background py-12 border-b-2 border-border overflow-hidden">
+        <section className="relative bg-gradient-to-br from-muted/30 via-muted/20 to-background py-6 md:py-12 border-b-2 border-border overflow-hidden">
           {/* Animated background pattern */}
           <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:60px_60px]" />
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
@@ -61,13 +61,13 @@ export default function Home() {
           </div>
           
           {/* Hero Content */}
-          <div className="container mx-auto px-4 text-center relative z-10 flex flex-col justify-center" style={{minHeight: '500px'}}>
+          <div className="container mx-auto px-4 text-center relative z-10 flex flex-col justify-center" style={{minHeight: '320px'}}>
             {/* Centered H1 in logo area */}
-            <div className="flex flex-col items-center justify-center mb-8">
-                <h1 className="text-4xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-6">
+            <div className="flex flex-col items-center justify-center mb-4 md:mb-8">
+                <h1 className="text-2xl md:text-6xl font-display font-bold tracking-wider uppercase text-foreground mb-3 md:mb-6">
                   Military Tees UK
                 </h1>
-                <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto font-display tracking-wide">
+                <p className="text-base md:text-xl text-muted-foreground mb-4 md:mb-8 max-w-2xl mx-auto font-display tracking-wide">
                   Proudly serving those who serve
                 </p>
             </div>
@@ -90,55 +90,55 @@ export default function Home() {
         <LatestArrivals />
 
         {/* Trust Indicators - Streamlined */}
-        <section className="py-16 bg-muted/30 relative overflow-hidden">
+        <section className="py-8 md:py-16 bg-muted/30 relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-transparent to-primary/5" />
           <div className="container mx-auto px-4 relative">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
+            <div className="text-center mb-6 md:mb-12">
+              <h2 className="text-xl md:text-3xl font-display font-bold mb-2 md:mb-4">
                 Military Quality, Guaranteed
               </h2>
-              <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="text-sm md:text-lg text-muted-foreground max-w-2xl mx-auto">
                 Founded by serving military, for the military community
               </p>
             </div>
             
             {/* Key Trust Indicators */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <Award className="h-8 w-8 text-primary-foreground" />
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 max-w-4xl mx-auto">
+              <div className="flex flex-col items-center text-center space-y-2 md:space-y-4">
+                <div className="w-8 h-8 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Award className="h-4 w-4 md:h-8 md:w-8 text-primary-foreground" />
                 </div>
-                <h3 className="font-bold text-lg uppercase tracking-wide">Premium Quality</h3>
-                <p className="text-sm text-muted-foreground">Military-grade materials and professional printing</p>
+                <h3 className="font-bold text-sm md:text-lg uppercase tracking-wide">Premium Quality</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Military-grade materials and professional printing</p>
               </div>
               
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <Truck className="h-8 w-8 text-primary-foreground" />
+              <div className="flex flex-col items-center text-center space-y-2 md:space-y-4">
+                <div className="w-8 h-8 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Truck className="h-4 w-4 md:h-8 md:w-8 text-primary-foreground" />
                 </div>
-                <h3 className="font-bold text-lg uppercase tracking-wide">Fast & Free Shipping</h3>
-                <p className="text-sm text-muted-foreground">Free UK delivery on orders over £50</p>
+                <h3 className="font-bold text-sm md:text-lg uppercase tracking-wide">Fast & Free Shipping</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">Free UK delivery on orders over £50</p>
               </div>
               
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center">
-                  <Shield className="h-8 w-8 text-primary-foreground" />
+              <div className="flex flex-col items-center text-center space-y-2 md:space-y-4">
+                <div className="w-8 h-8 md:w-16 md:h-16 bg-primary rounded-full flex items-center justify-center">
+                  <Shield className="h-4 w-4 md:h-8 md:w-8 text-primary-foreground" />
                 </div>
-                <h3 className="font-bold text-lg uppercase tracking-wide">30-Day Returns</h3>
-                <p className="text-sm text-muted-foreground">No questions asked money back guarantee</p>
+                <h3 className="font-bold text-sm md:text-lg uppercase tracking-wide">30-Day Returns</h3>
+                <p className="text-xs md:text-sm text-muted-foreground">No questions asked money back guarantee</p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Popular Categories */}
-        <section className="py-16 bg-background">
+        <section className="py-8 md:py-16 bg-background">
           <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-display font-bold mb-4">
+            <div className="text-center mb-6 md:mb-12">
+              <h2 className="text-xl md:text-3xl font-display font-bold mb-2 md:mb-4">
                 Shop by Service
               </h2>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-sm md:text-lg text-muted-foreground">
                 Authentic designs for every branch of service
               </p>
             </div>
@@ -192,15 +192,15 @@ export default function Home() {
         </section>
 
         {/* Final CTA */}
-        <section className="py-16 bg-muted/30">
+        <section className="py-8 md:py-16 bg-muted/30">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl font-display font-bold mb-4 text-foreground">
+            <h2 className="text-xl md:text-3xl font-display font-bold mb-2 md:mb-4 text-foreground">
               Ready to Serve in Style?
             </h2>
-            <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            <p className="text-sm md:text-xl text-muted-foreground mb-4 md:mb-8 max-w-2xl mx-auto">
               Browse our complete collection of premium military-themed apparel
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-3 md:gap-6 justify-center items-center">
               <Button 
                 size="xl"
                 className="font-bold uppercase tracking-wide px-8 min-h-[48px]"

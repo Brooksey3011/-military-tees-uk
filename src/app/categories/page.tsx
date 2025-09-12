@@ -95,7 +95,7 @@ export default function CategoriesPage() {
       </section>
 
       {/* Military Branches Grid */}
-      <section className="container mx-auto px-4 py-16">
+      <section className="container mx-auto px-4 py-8 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
           {militaryBranches.map((branch) => {
             const IconComponent = branch.icon
@@ -169,15 +169,15 @@ export default function CategoriesPage() {
 
       {/* CTA Section */}
       <section className="border-t-2 border-border bg-muted/10">
-        <div className="container mx-auto px-4 py-16 text-center">
+        <div className="container mx-auto px-4 py-8 md:py-16 text-center">
           <h2 className={cn(
-            "text-2xl md:text-3xl font-display font-bold text-foreground mb-4",
+            "text-lg md:text-3xl font-display font-bold text-foreground mb-2 md:mb-4",
             "tracking-wider uppercase"
           )}>
             Proudly Serving Those Who Serve
           </h2>
           
-          <p className="text-muted-foreground max-w-lg mx-auto mb-8">
+          <p className="text-sm md:text-base text-muted-foreground max-w-lg mx-auto mb-4 md:mb-8">
             Can't find what you're looking for? Explore our custom orders service or browse our 
             memorial and veterans collections for specialized military designs.
           </p>
