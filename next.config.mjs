@@ -71,14 +71,6 @@ const nextConfig = {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
           },
-          {
-            key: 'Accept-Encoding',
-            value: 'gzip, deflate, br'
-          },
-          {
-            key: 'Content-Encoding',
-            value: 'gzip'
-          },
           // Security headers
           {
             key: 'Strict-Transport-Security',
@@ -99,7 +91,7 @@ const nextConfig = {
           // Server push for critical resources
           {
             key: 'Link',
-            value: '</logowhite.webp>; rel=preload; as=image, </fonts/inter.woff2>; rel=preload; as=font; crossorigin'
+            value: '</logowhite.webp>; rel=preload; as=image'
           },
         ],
       },
@@ -150,10 +142,6 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=60, stale-while-revalidate=300',
           },
-          {
-            key: 'Content-Encoding',
-            value: 'gzip',
-          },
         ],
       },
       // Cache API responses for optimal performance
@@ -164,10 +152,6 @@ const nextConfig = {
             key: 'Cache-Control',
             value: 'public, max-age=300, stale-while-revalidate=60',
           },
-          {
-            key: 'Content-Encoding',
-            value: 'gzip',
-          },
         ],
       },
       {
@@ -176,10 +160,6 @@ const nextConfig = {
           {
             key: 'Cache-Control',
             value: 'public, max-age=600, stale-while-revalidate=120',
-          },
-          {
-            key: 'Content-Encoding',
-            value: 'gzip',
           },
         ],
       },
