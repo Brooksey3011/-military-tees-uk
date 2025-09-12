@@ -177,7 +177,7 @@ export default function RootLayout({
       ]
     },
     "sameAs": [
-      "https://www.facebook.com/militaryteesukltd",
+      "https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/",
       "https://www.instagram.com/militaryteesukltd/", 
       "https://www.tiktok.com/@militaryteesuk"
     ],

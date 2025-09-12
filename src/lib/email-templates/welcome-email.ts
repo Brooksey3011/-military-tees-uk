@@ -93,7 +93,7 @@ export function generateWelcomeEmail(data: WelcomeEmailData): { html: string; te
       <h3 style="color: #6b7c3a; margin-bottom: 16px;">📧 Stay Connected</h3>
       <p style="margin-bottom: 16px;">Follow us for the latest designs, military heritage stories, and exclusive member offers:</p>
       <p style="margin: 0;">
-        <a href="https://facebook.com/militaryteesukltd" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Facebook</a> |
+        <a href="https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Facebook</a> |
         <a href="https://instagram.com/militaryteesukltd" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Instagram</a> |
         <a href="https://militarytees.co.uk/newsletter" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Newsletter</a>
       </p>

@@ -34,7 +34,7 @@ const footerLinks = {
 }
 
 const socialLinks = [
-  { icon: Facebook, href: "https://www.facebook.com/militaryteesukltd", label: "Facebook" },
+  { icon: Facebook, href: "https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/", label: "Facebook" },
   { icon: Instagram, href: "https://www.instagram.com/militaryteesukltd/", label: "Instagram" },
 ]
 

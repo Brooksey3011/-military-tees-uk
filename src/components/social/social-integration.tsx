@@ -120,7 +120,7 @@ export function SocialProof({ className }: SocialProofProps) {
       handle: "MilitaryTeesUK",
       description: "Community updates & military features",
       color: "text-blue-600",
-      url: "https://www.facebook.com/militaryteesukltd"
+      url: "https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/"
     }
   ]
 
@@ -308,7 +308,7 @@ export function SocialMediaFooter({ className }: { className?: string }) {
     {
       name: "Facebook", 
       icon: Facebook,
-      url: "https://www.facebook.com/militaryteesukltd",
+      url: "https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/",
       color: "hover:text-blue-600"
     }
   ]

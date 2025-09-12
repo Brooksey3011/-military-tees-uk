@@ -114,7 +114,7 @@ export function generateCustomQuoteEmail(data: CustomQuoteData): { html: string;
       <p style="margin-bottom: 16px;">Follow our custom design projects and see what we're creating for other military organizations:</p>
       <p style="margin: 0;">
         <a href="https://instagram.com/militaryteesukltd" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Instagram Portfolio</a> |
-        <a href="https://facebook.com/militaryteesukltd" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Facebook Gallery</a>
+        <a href="https://www.facebook.com/people/Military-Tees-UK-Ltd/61577312099036/" style="margin: 0 10px; color: #6b7c3a; text-decoration: none;">Facebook Gallery</a>
       </p>
     </div>
 
