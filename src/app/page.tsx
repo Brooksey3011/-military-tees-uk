@@ -143,12 +143,12 @@ export default function Home() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 max-w-6xl mx-auto">
               {/* British Army */}
               <Link href="/categories/british-army" className="group">
                 <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="aspect-square p-8 flex items-center justify-center">
-                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                  <div className="aspect-square p-4 md:p-8 flex items-center justify-center">
+                    <h3 className="text-sm md:text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
                       British Army
                     </h3>
                   </div>
@@ -158,8 +158,8 @@ export default function Home() {
               {/* Royal Navy */}
               <Link href="/categories/royal-navy" className="group">
                 <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="aspect-square p-8 flex items-center justify-center">
-                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                  <div className="aspect-square p-4 md:p-8 flex items-center justify-center">
+                    <h3 className="text-sm md:text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
                       Royal Navy
                     </h3>
                   </div>
@@ -169,8 +169,8 @@ export default function Home() {
               {/* Royal Air Force */}
               <Link href="/categories/royal-air-force" className="group">
                 <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="aspect-square p-8 flex items-center justify-center">
-                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                  <div className="aspect-square p-4 md:p-8 flex items-center justify-center">
+                    <h3 className="text-sm md:text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
                       Royal Air Force
                     </h3>
                   </div>
@@ -180,8 +180,8 @@ export default function Home() {
               {/* Royal Marines */}
               <Link href="/categories/royal-marines" className="group">
                 <div className="relative bg-muted/50 rounded-lg overflow-hidden hover:shadow-lg transition-all duration-300">
-                  <div className="aspect-square p-8 flex items-center justify-center">
-                    <h3 className="text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
+                  <div className="aspect-square p-4 md:p-8 flex items-center justify-center">
+                    <h3 className="text-sm md:text-xl font-display font-bold text-center group-hover:text-primary transition-colors">
                       Royal Marines
                     </h3>
                   </div>
