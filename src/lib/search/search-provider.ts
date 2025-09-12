@@ -2,9 +2,10 @@ import { SearchService } from './search-service'
 import { AlgoliaSearchService } from './algolia-search'
 import { CustomSearchService } from './custom-search'
 import { EnhancedSearchService } from './enhanced-search'
+import { ApiSearchService } from './api-search'
 
 export interface SearchConfig {
-  provider: 'algolia' | 'custom' | 'enhanced'
+  provider: 'algolia' | 'custom' | 'enhanced' | 'api'
   algolia?: {
     appId: string
     searchApiKey: string
@@ -27,6 +28,10 @@ class SearchProvider {
         this.service = new AlgoliaSearchService(config.algolia)
         break
       
+      case 'api':
+        this.service = new ApiSearchService()
+        break
+      
       case 'enhanced':
         this.service = new EnhancedSearchService()
         break
@@ -42,8 +47,8 @@ class SearchProvider {
 
   getService(): SearchService {
     if (!this.service) {
-      // Fallback to enhanced search if not initialized - do this silently
-      this.service = new EnhancedSearchService()
+      // Fallback to API search if not initialized - do this silently
+      this.service = new ApiSearchService()
     }
     return this.service
   }
@@ -78,11 +83,11 @@ const initializeSearchProvider = () => {
     })
     // Algolia search initialized
   } else {
-    // Fallback to enhanced search (production-ready database search)
+    // Fallback to API search (uses working /api/products endpoint)
     searchProvider.initialize({
-      provider: 'enhanced'
+      provider: 'api'
     })
-    // Enhanced database search initialized
+    // API search initialized
   }
 }
 
