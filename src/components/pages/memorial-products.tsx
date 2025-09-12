@@ -158,8 +158,6 @@ export function MemorialProducts({ onProductCountChange }: MemorialProductsProps
         </div>
         
         <div className="flex items-center gap-4">
-          <ProductViewToggle onViewChange={setView} />
-          
           <div className="flex items-center gap-2">
             <SortAsc className="h-4 w-4" />
             <span className="text-sm font-medium">Sort by:</span>
@@ -171,7 +169,11 @@ export function MemorialProducts({ onProductCountChange }: MemorialProductsProps
               <option value="name">Name A-Z</option>
               <option value="price-low">Price Low-High</option>
               <option value="price-high">Price High-Low</option>
-          </select>
+            </select>
+          </div>
+          
+          {/* View Toggle */}
+          <ProductViewToggle onViewChange={setView} />
         </div>
       </div>
 
