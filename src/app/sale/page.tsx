@@ -92,7 +92,7 @@ export default function SalePage() {
               </p>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center"
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center">
               <Button size="lg" className="rounded-none font-display font-bold tracking-wide uppercase" asChild>
                 <Link href="/products">
                   Shop Launch Deals

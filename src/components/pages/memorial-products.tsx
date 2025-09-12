@@ -212,7 +212,7 @@ export function MemorialProducts({ onProductCountChange }: MemorialProductsProps
                 sku: product.id,
                 price: product.price
               }]
-            }
+            };
 
             return (
               <ProductCard
