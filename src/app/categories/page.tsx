@@ -96,7 +96,7 @@ export default function CategoriesPage() {
 
       {/* Military Branches Grid */}
       <section className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div className="grid grid-cols-2 md:grid-cols-2 gap-4 md:gap-8 max-w-4xl mx-auto">
           {militaryBranches.map((branch) => {
             const IconComponent = branch.icon
             
@@ -112,34 +112,34 @@ export default function CategoriesPage() {
                   "rounded-none", // Sharp military styling
                   "group-hover:shadow-lg group-hover:-translate-y-1"
                 )}>
-                  <CardContent className="p-8">
+                  <CardContent className="p-4 md:p-8">
                     {/* Icon */}
                     <div className={cn(
-                      "mb-6 p-4",
+                      "mb-3 md:mb-6 p-2 md:p-4",
                       "border border-muted-foreground/20",
                       "rounded-none",
                       "bg-muted/20 group-hover:bg-primary/10 transition-colors"
                     )}>
                       <IconComponent className={cn(
-                        "h-10 w-10 group-hover:text-primary transition-colors",
+                        "h-6 w-6 md:h-10 md:w-10 group-hover:text-primary transition-colors",
                         branch.color
                       )} />
                     </div>
                     
                     {/* Branch Info */}
                     <h3 className={cn(
-                      "text-xl font-display font-bold text-foreground mb-3",
+                      "text-sm md:text-xl font-display font-bold text-foreground mb-2 md:mb-3",
                       "tracking-wide", // Military stencil feel
                       "group-hover:text-primary transition-colors"
                     )}>
                       {branch.name}
                     </h3>
                     
-                    <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+                    <p className="text-xs md:text-sm text-muted-foreground leading-relaxed mb-2 md:mb-4">
                       {branch.description}
                     </p>
                     
-                    <p className="text-xs text-muted-foreground leading-relaxed mb-6">
+                    <p className="hidden md:block text-xs text-muted-foreground leading-relaxed mb-6">
                       {branch.longDescription}
                     </p>
                     
