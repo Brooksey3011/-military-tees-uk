@@ -147,7 +147,7 @@ export function Navbar() {
         {/* Main navbar */}
         <div className="flex h-16 items-center justify-between">
           {/* Logo Section */}
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 min-w-0 mr-16">
             <Link href="/" className="flex items-center space-x-4 hover:opacity-90 transition-opacity">
               <Image 
                 src="/logowhite.webp" 
@@ -169,7 +169,7 @@ export function Navbar() {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-8">
+          <div className="hidden lg:flex items-center space-x-8 flex-1">
             {navigation.map((item) => (
               <div key={item.title} className="relative">
                 {item.title === "Military" ? (
