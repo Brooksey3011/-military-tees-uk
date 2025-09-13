@@ -148,7 +148,7 @@ export function trackError(
   // Add request context if available
   if (request) {
     enrichedContext.userAgent = request.headers.get('user-agent') || undefined
-    enrichedContext.ip = request.headers.get('x-forwarded-for') || request.ip || undefined
+    enrichedContext.ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || undefined
     enrichedContext.path = request.nextUrl?.pathname
     enrichedContext.method = request.method
   }

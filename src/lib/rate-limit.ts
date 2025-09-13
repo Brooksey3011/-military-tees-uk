@@ -84,7 +84,7 @@ function createRateLimitKey(request: NextRequest, keyType: string): string {
   // Get client IP - handle various proxy headers
   const forwardedFor = request.headers.get('x-forwarded-for')
   const realIp = request.headers.get('x-real-ip')
-  const clientIp = forwardedFor?.split(',')[0]?.trim() || realIp || request.ip || 'unknown'
+  const clientIp = forwardedFor?.split(',')[0]?.trim() || realIp || 'unknown'
 
   // Get user agent for additional fingerprinting
   const userAgent = request.headers.get('user-agent')?.substring(0, 100) || 'unknown'

@@ -22,7 +22,7 @@ export function initializeSentry(): void {
     // Dynamic import to avoid errors when @sentry/nextjs is not installed
     const initSentry = async () => {
       try {
-        const Sentry = await import('@sentry/nextjs')
+        const Sentry = await import('@sentry/nextjs' as any)
 
         const config: SentryConfig = {
           dsn: process.env.SENTRY_DSN || '',
@@ -86,7 +86,7 @@ export async function captureError(
   } = {}
 ): Promise<void> {
   try {
-    const Sentry = await import('@sentry/nextjs')
+    const Sentry = await import('@sentry/nextjs' as any)
 
     // Set user context if provided
     if (context.user) {
@@ -125,7 +125,7 @@ export async function trackTransaction(
   callback: () => Promise<any>
 ): Promise<any> {
   try {
-    const Sentry = await import('@sentry/nextjs')
+    const Sentry = await import('@sentry/nextjs' as any)
 
     const transaction = Sentry.startTransaction({ name, op: operation })
 
