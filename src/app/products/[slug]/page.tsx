@@ -7,12 +7,13 @@ import { generateEnhancedMetadata, generateStructuredData } from "@/components/s
 import { notFound } from "next/navigation"
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+  const resolvedParams = await params
   const supabase = createSupabaseServer()
   
   try {
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
         category:categories(name),
         variants:product_variants(*)
       `)
-      .eq('slug', params.slug)
+      .eq('slug', resolvedParams.slug)
       .eq('is_active', true)
       .single()
 
@@ -61,7 +62,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       title,
       description,
       keywords,
-      canonicalUrl: `/products/${params.slug}`,
+      canonicalUrl: `/products/${resolvedParams.slug}`,
       ogImage: product.main_image_url || "/og-image.jpg",
       productInfo: {
         name: product.name,
@@ -82,6 +83,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 }
 
 export default async function ProductPage({ params }: ProductPageProps) {
+  const resolvedParams = await params
   const supabase = createSupabaseServer()
   
   let productSchema = null
@@ -94,7 +96,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
         category:categories(name),
         variants:product_variants(*)
       `)
-      .eq('slug', params.slug)
+      .eq('slug', resolvedParams.slug)
       .eq('is_active', true)
       .single()
 

@@ -139,18 +139,18 @@ export function SimpleSearchResults({
               Try adjusting your search terms or browse our categories.
             </p>
             <div className="flex flex-wrap gap-2 justify-center">
-              <Badge variant="secondary" asChild>
-                <Link href="/categories/british-army">British Army</Link>
-              </Badge>
-              <Badge variant="secondary" asChild>
-                <Link href="/categories/royal-navy">Royal Navy</Link>
-              </Badge>
-              <Badge variant="secondary" asChild>
-                <Link href="/categories/royal-air-force">RAF</Link>
-              </Badge>
-              <Badge variant="secondary" asChild>
-                <Link href="/veterans">Veterans</Link>
-              </Badge>
+              <Link href="/categories/british-army">
+                <Badge variant="secondary">British Army</Badge>
+              </Link>
+              <Link href="/categories/royal-navy">
+                <Badge variant="secondary">Royal Navy</Badge>
+              </Link>
+              <Link href="/categories/royal-air-force">
+                <Badge variant="secondary">RAF</Badge>
+              </Link>
+              <Link href="/veterans">
+                <Badge variant="secondary">Veterans</Badge>
+              </Link>
             </div>
           </div>
         </div>

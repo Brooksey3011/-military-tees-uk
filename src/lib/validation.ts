@@ -202,7 +202,7 @@ export const fileUploadValidationSchema = z.object({
     'image/gif',
     'image/webp',
     'application/pdf'
-  ], { errorMap: () => ({ message: 'Unsupported file type' }) }),
+  ], { message: 'Unsupported file type' }),
   size: z.number()
     .min(1, 'File cannot be empty')
     .max(10 * 1024 * 1024, 'File too large (max 10MB)'),

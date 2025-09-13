@@ -6,8 +6,10 @@ import { ProductCard } from "./product-card"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
+import { useProgressiveLoading } from "@/hooks/use-progressive-loading"
 import { cn } from "@/lib/utils"
 import type { Product, ProductVariant, FilterOptions } from "@/types"
+import { Loader2, Package } from "lucide-react"
 
 interface ProductGridProps {
   products: Product[]
@@ -27,6 +29,14 @@ interface ProductGridProps {
     tablet: 2 | 3
     desktop: 3 | 4 | 5
   }
+  // Progressive loading options
+  progressiveLoading?: {
+    enabled: boolean
+    initialLoad?: number
+    loadIncrement?: number
+    showProgress?: boolean
+  }
+  view?: 'grid' | 'list'
 }
 
 const defaultColumns = {
@@ -65,8 +75,31 @@ export function ProductGrid({
   className,
   variant = "default",
   columns = defaultColumns,
+  progressiveLoading,
+  view = 'grid'
 }: ProductGridProps) {
   const [filteredProducts, setFilteredProducts] = React.useState<Product[]>(products)
+  
+  // Progressive loading setup
+  const {
+    visibleItems,
+    loadMoreRef,
+    isLoading: progressiveLoading_isLoading,
+    hasMore: progressiveHasMore,
+    loadedCount,
+    totalCount,
+    loadProgress
+  } = useProgressiveLoading(filteredProducts, progressiveLoading?.enabled ? {
+    initialLoad: progressiveLoading.initialLoad || 12,
+    loadIncrement: progressiveLoading.loadIncrement || 8,
+    threshold: 0.1,
+    rootMargin: '150px'
+  } : {
+    initialLoad: filteredProducts.length, // Show all if progressive loading disabled
+    loadIncrement: 0
+  })
+
+  const displayProducts = progressiveLoading?.enabled ? visibleItems : filteredProducts
 
   // Apply filters
   React.useEffect(() => {
@@ -157,11 +190,31 @@ export function ProductGrid({
 
   return (
     <div className="space-y-6">
+      {/* Progressive Loading Progress */}
+      {progressiveLoading?.enabled && progressiveLoading.showProgress && totalCount > (progressiveLoading.initialLoad || 12) && (
+        <div className="flex items-center justify-between text-sm text-muted-foreground">
+          <span>
+            Showing {loadedCount} of {totalCount} products
+          </span>
+          <div className="flex items-center space-x-2">
+            <div className="w-24 h-2 bg-muted rounded-full overflow-hidden">
+              <div 
+                className="h-full bg-primary transition-all duration-300 ease-out"
+                style={{ width: `${loadProgress}%` }}
+              />
+            </div>
+            <span className="font-medium">
+              {Math.round(loadProgress)}%
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Results Summary */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">
-            {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
+            {progressiveLoading?.enabled ? loadedCount : filteredProducts.length} of {filteredProducts.length} {filteredProducts.length === 1 ? 'product' : 'products'}
           </span>
           {filters && (
             <div className="flex gap-1">
@@ -186,7 +239,7 @@ export function ProductGrid({
         layout
       >
         <AnimatePresence>
-          {filteredProducts.map((product, index) => (
+          {displayProducts.map((product, index) => (
             <motion.div
               key={product.id}
               layout
@@ -211,8 +264,36 @@ export function ProductGrid({
         </AnimatePresence>
       </motion.div>
 
-      {/* Load More Button */}
-      {hasMore && (
+      {/* Progressive Loading Trigger */}
+      {progressiveLoading?.enabled && progressiveHasMore && (
+        <div 
+          ref={loadMoreRef}
+          className="flex items-center justify-center py-8"
+        >
+          {progressiveLoading_isLoading ? (
+            <div className="flex items-center space-x-2 text-muted-foreground">
+              <Loader2 className="h-4 w-4 animate-spin" />
+              <span>Loading more products...</span>
+            </div>
+          ) : (
+            <div className="text-xs text-muted-foreground">
+              Scroll down to load more
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* End of Progressive Loading */}
+      {progressiveLoading?.enabled && !progressiveHasMore && loadedCount === totalCount && totalCount > (progressiveLoading.initialLoad || 12) && (
+        <div className="text-center py-8 border-t border-border/50">
+          <p className="text-sm text-muted-foreground">
+            You've seen all {totalCount} products
+          </p>
+        </div>
+      )}
+
+      {/* Legacy Load More Button (when progressive loading is disabled) */}
+      {!progressiveLoading?.enabled && hasMore && (
         <div className="flex justify-center pt-8">
           <Button
             variant="outline"

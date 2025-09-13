@@ -4,8 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbo",
-    "build": "SKIP_TYPE_CHECK=true next build",
-    "build:safe": "npm run type-check && next build",
+    "build": "next build",
+    "build:dev": "SKIP_TYPE_CHECK=true next build",
+    "build:production": "npm run type-check && npm run lint && next build",
     "start": "next start",
     "lint": "next lint",
     "type-check": "tsc --noEmit",

@@ -1,8 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Skip TypeScript checking during build if environment variable is set
+  // TypeScript configuration - only skip in development for faster builds
   typescript: {
-    ignoreBuildErrors: !!process.env.SKIP_TYPE_CHECK,
+    ignoreBuildErrors: process.env.NODE_ENV === 'development' && !!process.env.SKIP_TYPE_CHECK,
   },
   
   // Skip ESLint during build to avoid configuration warnings

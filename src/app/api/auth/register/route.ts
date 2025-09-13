@@ -31,10 +31,12 @@ const registerSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  let validatedData: z.infer<typeof registerSchema>
+  
   try {
     // Parse and validate request body
     const body = await request.json()
-    const validatedData = registerSchema.parse(body)
+    validatedData = registerSchema.parse(body)
     
     console.log('🔐 Registration attempt:', { 
       email: validatedData.email,

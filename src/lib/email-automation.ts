@@ -75,7 +75,7 @@ export class EmailAutomation {
     if (process.env.HOSTINGER_EMAIL_HOST && process.env.HOSTINGER_EMAIL_USER && process.env.HOSTINGER_EMAIL_PASS) {
       this.emailService = 'hostinger'
       try {
-        this.transporter = nodemailer.createTransporter({
+        this.transporter = nodemailer.createTransport({
           host: process.env.HOSTINGER_EMAIL_HOST,
           port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '465'),
           secure: process.env.HOSTINGER_EMAIL_SECURE === 'true',
@@ -156,7 +156,7 @@ export class EmailAutomation {
     template: { subject: string; html: string },
     recipients: string[]
   ) {
-    const freshTransporter = nodemailer.createTransporter({
+    const freshTransporter = nodemailer.createTransport({
       host: process.env.HOSTINGER_EMAIL_HOST,
       port: parseInt(process.env.HOSTINGER_EMAIL_PORT || '465'),
       secure: process.env.HOSTINGER_EMAIL_SECURE === 'true',

@@ -46,7 +46,7 @@ class ProfessionalEmailService {
         subject,
         html,
         text,
-        reply_to: replyTo || this.replyTo,
+        replyTo: replyTo || this.replyTo,
       })
 
       if (result.error) {
