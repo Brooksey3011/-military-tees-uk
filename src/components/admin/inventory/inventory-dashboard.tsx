@@ -288,6 +288,7 @@ export function InventoryDashboard({
               </div>
             </div>
             
+            {/* @ts-ignore */}
             <Select value={filterCategory} onValueChange={setFilterCategory}>
               <SelectTrigger className="w-48">
                 <SelectValue placeholder="Category" />

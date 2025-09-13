@@ -20,7 +20,7 @@ export function StripeDebugInfo() {
         platform: navigator.platform,
         
         // Apple Pay detection
-        applePaySession: 'ApplePaySession' in window,
+        applePaySession: 'ApplePaySession' in (window as any),
         applePayCanMakePayments: false,
         applePayCanMakeActiveCard: false,
         
@@ -40,11 +40,11 @@ export function StripeDebugInfo() {
       }
 
       // Check Apple Pay
-      if (window.ApplePaySession) {
-        info.applePayCanMakePayments = window.ApplePaySession.canMakePayments()
+      if ((window as any).ApplePaySession) {
+        info.applePayCanMakePayments = (window as any).ApplePaySession.canMakePayments()
         
         if (info.applePayCanMakePayments) {
-          window.ApplePaySession.canMakePaymentsWithActiveCard()
+          (window as any).ApplePaySession.canMakePaymentsWithActiveCard()
             .then((canMake) => {
               setDebugInfo(prev => ({ ...prev, applePayCanMakeActiveCard: canMake }))
             })

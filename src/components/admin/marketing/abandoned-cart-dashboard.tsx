@@ -87,6 +87,7 @@ export function AbandonedCartDashboard() {
           cart_value: 67.99,
           items_count: 1,
           abandoned_at: '2024-06-19T09:20:00Z',
+          email_count: 3,
           status: 'recovered'
         }
       ]

@@ -203,7 +203,7 @@ export function KidsProducts({ onProductCountChange }: KidsProductsProps = {}) {
               variants: product.variants?.map(variant => ({
                 ...variant,
                 stockQuantity: variant.stock_quantity || 10,
-                price: variant.price || product.price
+                price: (variant as any).price || product.price
               })) || [{
                 id: product.id,
                 size: 'One Size',

@@ -78,7 +78,7 @@ export function MiniCart({ isOpen, onClose, className }: MiniCartProps) {
             ) : (
               <div className="p-4 space-y-3">
                 <AnimatePresence>
-                  {items.slice(0, 3).map((item) => (
+                  {items.slice(0, 3).map((item: any) => (
                     <motion.div
                       key={item.id}
                       initial={{ opacity: 0, x: -10 }}

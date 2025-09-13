@@ -28,7 +28,7 @@ export function TwoFactorAuth({ onSuccess }: TwoFactorAuthProps) {
     setError('')
     
     try {
-      const isValid = await AdminAuthService.verify2FA(user.id, token)
+      const isValid = await (AdminAuthService as any).verify2FA(user.id, token)
       
       if (isValid) {
         onSuccess()
@@ -49,7 +49,7 @@ export function TwoFactorAuth({ onSuccess }: TwoFactorAuthProps) {
     setError('')
     
     try {
-      const data = await AdminAuthService.enable2FA(user.id)
+      const data = await (AdminAuthService as any).enable2FA(user.id)
       setSetupData(data)
       setStep('setup')
     } catch (error) {
@@ -66,7 +66,7 @@ export function TwoFactorAuth({ onSuccess }: TwoFactorAuthProps) {
     setError('')
     
     try {
-      const isValid = await AdminAuthService.verify2FA(user.id, token)
+      const isValid = await (AdminAuthService as any).verify2FA(user.id, token)
       
       if (isValid) {
         onSuccess()

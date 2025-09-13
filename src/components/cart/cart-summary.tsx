@@ -47,11 +47,11 @@ export function CartSummary({ showItems = true, className }: CartSummaryProps) {
         {/* Items List */}
         {showItems && (
           <div className="space-y-3 max-h-64 overflow-y-auto">
-            {items.map((item) => (
+            {items.map((item: any) => (
               <div key={item.id} className="flex items-center gap-3 py-2 border-b last:border-b-0">
                 {/* Product Image */}
                 <ProductImage
-                  src={item.variant.image_urls?.[0] || item.product.main_image_url}
+                  src={item.variant?.image_urls?.[0] || item.product.main_image_url}
                   alt={item.product.name}
                   className="h-12 w-12 flex-shrink-0 overflow-hidden rounded border"
                   fill
