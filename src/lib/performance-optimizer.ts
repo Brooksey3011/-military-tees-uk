@@ -8,30 +8,14 @@ export interface CriticalResource {
 }
 
 export const CRITICAL_RESOURCES: CriticalResource[] = [
-  // Critical images for LCP
+  // Critical images for LCP - only logo as it's used on every page
   {
     url: '/logowhite.webp',
     type: 'image',
     priority: 'high'
-  },
-  {
-    url: '/favicon-32x32.png',
-    type: 'image',
-    priority: 'low'
-  },
-  // Critical fonts for CLS prevention
-  {
-    url: 'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiJ-Ek-_EeA.woff2',
-    type: 'font',
-    priority: 'high',
-    crossOrigin: true
-  },
-  {
-    url: 'https://fonts.gstatic.com/s/robotoslab/v25/BngbUXZYTXPIvIBgJJSb6s3BzlRRfKOFbvjojISWaG5iddG-1A.woff2',
-    type: 'font',
-    priority: 'high',
-    crossOrigin: true
   }
+  // Removed font preloading as it was causing preload warnings
+  // Fonts will be loaded naturally by Next.js font optimization
 ]
 
 // Preload critical resources programmatically
