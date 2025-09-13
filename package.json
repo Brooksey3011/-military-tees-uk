@@ -24,6 +24,9 @@
     "test:e2e:headed": "playwright test --headed",
     "test:journey": "playwright test tests/journeys/",
     "test:all": "npm run test:ci && npm run test:e2e",
+    "test:business-critical": "node test-business-critical.js",
+    "test:monitoring": "node test-monitoring.js",
+    "test:production-ready": "npm run test:business-critical && npm run build",
     "security:audit": "npm audit --audit-level high",
     "prepare": "husky install"
   },
