@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils"
 
 interface PromoBannerProps {
   className?: string
+  forceAnimation?: boolean
 }
 
-export function PromoBanner({ className }: PromoBannerProps) {
+export function PromoBanner({ className, forceAnimation = false }: PromoBannerProps) {
   const [isVisible, setIsVisible] = useState(true)
   const [isClient, setIsClient] = useState(false)
 
@@ -48,7 +49,10 @@ export function PromoBanner({ className }: PromoBannerProps) {
     )}>
       {/* Moving text container */}
       <div className="relative whitespace-nowrap">
-        <div className="animate-marquee inline-flex items-center space-x-8">
+        <div className={cn(
+          "inline-flex items-center space-x-8",
+          forceAnimation ? "animate-marquee-force" : "animate-marquee"
+        )}>
           {/* First set of messages */}
           {promoMessages.map((message, index) => (
             <span 

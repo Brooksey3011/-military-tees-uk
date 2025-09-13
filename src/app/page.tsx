@@ -27,7 +27,7 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
       {/* Promotional Banner */}
-      <PromoBanner />
+      <PromoBanner forceAnimation={true} />
       
       <div className="min-h-screen">
         {/* Hero Section */}

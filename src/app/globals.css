@@ -283,6 +283,18 @@ input, textarea, select {
   animation: marquee 30s linear infinite;
 }
 
+/* Mobile-specific marquee animation - faster on mobile */
+@media (max-width: 768px) {
+  .animate-marquee {
+    animation: marquee 20s linear infinite;
+  }
+}
+
+/* Override reduced motion only for the marquee banner if explicitly wanted */
+.animate-marquee-force {
+  animation: marquee 25s linear infinite !important;
+}
+
 /* ================================
    PRODUCT VIEW TOGGLE - MILITARY THEME
    ================================ */
