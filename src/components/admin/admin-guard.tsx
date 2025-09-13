@@ -30,7 +30,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
       try {
         // Check if user is admin
-        const adminStatus = await AdminAuthService.isAdmin(user.id)
+        const adminStatus = await (AdminAuthService as any).isAdmin(user.id)
         setIsAdmin(adminStatus)
         
         if (!adminStatus) {
@@ -39,11 +39,11 @@ export function AdminGuard({ children }: AdminGuardProps) {
         }
 
         // Check if 2FA is required
-        const requires2FA = await AdminAuthService.check2FARequired(user.id)
+        const requires2FA = await (AdminAuthService as any).check2FARequired(user.id)
         setRequires2FA(requires2FA)
         
         // Check existing admin session
-        const existingSession = await AdminAuthService.validateAdminSession()
+        const existingSession = await (AdminAuthService as any).validateAdminSession()
         if (existingSession && requires2FA) {
           setIs2FAVerified(true)
         } else if (!requires2FA) {
@@ -61,7 +61,7 @@ export function AdminGuard({ children }: AdminGuardProps) {
 
   const handle2FASuccess = async () => {
     if (user) {
-      await AdminAuthService.createAdminSession(user.id)
+      await (AdminAuthService as any).createAdminSession(user.id)
       setIs2FAVerified(true)
     }
   }

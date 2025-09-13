@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
     
     // Log webhook error to database
     await supabase.from('webhook_errors').insert({
-      stripe_session_id: 'session_id' in event.data.object ? event.data.object.id : 'unknown',
+      stripe_session_id: 'session_id' in event.data.object ? (event.data.object as any).id : 'unknown',
       error_message: error instanceof Error ? error.message : 'Unknown error',
       resolved: false
     })
@@ -114,7 +114,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session, supabas
     updateData.shipping_carrier = shippingRate.metadata?.carrier || 'Royal Mail'
     
     // Detect address type
-    const shippingAddress = session.shipping_details?.address
+    const shippingAddress = (session as any).shipping_details?.address
     if (shippingAddress) {
       const isBFPO = EnhancedShippingCalculator.isBFPOAddress({
         line1: shippingAddress.line1 || '',
@@ -291,7 +291,7 @@ async function sendPaymentReceivedEmail(order: any, session: Stripe.Checkout.Ses
   try {
     console.log(`📧 Sending payment received email for order: ${order.order_number}`)
 
-    const shippingDetails = session.shipping_details || session.customer_details
+    const shippingDetails = (session as any).shipping_details || (session as any).customer_details
     if (!shippingDetails?.email) {
       console.log('⚠️ No email address found in session')
       return

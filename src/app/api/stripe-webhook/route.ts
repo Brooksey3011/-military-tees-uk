@@ -283,13 +283,13 @@ async function sendOrderConfirmationEmail({
     const orderTotal = subtotal + shippingCost + taxAmount
 
     // Format shipping address
-    const shippingAddress = session.shipping ? {
-      name: session.shipping.name,
-      address_line_1: session.shipping.address?.line1 || '',
-      address_line_2: session.shipping.address?.line2 || undefined,
-      city: session.shipping.address?.city || '',
-      postcode: session.shipping.address?.postal_code || '',
-      country: session.shipping.address?.country || 'United Kingdom'
+    const shippingAddress = (session as any).shipping ? {
+      name: (session as any).shipping.name,
+      address_line_1: (session as any).shipping.address?.line1 || '',
+      address_line_2: (session as any).shipping.address?.line2 || undefined,
+      city: (session as any).shipping.address?.city || '',
+      postcode: (session as any).shipping.address?.postal_code || '',
+      country: (session as any).shipping.address?.country || 'United Kingdom'
     } : {
       name: customerName,
       address_line_1: 'Address details pending',

@@ -44,7 +44,6 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <div className="max-w-2xl mx-auto">
             <SimpleSearchBar
               placeholder="Search for military tees, categories, or designs..."
-              defaultValue={query}
               className="w-full"
             />
           </div>

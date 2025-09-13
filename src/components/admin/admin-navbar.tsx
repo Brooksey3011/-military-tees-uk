@@ -13,7 +13,7 @@ export function AdminNavbar() {
   const router = useRouter()
 
   const handleSignOut = async () => {
-    AdminAuthService.clearAdminSession()
+    (AdminAuthService as any).clearAdminSession()
     await signOut()
     router.push('/')
   }

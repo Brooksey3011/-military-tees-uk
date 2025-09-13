@@ -32,7 +32,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
       return generateEnhancedMetadata({
         title: "Product Not Found | Military Tees UK",
         description: "The requested military apparel product could not be found. Browse our collection of premium British Army themed clothing.",
-        canonicalUrl: `/products/${params.slug}`
+        canonicalUrl: `/products/${resolvedParams.slug}`
       })
     }
 
@@ -77,7 +77,7 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
     return generateEnhancedMetadata({
       title: "Military Product | Military Tees UK",
       description: "Premium British military-themed apparel. Authentic designs inspired by the British Army.",
-      canonicalUrl: `/products/${params.slug}`
+      canonicalUrl: `/products/${resolvedParams.slug}`
     })
   }
 }

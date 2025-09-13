@@ -406,7 +406,7 @@ export default function ProfilePage() {
 
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
-              <Tabs defaultValue="personal" className="w-full">
+              <Tabs value="personal" onValueChange={() => {}} className="w-full">
                 <TabsList className="grid w-full grid-cols-4 rounded-none">
                   <TabsTrigger value="personal" className="rounded-none">
                     <User className="h-4 w-4 mr-2" />
