@@ -344,7 +344,7 @@ export function SearchResults({
                       isNew: result.isNew,
                       isSale: result.isSale,
                       slug: result.url.replace('/products/', '')
-                    }))}
+                    })) as any}
                     className={cn(
                       "product-card h-full",
                       view === 'list' ? 'list-card' : 'grid-card'

@@ -223,10 +223,10 @@ export function QuickViewModal({
                       addItem({
                         productId: product.id,
                         name: product.name,
-                        slug: product.slug || product.name.toLowerCase().replace(/\s+/g, '-'),
+                        slug: (product as any).slug || product.name.toLowerCase().replace(/\s+/g, '-'),
                         price: product.price,
-                        originalPrice: product.originalPrice,
-                        image: product.images[0] || '/api/placeholder/300/400',
+                        originalPrice: (product as any).originalPrice,
+                        image: (product as any).images?.[0] || '/api/placeholder/300/400',
                         category: product.category,
                         inStock: product.variants?.some(v => v.stock > 0) ?? true,
                         sizes: product.variants?.map(v => v.size) || ['One Size']

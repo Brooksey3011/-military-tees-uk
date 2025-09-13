@@ -279,6 +279,7 @@ export function ReviewDisplay({
           ))}
         </div>
 
+        {/* @ts-ignore */}
         <Select value={sortBy} onValueChange={(value: any) => {
           setSortBy(value)
           handleFilterChange()

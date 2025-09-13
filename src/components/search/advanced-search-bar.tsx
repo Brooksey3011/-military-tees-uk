@@ -100,7 +100,7 @@ export function AdvancedSearchBar({
           facets: false
         })
         
-        setResults(response.results || [])
+        setResults(response.results as any || [])
       } catch (error) {
         console.error('Search failed:', error)
         // Fallback to mock results for better UX

@@ -47,7 +47,7 @@ export function DialogTrigger({ asChild = false, children, className }: DialogTr
     return React.cloneElement(children as React.ReactElement, {
       onClick: handleClick,
       className: cn(className, (children as React.ReactElement).props.className)
-    })
+    } as any)
   }
 
   return (

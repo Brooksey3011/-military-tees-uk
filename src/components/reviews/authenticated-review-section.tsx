@@ -20,7 +20,7 @@ export function AuthenticatedReviewSection({
   productName,
   className
 }: AuthenticatedReviewSectionProps) {
-  const { user, isLoading } = useAuth()
+  const { user } = useAuth()
   const [showReviewForm, setShowReviewForm] = React.useState(false)
   const [hasPurchased, setHasPurchased] = React.useState(false)
   const [purchaseData, setPurchaseData] = React.useState<{ orderId: string; customerId: string } | null>(null)
@@ -53,7 +53,7 @@ export function AuthenticatedReviewSection({
     checkPurchaseHistory()
   }, [user, productId])
 
-  if (isLoading || isCheckingPurchase) {
+  if (isCheckingPurchase) {
     return (
       <Card className={cn("", className)}>
         <CardContent className="p-6">

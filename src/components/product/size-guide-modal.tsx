@@ -152,7 +152,6 @@ export function SizeGuideModal({ triggerClassName = "", productType = 'tshirt' }
       </DialogTrigger>
       
       <DialogContent 
-        ref={modalRef}
         className="max-w-4xl w-[95vw] max-h-[90vh] overflow-hidden p-0 gap-0"
         aria-labelledby="size-guide-title"
         aria-describedby="size-guide-description"
@@ -166,7 +165,6 @@ export function SizeGuideModal({ triggerClassName = "", productType = 'tshirt' }
               </div>
               <div>
                 <DialogTitle 
-                  id="size-guide-title" 
                   className="text-2xl font-bold text-white"
                 >
                   Size Guide

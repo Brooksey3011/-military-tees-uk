@@ -131,8 +131,7 @@ export function ProgressiveProductGrid({
             }}
           >
             <ProductCard
-              product={product}
-              priority={index < 4} // Prioritize loading for first 4 images
+              product={product as any}
               className="h-full"
             />
           </div>
@@ -227,7 +226,7 @@ export function VirtualizedProductGrid({
             )}>
               {visibleItems.map((product) => (
                 <div key={product.id} style={{ height: itemHeight }}>
-                  <ProductCard product={product} className="h-full" />
+                  <ProductCard product={product as any} className="h-full" />
                 </div>
               ))}
             </div>

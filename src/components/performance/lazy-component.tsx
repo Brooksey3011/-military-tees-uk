@@ -39,7 +39,7 @@ export function withLazyLoading<T extends {}>(
 
 // Safe lazy loading component for Latest Arrivals
 const LazyLatestArrivalsComponent = withLazyLoading(
-  () => import('@/components/homepage/latest-arrivals'),
+  () => import('@/components/homepage/latest-arrivals').then(mod => ({ default: mod.LatestArrivals })),
   <div className="py-16">
     <div className="container mx-auto px-4">
       <div className="text-center mb-12">

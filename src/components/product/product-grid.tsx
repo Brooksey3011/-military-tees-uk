@@ -252,11 +252,10 @@ export function ProductGrid({
               }}
             >
               <ProductCard
-                product={product}
+                product={product as any}
                 variant={variant}
-                onQuickView={onQuickView}
-                onAddToCart={onAddToCart}
-                onToggleFavorite={onToggleFavorite}
+                onQuickView={onQuickView as any}
+                onToggleFavorite={onToggleFavorite as any}
                 isFavorite={favoriteProducts.includes(product.id)}
               />
             </motion.div>

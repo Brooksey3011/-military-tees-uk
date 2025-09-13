@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Slider } from "@/components/ui/slider"
+// import { Slider } from "@/components/ui/slider" // Component doesn't exist
 import { cn } from "@/lib/utils"
 import { 
   Filter, 
@@ -381,13 +381,30 @@ export default function AdvancedFilters({
                 {/* Price Range Filter */}
                 <FilterSection title="Price Range" icon={Tag}>
                   <div className="space-y-4">
-                    <Slider
-                      value={filters.priceRange || [0, 100]}
-                      onValueChange={(value) => handleFilterChange('priceRange', value as [number, number])}
-                      max={100}
-                      step={5}
-                      className="w-full"
-                    />
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="text-xs text-gray-600">Min</label>
+                        <input
+                          type="number"
+                          value={filters.priceRange?.[0] || 0}
+                          onChange={(e) => handleFilterChange('priceRange', [Number(e.target.value), filters.priceRange?.[1] || 100])}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          min="0"
+                          max="99"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-xs text-gray-600">Max</label>
+                        <input
+                          type="number"
+                          value={filters.priceRange?.[1] || 100}
+                          onChange={(e) => handleFilterChange('priceRange', [filters.priceRange?.[0] || 0, Number(e.target.value)])}
+                          className="w-full px-2 py-1 border border-gray-300 rounded text-sm"
+                          min="1"
+                          max="100"
+                        />
+                      </div>
+                    </div>
                     <div className="flex justify-between text-sm text-gray-600">
                       <span>£{filters.priceRange?.[0] || 0}</span>
                       <span>£{filters.priceRange?.[1] || 100}+</span>

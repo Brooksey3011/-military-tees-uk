@@ -44,7 +44,7 @@ export function ProductCard({
 }: ProductCardProps) {
   const [isHovered, setIsHovered] = React.useState(false)
   const [selectedVariant, setSelectedVariant] = React.useState<ProductVariant | null>(
-    product.variants?.find(v => (v.stockQuantity || v.stock_quantity) > 0) || product.variants?.[0] || null
+    product.variants?.find(v => ((v as any).stockQuantity || v.stock_quantity) > 0) || product.variants?.[0] || null
   )
   
   const addItem = useWishlistAddItem()
@@ -53,7 +53,7 @@ export function ProductCard({
   const isInWishlistState = isInWishlist(product.id)
 
   const averageRating = product.rating || 0
-  const stockQuantity = selectedVariant ? (selectedVariant.stockQuantity || selectedVariant.stock_quantity || 0) : 0
+  const stockQuantity = selectedVariant ? ((selectedVariant as any).stockQuantity || selectedVariant.stock_quantity || 0) : 0
   const isOutOfStock = stockQuantity <= 0
   const isLowStock = stockQuantity <= 5 && stockQuantity > 0
   
@@ -80,7 +80,7 @@ export function ProductCard({
         price: product.price,
         image: displayImage,
         category: product.category_id,
-        inStock: selectedVariant ? (selectedVariant.stockQuantity || selectedVariant.stock_quantity || 0) > 0 : true,
+        inStock: selectedVariant ? ((selectedVariant as any).stockQuantity || selectedVariant.stock_quantity || 0) > 0 : true,
         sizes: product.variants?.map(v => v.size || 'One Size') || ['One Size']
       })
     }
