@@ -1,13 +1,9 @@
-import { Metadata } from 'next'
+"use client"
+
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Wifi, WifiOff, RefreshCw, Home, ShoppingBag } from 'lucide-react'
-
-export const metadata: Metadata = {
-  title: 'Offline - Military Tees UK',
-  description: 'You are currently offline. Check your internet connection and try again.',
-}
 
 export default function OfflinePage() {
   return (
