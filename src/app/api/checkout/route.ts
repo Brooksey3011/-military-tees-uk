@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
+import { rateLimitMiddleware, recordSuccess, RATE_LIMITS } from '@/lib/rate-limit'
 
 // Checkout request schema - using live data validation
 const checkoutSchema = z.object({
@@ -132,6 +133,12 @@ export async function GET() {
 
 // Main checkout processing with live data
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for checkout/payment requests
+  const rateLimitResult = rateLimitMiddleware.payment(request)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
+
   try {
     console.log('🚀 Checkout API called - USING LIVE DATA')
 
@@ -228,6 +235,9 @@ export async function POST(request: NextRequest) {
     })
 
     console.log('✅ Stripe Checkout Session created with live data:', session.id)
+
+    // Record successful checkout session creation
+    recordSuccess(request, RATE_LIMITS.PAYMENT, 'payment')
 
     // Return success response with live data confirmation
     return NextResponse.json({

@@ -2,11 +2,18 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createSupabaseAdmin } from '@/lib/supabase';
 import { customQuoteRequestSchema, validateAndSanitize, validateEnvironmentVariables } from '@/lib/validation';
 import { headers } from 'next/headers';
+import { rateLimitMiddleware, recordSuccess, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Validate required environment variables
 validateEnvironmentVariables(['SUPABASE_SERVICE_ROLE_KEY', 'NEXT_PUBLIC_SUPABASE_URL']);
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for custom quote requests
+  const rateLimitResult = rateLimitMiddleware.contact(request)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
+
   try {
     // Security headers validation
     const headersList = await headers();
@@ -88,7 +95,10 @@ export async function POST(request: NextRequest) {
       quantity: validData.quantity
     });
 
-    return NextResponse.json({ 
+    // Record successful custom quote submission
+    recordSuccess(request, RATE_LIMITS.CONTACT, 'contact')
+
+    return NextResponse.json({
       success: true,
       quote: {
         id: quote.id,

@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { newsletterSchema, validateAndSanitize, sanitizeInput, validateEnvironmentVariables } from '@/lib/validation';
 import { headers } from 'next/headers';
+import { rateLimitMiddleware, recordSuccess, RATE_LIMITS } from '@/lib/rate-limit';
 
 // Validate required environment variables
 validateEnvironmentVariables(['NEXT_PUBLIC_SUPABASE_URL']);
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for newsletter subscriptions
+  const rateLimitResult = rateLimitMiddleware.contact(request)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
+
   try {
     // Security headers validation
     const headersList = await headers();
@@ -57,7 +64,10 @@ export async function POST(request: NextRequest) {
     // TODO: Implement database storage when newsletter_subscribers table is created
     // For now, validate and return success
     
-    return NextResponse.json({ 
+    // Record successful newsletter subscription
+    recordSuccess(request, RATE_LIMITS.CONTACT, 'contact')
+
+    return NextResponse.json({
       success: true,
       message: 'Successfully subscribed to newsletter!',
       note: 'Welcome email will be sent shortly.'

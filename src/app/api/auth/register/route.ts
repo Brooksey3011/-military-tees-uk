@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 import { createSupabaseAdmin } from '@/lib/supabase'
+import { rateLimitMiddleware, recordSuccess, RATE_LIMITS } from '@/lib/rate-limit'
 
 // Secure registration schema with comprehensive validation
 const registerSchema = z.object({
@@ -31,6 +32,12 @@ const registerSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
+  // Apply rate limiting for registration attempts
+  const rateLimitResult = rateLimitMiddleware.auth(request)
+  if (rateLimitResult) {
+    return rateLimitResult
+  }
+
   try {
     // Parse and validate request body
     const body = await request.json()
@@ -155,6 +162,9 @@ export async function POST(request: NextRequest) {
       customerId: customerData.id,
       email: validatedData.email
     })
+
+    // Record successful registration to potentially reduce rate limit counter
+    recordSuccess(request, RATE_LIMITS.AUTH, 'auth')
 
     return NextResponse.json({
       success: true,
