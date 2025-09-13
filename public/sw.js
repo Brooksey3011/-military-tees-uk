@@ -14,12 +14,7 @@ const CACHE_DURATION = {
 // Critical resources to cache immediately
 const CRITICAL_RESOURCES = [
   '/',
-  '/offline',
-  '/logowhite.webp',
-  '/placeholder-product.jpg',
-  '/favicon-32x32.png',
-  '/apple-touch-icon.png',
-  '/manifest.json'
+  '/offline'
 ]
 
 // Install event - cache critical resources
@@ -198,9 +193,11 @@ async function apiCacheStrategy(request) {
       const headers = new Headers(networkResponse.headers)
       headers.set('sw-cached-at', Date.now().toString())
       
-      const enhancedResponse = new Response(networkResponse.body, {
-        status: networkResponse.status,
-        statusText: networkResponse.statusText,
+      // Clone the response to avoid body locking issues
+      const responseClone = networkResponse.clone()
+      const enhancedResponse = new Response(responseClone.body, {
+        status: responseClone.status,
+        statusText: responseClone.statusText,
         headers: headers
       })
       
