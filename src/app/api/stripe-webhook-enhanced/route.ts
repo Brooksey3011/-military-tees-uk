@@ -8,7 +8,7 @@ import { ShippingCalculator } from '@/lib/shipping-calculator'
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
-    const headersList = headers()
+    const headersList = await headers()
     const signature = headersList.get('stripe-signature')
 
     if (!signature) {
@@ -37,9 +37,9 @@ export async function POST(request: NextRequest) {
       })
 
       // Extract shipping information
-      const shippingCost = fullSession.shipping_cost
-      const shippingDetails = fullSession.shipping_details
-      const customerDetails = fullSession.customer_details
+      const shippingCost = (fullSession as any).shipping_cost
+      const shippingDetails = (fullSession as any).shipping_details
+      const customerDetails = (fullSession as any).customer_details
 
       console.log('🚚 Shipping information:', {
         shippingCost: shippingCost?.amount_total,

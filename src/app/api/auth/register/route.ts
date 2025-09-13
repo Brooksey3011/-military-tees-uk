@@ -31,12 +31,23 @@ const registerSchema = z.object({
 })
 
 export async function POST(request: NextRequest) {
-  let validatedData: z.infer<typeof registerSchema>
-  
   try {
     // Parse and validate request body
     const body = await request.json()
-    validatedData = registerSchema.parse(body)
+    const parseResult = registerSchema.safeParse(body)
+    
+    if (!parseResult.success) {
+      console.log('❌ Registration validation failed:', parseResult.error.flatten())
+      return NextResponse.json(
+        { 
+          error: 'Invalid registration data. Please check your input.',
+          details: parseResult.error.flatten().fieldErrors
+        },
+        { status: 400 }
+      )
+    }
+    
+    const validatedData = parseResult.data
     
     console.log('🔐 Registration attempt:', { 
       email: validatedData.email,
@@ -50,7 +61,7 @@ export async function POST(request: NextRequest) {
     // 1. Check if email already exists
     const { data: existingUser, error: checkError } = await supabaseAdmin.auth.admin.listUsers()
     
-    const emailExists = existingUser.users?.some(user => user.email === validatedData.email)
+    const emailExists = existingUser.users?.some((user: any) => user.email === validatedData.email)
     
     if (emailExists) {
       console.log('❌ Registration failed: Email already exists')

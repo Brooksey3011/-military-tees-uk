@@ -35,10 +35,10 @@ export async function POST(request: NextRequest) {
     const validation = validateAndSanitize(customQuoteRequestSchema, normalizedBody);
     
     if (!validation.success) {
-      console.warn('Custom quote validation failed:', validation.error);
+      console.warn('Custom quote validation failed:', (validation as any).error);
       return NextResponse.json({ 
         error: 'Invalid request data',
-        details: validation.error 
+        details: (validation as any).error 
       }, { status: 400 });
     }
 

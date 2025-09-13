@@ -147,11 +147,13 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
     console.log(`💰 Total amount: £${totalAmount}`)
 
     // Perform atomic database operations
-    await supabase.transaction(async (trx) => {
+    // TODO: Implement proper transaction handling
+    // await supabase.transaction(async (trx) => {
+    try {
       console.log('🔄 Starting database transaction...')
 
       // 1. Create the order record
-      const { data: order, error: orderError } = await trx
+      const { data: order, error: orderError } = await supabase
         .from('orders')
         .insert({
           order_number: orderNumber,
@@ -177,14 +179,14 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
       // 2. Create order items and update stock
       for (const item of orderItems) {
         // Create order item
-        const { error: orderItemError } = await trx
+        const { error: orderItemError } = await supabase
           .from('order_items')
           .insert({
             order_id: order.id,
             product_variant_id: item.variant_id,
             quantity: item.quantity,
             price_at_purchase: item.price_at_purchase,
-            product_name: `${metadata.size} ${metadata.color}`,
+            product_name: item.product_name || 'Product',
             sku: item.sku
           })
 
@@ -194,7 +196,7 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
         }
 
         // Update stock quantity (secure approach - no raw SQL)
-        const { data: currentVariant, error: fetchError } = await trx
+        const { data: currentVariant, error: fetchError } = await supabase
           .from('product_variants')
           .select('stock_quantity')
           .eq('id', item.variant_id)
@@ -206,7 +208,7 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
 
         const newStockQuantity = Math.max(0, currentVariant.stock_quantity - item.quantity)
         
-        const { error: stockError } = await trx
+        const { error: stockError } = await supabase
           .from('product_variants')
           .update({ stock_quantity: newStockQuantity })
           .eq('id', item.variant_id)
@@ -220,7 +222,10 @@ async function processCompletedOrder(session: Stripe.Checkout.Session) {
       }
 
       console.log('✅ All order items created and stock updated')
-    })
+    } catch (dbError) {
+      console.error('❌ Database operation failed:', dbError)
+      throw dbError
+    }
 
     // 3. Send order confirmation email
     await sendOrderConfirmationEmail({
@@ -266,9 +271,9 @@ async function sendOrderConfirmationEmail({
     })
 
     // Extract customer name from shipping or metadata
-    const customerName = session.shipping?.name || 
-                        session.customer_details?.name || 
-                        session.metadata?.customerName ||
+    const customerName = (session as any).shipping?.name || 
+                        (session as any).customer_details?.name || 
+                        (session as any).metadata?.customerName ||
                         customerEmail.split('@')[0]
 
     // Calculate breakdown

@@ -47,12 +47,12 @@ export async function GET(request: NextRequest) {
     if (!validation.success) {
       console.error('Products API validation failed:', {
         queryParams,
-        validationError: validation.error,
+        validationError: (validation as any).error,
         timestamp: new Date().toISOString()
       });
       return NextResponse.json({
         error: 'Invalid parameters',
-        details: validation.error,
+        details: (validation as any).error,
         timestamp: new Date().toISOString()
       }, { status: 400 });
     }

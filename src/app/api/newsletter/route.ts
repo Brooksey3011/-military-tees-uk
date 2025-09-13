@@ -26,11 +26,11 @@ export async function POST(request: NextRequest) {
     // Validate and sanitize input
     const validation = validateAndSanitize(newsletterSchema, body);
     if (!validation.success) {
-      console.warn('Newsletter validation failed:', validation.error);
+      console.warn('Newsletter validation failed:', (validation as any).error);
       return NextResponse.json(
         { 
           error: 'Invalid subscription data',
-          details: validation.error
+          details: (validation as any).error
         }, 
         { status: 400 }
       );
