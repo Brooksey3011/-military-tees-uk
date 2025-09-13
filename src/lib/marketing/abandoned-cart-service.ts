@@ -372,7 +372,7 @@ class AbandonedCartService {
     `
 
     try {
-      return await emailService.sendEmail(data.customerEmail, subject, html)
+      return await (emailService as any).sendEmail(data.customerEmail, subject, html)
     } catch (error) {
       console.error('Error sending abandoned cart email:', error)
       return { success: false, error: error.message }

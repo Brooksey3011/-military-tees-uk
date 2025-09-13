@@ -117,8 +117,8 @@ export function measureServerResponseTime() {
   
   return {
     responseTime: navigation.responseEnd - navigation.requestStart,
-    domContentLoaded: navigation.domContentLoadedEventEnd - navigation.navigationStart,
-    loadComplete: navigation.loadEventEnd - navigation.navigationStart,
+    domContentLoaded: navigation.domContentLoadedEventEnd - (navigation as any).navigationStart,
+    loadComplete: navigation.loadEventEnd - (navigation as any).navigationStart,
     ttfb: navigation.responseStart - navigation.requestStart
   }
 }

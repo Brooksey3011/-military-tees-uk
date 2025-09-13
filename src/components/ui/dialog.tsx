@@ -46,7 +46,7 @@ export function DialogTrigger({ asChild = false, children, className }: DialogTr
   if (asChild) {
     return React.cloneElement(children as React.ReactElement, {
       onClick: handleClick,
-      className: cn(className, (children as React.ReactElement).props.className)
+      className: cn(className, (children as any).props.className)
     } as any)
   }
 
@@ -191,8 +191,8 @@ export function DialogClose({ asChild = false, children, className }: DialogClos
   if (asChild && children) {
     return React.cloneElement(children as React.ReactElement, {
       onClick: handleClick,
-      className: cn(className, (children as React.ReactElement).props.className)
-    })
+      className: cn(className, (children as any).props.className)
+    } as any)
   }
 
   return (

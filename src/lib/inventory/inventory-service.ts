@@ -115,7 +115,7 @@ class InventoryService {
       }
 
       if (lowStock) {
-        query = query.lt('available_stock', supabase.raw('reorder_point'))
+        query = query.lt('available_stock', (supabase as any).raw('reorder_point'))
       }
 
       if (outOfStock) {
