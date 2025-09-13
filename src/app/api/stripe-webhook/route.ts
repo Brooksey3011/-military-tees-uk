@@ -3,9 +3,18 @@ import { headers } from 'next/headers'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
 import Stripe from 'stripe'
+import {
+  trackPaymentEvent,
+  trackError,
+  trackCheckoutEvent,
+  monitorApiEndpoint,
+  BusinessErrorType,
+  ErrorSeverity
+} from '@/lib/monitoring-enhanced'
 
 // This endpoint handles Stripe webhooks to complete orders
 export async function POST(request: NextRequest) {
+  return monitorApiEndpoint('stripe-webhook', async () => {
   try {
     console.log('🔔 Stripe webhook received')
 
@@ -68,9 +77,35 @@ export async function POST(request: NextRequest) {
 
       // Only process if payment was successful
       if (session.payment_status === 'paid') {
+        // Track successful payment
+        trackPaymentEvent('succeeded', {
+          orderId: session.metadata?.orderNumber || 'unknown',
+          amount: (session.amount_total || 0) / 100, // Convert from cents
+          currency: session.currency || 'gbp',
+          stripeSessionId: session.id,
+          customerId: session.customer_details?.email || 'unknown'
+        })
+
         await processCompletedOrder(session)
+
+        // Track completed order
+        trackCheckoutEvent('completed', {
+          orderId: session.metadata?.orderNumber,
+          cartValue: (session.amount_total || 0) / 100,
+          itemCount: parseInt(session.metadata?.itemCount || '1'),
+          userId: session.customer_details?.email
+        })
       } else {
         console.log('⚠️ Payment not completed, skipping order processing')
+
+        // Track payment failure
+        trackPaymentEvent('failed', {
+          orderId: session.metadata?.orderNumber || 'unknown',
+          amount: (session.amount_total || 0) / 100,
+          currency: session.currency || 'gbp',
+          stripeSessionId: session.id,
+          error: `Payment status: ${session.payment_status}`
+        })
       }
     }
 
@@ -79,11 +114,20 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ Webhook processing error:', error)
+
+    // Track webhook processing failure
+    trackError(error instanceof Error ? error.message : 'Webhook processing failed', {
+      type: BusinessErrorType.PAYMENT_ERROR,
+      severity: ErrorSeverity.CRITICAL,
+      path: '/api/stripe-webhook'
+    }, request)
+
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
     )
   }
+  })
 }
 
 // Process a completed order with atomic database operations

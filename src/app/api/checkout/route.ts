@@ -3,6 +3,13 @@ import { z } from 'zod'
 import { stripe } from '@/lib/stripe'
 import { createSupabaseAdmin } from '@/lib/supabase'
 import { rateLimitMiddleware, recordSuccess, RATE_LIMITS } from '@/lib/rate-limit'
+import {
+  trackCheckoutEvent,
+  trackError,
+  monitorApiEndpoint,
+  BusinessErrorType,
+  ErrorSeverity
+} from '@/lib/monitoring-enhanced'
 
 // Checkout request schema - using live data validation
 const checkoutSchema = z.object({
@@ -139,10 +146,12 @@ export async function POST(request: NextRequest) {
     return rateLimitResult
   }
 
-  try {
-    console.log('🚀 Checkout API called - USING LIVE DATA')
+  // Wrap entire checkout process in monitoring
+  return monitorApiEndpoint('checkout', async () => {
+    try {
+      console.log('🚀 Checkout API called - USING LIVE DATA')
 
-    // Parse and validate request body
+      // Parse and validate request body
     const body = await request.json()
     console.log('📋 Request body received:', {
       itemCount: body.items?.length || 0,
@@ -153,6 +162,17 @@ export async function POST(request: NextRequest) {
     // Validate request
     const validatedData = checkoutSchema.parse(body)
     console.log('✅ Request validation passed')
+
+    // Calculate initial cart value for monitoring
+    const cartValue = validatedData.items.reduce((sum, item) => sum + (item.quantity * 20), 0) // Approximate
+    const itemCount = validatedData.items.reduce((sum, item) => sum + item.quantity, 0)
+
+    // Track checkout initiation
+    trackCheckoutEvent('initiated', {
+      cartValue,
+      itemCount,
+      userId: validatedData.shippingAddress.email // Using email as user identifier
+    })
 
     // Get product details from live Supabase database
     const productDetails = await getProductDetails(validatedData.items)
@@ -239,6 +259,15 @@ export async function POST(request: NextRequest) {
     // Record successful checkout session creation
     recordSuccess(request, RATE_LIMITS.PAYMENT, 'payment')
 
+    // Track successful checkout session creation
+    trackCheckoutEvent('payment_submitted', {
+      orderId: orderNumber,
+      cartValue: total,
+      itemCount,
+      userId: validatedData.shippingAddress.email,
+      paymentMethod: 'stripe'
+    })
+
     // Return success response with live data confirmation
     return NextResponse.json({
       success: true,
@@ -268,6 +297,14 @@ export async function POST(request: NextRequest) {
       error: error instanceof Error ? error.message : 'Unknown error',
       timestamp: new Date().toISOString()
     })
+
+    // Track checkout failure with enhanced monitoring
+    const errorMessage = error instanceof Error ? error.message : 'Unknown checkout error'
+    trackError(errorMessage, {
+      type: BusinessErrorType.CHECKOUT_FAILURE,
+      severity: ErrorSeverity.CRITICAL,
+      path: '/api/checkout'
+    }, request)
     
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -288,4 +325,5 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
+  })
 }
