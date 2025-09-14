@@ -6,9 +6,10 @@ import Image from "next/image"
 import { Menu, X, Search, User, Heart } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { CartIcon } from "@/components/cart/cart-icon"
-import { SimpleSearchBar } from "@/components/search/simple-search-bar"
+import { AdvancedSearchBar } from "@/components/search/advanced-search-bar"
 import { cn } from "@/lib/utils"
 import { useWishlistCount } from "@/store/wishlist"
+import { useRouter } from "next/navigation"
 
 interface NavItem {
   title: string
@@ -95,6 +96,7 @@ export function Navbar() {
   const [isSearchOpen, setIsSearchOpen] = React.useState(false)
   const [isCategoriesOpen, setIsCategoriesOpen] = React.useState(false)
   const [activeDropdown, setActiveDropdown] = React.useState<string | null>(null)
+  const router = useRouter()
 
   // Close menus when clicking outside
   React.useEffect(() => {
@@ -240,9 +242,15 @@ export function Navbar() {
 
           {/* Search Bar - Desktop */}
           <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
-            <SimpleSearchBar
+            <AdvancedSearchBar
               placeholder="Search military tees, categories..."
               className="w-full"
+              onSearch={(query) => {
+                router.push(`/search?q=${encodeURIComponent(query)}`)
+              }}
+              onResultSelect={(result) => {
+                router.push(result.url)
+              }}
             />
           </div>
 
@@ -299,9 +307,17 @@ export function Navbar() {
         {/* Mobile Search Bar */}
         {isSearchOpen && (
           <div className="md:hidden py-4 border-t">
-            <SimpleSearchBar
+            <AdvancedSearchBar
               placeholder="Search military tees, categories..."
               className="w-full"
+              onSearch={(query) => {
+                router.push(`/search?q=${encodeURIComponent(query)}`)
+                setIsSearchOpen(false)
+              }}
+              onResultSelect={(result) => {
+                router.push(result.url)
+                setIsSearchOpen(false)
+              }}
             />
           </div>
         )}
