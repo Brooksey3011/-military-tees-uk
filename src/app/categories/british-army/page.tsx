@@ -5,6 +5,7 @@ import Link from "next/link"
 import { ArrowLeft, Shield, Zap } from "lucide-react"
 import { Layout } from "@/components/layout"
 import { ClientOnly } from "@/components/ui/client-only"
+import { Breadcrumb, breadcrumbGenerators } from "@/components/ui/breadcrumb"
 import { cn } from "@/lib/utils"
 import { BritishArmyProducts } from "@/components/pages/british-army-products"
 
@@ -12,29 +13,15 @@ import { BritishArmyProducts } from "@/components/pages/british-army-products"
 export default function BritishArmyPage() {
   const [productCount, setProductCount] = useState<number>(0)
 
+  const breadcrumbItems = breadcrumbGenerators.category("British Army")
+
   return (
     <Layout>
       <div className="min-h-screen bg-background">
-        {/* Breadcrumb Navigation */}
+        {/* Breadcrumb Navigation with Schema */}
         <div className="border-b border-border/50 bg-muted/10">
           <div className="container mx-auto px-4 py-4">
-            <nav className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Link 
-                href="/" 
-                className="hover:text-foreground transition-colors"
-              >
-                Home
-              </Link>
-              <span>/</span>
-              <Link 
-                href="/categories" 
-                className="hover:text-foreground transition-colors"
-              >
-                British Armed Forces
-              </Link>
-              <span>/</span>
-              <span className="text-foreground font-medium">British Army</span>
-            </nav>
+            <Breadcrumb items={breadcrumbItems} />
           </div>
         </div>
 

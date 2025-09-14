@@ -2,6 +2,7 @@ import { Metadata } from "next"
 import { Layout } from "@/components/layout"
 import { ProfessionalProductDetail } from "@/components/pages/professional-product-detail"
 import { ClientOnly } from "@/components/ui/client-only"
+import { Breadcrumb, breadcrumbGenerators } from "@/components/ui/breadcrumb"
 import { createSupabaseServer } from "@/lib/supabase"
 import { generateEnhancedMetadata, generateStructuredData } from "@/components/seo/enhanced-metadata"
 import { notFound } from "next/navigation"
@@ -85,15 +86,16 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 export default async function ProductPage({ params }: ProductPageProps) {
   const resolvedParams = await params
   const supabase = createSupabaseServer()
-  
+
   let productSchema = null
-  
+  let breadcrumbItems = []
+
   try {
     const { data: product } = await supabase
       .from('products')
       .select(`
         *,
-        category:categories(name),
+        category:categories(name, slug),
         variants:product_variants(*)
       `)
       .eq('slug', resolvedParams.slug)
@@ -103,7 +105,14 @@ export default async function ProductPage({ params }: ProductPageProps) {
     if (product) {
       const price = product.variants?.[0]?.price || product.price || 0
       const availability = product.variants?.some((v: any) => v.stock_quantity > 0) ? "InStock" : "OutOfStock"
-      
+
+      // Generate breadcrumb items
+      breadcrumbItems = breadcrumbGenerators.product(
+        product.name,
+        product.category?.name,
+        product.category?.slug
+      )
+
       productSchema = {
         "@context": "https://schema.org",
         "@type": "Product",
@@ -187,6 +196,11 @@ export default async function ProductPage({ params }: ProductPageProps) {
         />
       )}
       <div className="min-h-screen bg-background">
+        {/* Breadcrumb Navigation */}
+        <div className="container mx-auto px-4 py-4">
+          <Breadcrumb items={breadcrumbItems} />
+        </div>
+
         <ClientOnly fallback={
           <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
