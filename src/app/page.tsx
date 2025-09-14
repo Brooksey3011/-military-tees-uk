@@ -37,16 +37,16 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           {/* Background Logo - Performance Optimized */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <div className="w-[320px] h-auto md:w-[400px] lg:w-[500px] opacity-15 select-none pointer-events-none">
+            <div className="w-[400px] h-auto md:w-[600px] lg:w-[800px] xl:w-[900px] opacity-25 select-none pointer-events-none">
               <OptimizedImage
                 src="/logowhite.webp"
                 alt="Military Tees UK Background Logo"
-                width={400}
-                height={267}
+                width={600}
+                height={400}
                 className="w-full h-auto object-contain"
                 priority={true}
                 fetchPriority="high"
-                sizes="(max-width: 768px) 320px, (max-width: 1200px) 400px, 500px"
+                sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, (max-width: 1536px) 800px, 900px"
               />
             </div>
           </div>
