@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return process.env.NODE_ENV === 'production' ? [
       {
-        source: '/test-:path*',
+        source: '/test-express',
         destination: '/404',
         permanent: false,
       },
@@ -56,16 +56,58 @@ const nextConfig: NextConfig = {
         pathname: '/**',
       },
     ],
-    formats: ['image/webp', 'image/avif'],
+    formats: ['image/avif', 'image/webp'], // AVIF first for better compression
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 86400, // 1 day cache
+    // Optimized imageSizes for better responsive images
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 400, 480, 600, 800],
+    minimumCacheTTL: 31536000, // 1 year cache for images - FIX FOR PAGESPEED
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    loader: 'default',
+    domains: [],
+    unoptimized: false,
   },
   
   async headers() {
     return [
+      // Cache Next.js optimized images - FIX FOR PAGESPEED
+      {
+        source: '/_next/image',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache logo and hero images - CRITICAL FOR LCP
+      {
+        source: '/logowhite.webp',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/logo.webp',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/placeholder-product.jpg',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
       // Specific headers for manifest files
       {
         source: '/site.webmanifest',
