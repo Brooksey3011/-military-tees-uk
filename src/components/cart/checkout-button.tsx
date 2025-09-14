@@ -100,7 +100,7 @@ export function CheckoutButton({
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              <span>Secure Checkout</span>
+              <span>Continue as Guest</span>
             </div>
             <span className="font-bold">
               {formatPrice(subtotal)}

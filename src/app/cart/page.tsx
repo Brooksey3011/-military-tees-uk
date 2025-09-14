@@ -168,10 +168,11 @@ export default function CartPage() {
                       <span>£{totalPrice.toFixed(2)}</span>
                     </div>
                     
-                    <div className="bg-blue-50 border border-blue-200 p-3 rounded-md">
-                      <div className="text-blue-800 text-sm">
-                        <p className="font-medium mb-1">Shipping & taxes calculated at checkout</p>
-                        <p className="text-xs">🚛 Free UK shipping on orders over £50</p>
+                    <div className="bg-green-50 border border-green-200 p-3 rounded-md">
+                      <div className="text-green-800 text-sm">
+                        <p className="font-medium mb-1">✅ No Account Required - Continue as Guest</p>
+                        <p className="text-xs mb-1">🚛 Free UK shipping on orders over £50</p>
+                        <p className="text-xs">📱 Express checkout with Apple Pay & Google Pay</p>
                       </div>
                     </div>
 

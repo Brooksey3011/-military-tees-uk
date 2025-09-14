@@ -1,13 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Security: TypeScript and ESLint errors must be fixed - no bypassing
   typescript: {
-    // Temporarily ignore TypeScript errors during build (to be fixed incrementally)
-    ignoreBuildErrors: true,
+    // Production builds require clean TypeScript - security critical
+    ignoreBuildErrors: false,
   },
   eslint: {
-    // Temporarily ignore ESLint errors during build (to be fixed incrementally)
-    ignoreDuringBuilds: true,
+    // Production builds require passing ESLint - security critical
+    ignoreDuringBuilds: false,
   },
   skipTrailingSlashRedirect: true,
   // Exclude test pages from production builds
