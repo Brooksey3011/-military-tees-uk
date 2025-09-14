@@ -139,6 +139,7 @@ export function CookieConsent() {
                   variant="ghost"
                   onClick={() => setIsVisible(false)}
                   className="p-2 h-8 w-8"
+                  aria-label="Close cookie consent banner"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -180,6 +181,7 @@ export function CookieConsent() {
                   variant="ghost"
                   onClick={() => setShowPreferences(false)}
                   className="p-2 h-8 w-8"
+                  aria-label="Close cookie preferences panel"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -218,10 +220,13 @@ export function CookieConsent() {
                       onClick={() => handlePreferenceChange('analytics')}
                       className={cn(
                         "w-12 h-6 rounded-full flex items-center p-1 transition-colors",
-                        preferences.analytics 
-                          ? "bg-primary justify-end" 
+                        preferences.analytics
+                          ? "bg-primary justify-end"
                           : "bg-muted justify-start"
                       )}
+                      aria-label={preferences.analytics ? "Disable analytics cookies" : "Enable analytics cookies"}
+                      role="switch"
+                      aria-checked={preferences.analytics}
                     >
                       <div className="w-4 h-4 bg-white rounded-full"></div>
                     </button>
@@ -243,10 +248,13 @@ export function CookieConsent() {
                       onClick={() => handlePreferenceChange('marketing')}
                       className={cn(
                         "w-12 h-6 rounded-full flex items-center p-1 transition-colors",
-                        preferences.marketing 
-                          ? "bg-primary justify-end" 
+                        preferences.marketing
+                          ? "bg-primary justify-end"
                           : "bg-muted justify-start"
                       )}
+                      aria-label={preferences.marketing ? "Disable marketing cookies" : "Enable marketing cookies"}
+                      role="switch"
+                      aria-checked={preferences.marketing}
                     >
                       <div className="w-4 h-4 bg-white rounded-full"></div>
                     </button>
@@ -268,10 +276,13 @@ export function CookieConsent() {
                       onClick={() => handlePreferenceChange('preferences')}
                       className={cn(
                         "w-12 h-6 rounded-full flex items-center p-1 transition-colors",
-                        preferences.preferences 
-                          ? "bg-primary justify-end" 
+                        preferences.preferences
+                          ? "bg-primary justify-end"
                           : "bg-muted justify-start"
                       )}
+                      aria-label={preferences.preferences ? "Disable preference cookies" : "Enable preference cookies"}
+                      role="switch"
+                      aria-checked={preferences.preferences}
                     >
                       <div className="w-4 h-4 bg-white rounded-full"></div>
                     </button>
