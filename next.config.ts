@@ -68,6 +68,9 @@ const nextConfig: NextConfig = {
     unoptimized: false,
   },
   
+  // Enable compression for better TTFB
+  compress: true,
+
   async headers() {
     return [
       // Cache Next.js optimized images - FIX FOR PAGESPEED
@@ -136,13 +139,27 @@ const nextConfig: NextConfig = {
           }
         ],
       },
+      // Enable compression for static assets
+      {
+        source: '/_next/static/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ],
+      },
       {
         source: '/(.*)',
         headers: [
-          // Security Headers
+          // Server optimization headers
           {
             key: 'X-DNS-Prefetch-Control',
             value: 'on'
+          },
+          {
+            key: 'Connection',
+            value: 'keep-alive'
           },
           {
             key: 'Strict-Transport-Security',
@@ -203,6 +220,8 @@ const nextConfig: NextConfig = {
     // CSS optimization for render blocking
     cssChunking: true,
     inlineCss: true, // Inline critical CSS to reduce render blocking
+    // Server optimization for faster TTFB
+    optimizeServerReact: true,
   },
 
   // Modern JavaScript targeting to reduce polyfills
