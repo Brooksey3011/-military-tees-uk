@@ -37,16 +37,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
           {/* Background Logo - Performance Optimized */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none py-4">
-            <picture className="w-[400px] h-auto md:w-[600px] lg:w-[800px] opacity-15 select-none pointer-events-none">
-              <source
-                srcSet="/logowhite-400w.webp 400w, /logowhite-800w.webp 800w"
-                sizes="(max-width: 768px) 400px, (max-width: 1200px) 600px, 800px"
-                type="image/webp"
-              />
-              <source
-                srcSet="/logowhite.avif"
-                type="image/avif"
-              />
+            <div className="w-[320px] h-auto md:w-[400px] lg:w-[500px] opacity-15 select-none pointer-events-none">
               <OptimizedImage
                 src="/logowhite.webp"
                 alt="Military Tees UK Background Logo"
@@ -55,9 +46,9 @@ export default function Home() {
                 className="w-full h-auto object-contain"
                 priority={true}
                 fetchPriority="high"
-                sizes="(max-width: 768px) 320px, 400px"
+                sizes="(max-width: 768px) 320px, (max-width: 1200px) 400px, 500px"
               />
-            </picture>
+            </div>
           </div>
           
           {/* Hero Content */}
