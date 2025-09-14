@@ -105,7 +105,7 @@ export function CookieConsent() {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/50 flex items-end justify-center p-4">
-      <Card className="w-full max-w-4xl rounded-none border-2 border-border shadow-2xl">
+      <Card className="w-full max-w-4xl rounded-none border-2 border-border shadow-2xl bg-white dark:bg-gray-900">
         <CardContent className="p-6">
           {!showPreferences ? (
             // Main consent banner
@@ -115,20 +115,20 @@ export function CookieConsent() {
                   <Cookie className="h-6 w-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-lg font-display font-bold text-foreground mb-2">
+                  <h3 className="text-lg font-display font-bold text-gray-900 dark:text-gray-100 mb-2">
                     We Value Your Privacy
                   </h3>
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-4">
-                    Military Tees UK uses cookies to enhance your browsing experience, provide personalized content, 
+                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4">
+                    Military Tees UK uses cookies to enhance your browsing experience, provide personalized content,
                     and analyze our traffic. We respect your privacy and follow GDPR guidelines for UK users.
                   </p>
-                  <p className="text-muted-foreground text-xs">
+                  <p className="text-gray-600 dark:text-gray-400 text-xs">
                     By clicking "Accept All", you consent to our use of cookies. You can manage your preferences or learn more in our{" "}
-                    <Link href="/cookies" className="text-primary hover:underline">
+                    <Link href="/cookies" className="text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300 font-medium">
                       Cookie Policy
                     </Link>
                     {" "}and{" "}
-                    <Link href="/privacy" className="text-primary hover:underline">
+                    <Link href="/privacy" className="text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300 font-medium">
                       Privacy Policy
                     </Link>
                     .
@@ -172,7 +172,7 @@ export function CookieConsent() {
             // Preferences panel
             <div className="space-y-6">
               <div className="flex items-center justify-between">
-                <h3 className="text-lg font-display font-bold text-foreground">
+                <h3 className="text-lg font-display font-bold text-gray-900 dark:text-gray-100">
                   Cookie Preferences
                 </h3>
                 <Button
@@ -187,12 +187,12 @@ export function CookieConsent() {
 
               <div className="space-y-4">
                 {/* Necessary Cookies */}
-                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none">
+                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none bg-gray-50 dark:bg-gray-800">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       Necessary Cookies
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       Essential for website functionality, security, and basic features. These cannot be disabled.
                     </p>
                   </div>
@@ -204,12 +204,12 @@ export function CookieConsent() {
                 </div>
 
                 {/* Analytics Cookies */}
-                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none">
+                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none bg-gray-50 dark:bg-gray-800">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       Analytics Cookies
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       Help us understand how visitors interact with our website to improve performance and user experience.
                     </p>
                   </div>
@@ -229,12 +229,12 @@ export function CookieConsent() {
                 </div>
 
                 {/* Marketing Cookies */}
-                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none">
+                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none bg-gray-50 dark:bg-gray-800">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       Marketing Cookies
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       Used to track visitors for personalized advertising and to measure campaign effectiveness.
                     </p>
                   </div>
@@ -254,12 +254,12 @@ export function CookieConsent() {
                 </div>
 
                 {/* Preference Cookies */}
-                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none">
+                <div className="flex items-start justify-between p-4 border-2 border-border rounded-none bg-gray-50 dark:bg-gray-800">
                   <div className="flex-1">
-                    <h4 className="font-semibold text-foreground mb-1">
+                    <h4 className="font-semibold text-gray-900 dark:text-gray-100 mb-1">
                       Preference Cookies
                     </h4>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-gray-700 dark:text-gray-300">
                       Remember your choices and settings to provide a more personalized experience.
                     </p>
                   </div>
