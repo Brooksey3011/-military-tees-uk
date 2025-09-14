@@ -36,15 +36,19 @@ const nextConfig = {
     },
   }),
   
-  // Image optimization
+  // Image optimization - PERFORMANCE CRITICAL
   images: {
     formats: ['image/avif', 'image/webp'], // AVIF first for better compression
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 year
+    // Optimized imageSizes for better responsive images
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 400, 480, 600, 800],
+    minimumCacheTTL: 31536000, // 1 year cache for images
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Add loader config for better performance
+    loader: 'default',
+    domains: [], // Add external domains if needed
   },
 
   // Bundle analyzer (only in development)
@@ -88,16 +92,36 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
           },
-          // Server push for critical resources
+          // Preload critical images for LCP optimization
           {
             key: 'Link',
-            value: '</logowhite.webp>; rel=preload; as=image'
+            value: '</logowhite.webp>; rel=preload; as=image; fetchpriority=high, </_next/image?url=%2Flogowhite.webp&w=750&q=75>; rel=preload; as=image; fetchpriority=high'
           },
         ],
       },
-      // Cache static assets
+      // Cache static assets - PERFORMANCE CRITICAL
       {
         source: '/images/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache Next.js optimized images - FIX FOR PAGESPEED
+      {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      // Cache logo and hero images - CRITICAL FOR LCP
+      {
+        source: '/(logowhite.webp|logo.webp|hero.*|placeholder.*)',
         headers: [
           {
             key: 'Cache-Control',
@@ -170,8 +194,6 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-
-  // SWC configuration for modern browsers (swcMinify is enabled by default in Next.js 15)
   
   // Experimental features for better performance
   experimental: {
@@ -190,6 +212,8 @@ const nextConfig = {
     gzipSize: true,
     // Improve build performance
     cpus: 4,
+    // Inline critical CSS to reduce render-blocking resources
+    inlineCss: true,
   },
 
   // Turbopack configuration (stable)

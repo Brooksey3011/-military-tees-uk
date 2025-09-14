@@ -50,8 +50,8 @@ export default function Home() {
               <OptimizedImage
                 src="/logowhite.webp"
                 alt="Military Tees UK Background Logo"
-                width={800}
-                height={533}
+                width={400}
+                height={267}
                 className="w-full h-auto object-contain"
                 priority={true}
                 fetchPriority="high"
