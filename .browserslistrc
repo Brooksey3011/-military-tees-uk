@@ -1,28 +1,21 @@
 # Browserslist configuration for Military Tees UK
-# Targeting modern browsers to reduce polyfill overhead
-# This eliminates unnecessary polyfills for Array.flat, Object.hasOwn, etc.
+# Targeting modern browsers to eliminate legacy polyfills (saves 12 KiB)
+# Removes polyfills for: Array.at, Array.flat, Array.flatMap, Object.fromEntries, Object.hasOwn, String.trim*
 
-# Modern browsers with native ES6+ support
-> 0.2%
-last 2 versions
-not dead
+# Ultra-modern browsers only (2022+ features)
+Chrome >= 94
+Firefox >= 93
+Safari >= 15.4
+Edge >= 94
+
+# Mobile modern browsers
+iOS >= 15.4
+ChromeAndroid >= 94
+FirefoxAndroid >= 93
+
+# Remove legacy targets
 not ie 11
 not op_mini all
-
-# Specifically target browsers that support:
-# - Array.prototype.at (2022+)
-# - Array.prototype.flat (2019+) 
-# - Array.prototype.flatMap (2019+)
-# - Object.fromEntries (2019+)
-# - Object.hasOwn (2022+)
-# - String.prototype.trimStart/trimEnd (2019+)
-
-# Modern browser targets
-Chrome >= 87
-Firefox >= 83  
-Safari >= 14
-Edge >= 87
-
-# Mobile browsers
-iOS >= 14
-Android >= 87
+not android <= 4.4
+not safari <= 14
+not chrome <= 93

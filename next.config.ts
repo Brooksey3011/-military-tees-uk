@@ -210,9 +210,17 @@ const nextConfig: NextConfig = {
     removeConsole: process.env.NODE_ENV === 'production',
   },
 
-  // Webpack configuration for CSS optimization
+  // Webpack configuration for CSS optimization and modern JS
   webpack: (config, { dev, isServer }) => {
+    // Modern JavaScript targeting to reduce polyfills
     if (!dev && !isServer) {
+      // Set modern ES target to eliminate unnecessary polyfills
+      config.target = 'web';
+      config.resolve = {
+        ...config.resolve,
+        mainFields: ['browser', 'module', 'main'],
+      };
+
       // Advanced CSS optimization to reduce render blocking
       config.optimization = {
         ...config.optimization,
