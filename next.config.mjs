@@ -49,6 +49,8 @@ const nextConfig = {
     // Add loader config for better performance
     loader: 'default',
     domains: [], // Add external domains if needed
+    // Unoptimized images also get long cache
+    unoptimized: false,
   },
 
   // Bundle analyzer (only in development)
