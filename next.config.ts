@@ -57,9 +57,9 @@ const nextConfig: NextConfig = {
       },
     ],
     formats: ['image/avif', 'image/webp'], // AVIF first for better compression
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    deviceSizes: [400, 640, 828, 1080, 1200, 1920, 2048, 3840],
     // Optimized imageSizes for better responsive images
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 400, 480, 600, 800],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 320, 384, 480, 600, 800],
     minimumCacheTTL: 31536000, // 1 year cache for images - FIX FOR PAGESPEED
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
