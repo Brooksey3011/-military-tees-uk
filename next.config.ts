@@ -200,8 +200,9 @@ const nextConfig: NextConfig = {
     optimizeCss: true,
     webVitalsAttribution: ['CLS', 'LCP', 'FCP', 'FID', 'TTFB'],
     forceSwcTransforms: true,
-    // Try different CSS optimization approaches
+    // CSS optimization for render blocking
     cssChunking: true,
+    inlineCss: true, // Inline critical CSS to reduce render blocking
   },
 
   // Modern JavaScript targeting to reduce polyfills
@@ -212,19 +213,36 @@ const nextConfig: NextConfig = {
   // Webpack configuration for CSS optimization
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
-      // Optimize CSS loading in production
+      // Advanced CSS optimization to reduce render blocking
       config.optimization = {
         ...config.optimization,
         splitChunks: {
           ...config.optimization.splitChunks,
           cacheGroups: {
             ...config.optimization.splitChunks.cacheGroups,
+            // Critical CSS chunk for above-the-fold content
+            critical: {
+              name: 'critical',
+              test: /\.(css|scss)$/,
+              chunks: 'initial',
+              enforce: true,
+              priority: 30,
+            },
+            // Non-critical CSS chunk
             styles: {
               name: 'styles',
               test: /\.(css|scss)$/,
-              chunks: 'all',
+              chunks: 'async',
               enforce: true,
               priority: 20,
+            },
+            // Vendor CSS separate chunk
+            vendor: {
+              name: 'vendor',
+              test: /[\\/]node_modules[\\/].*\.(css|scss)$/,
+              chunks: 'all',
+              enforce: true,
+              priority: 25,
             },
           },
         },
