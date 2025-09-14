@@ -74,7 +74,7 @@ export default function Home() {
             
             {/* Single Primary CTA */}
             <div className="flex justify-center">
-              <Button size="xl" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg relative overflow-hidden group min-h-[48px]" asChild>
+              <Button size="xl" className="rounded-none font-display font-bold tracking-wide uppercase px-12 py-4 text-lg relative overflow-hidden group min-h-[56px] min-w-[240px]" asChild>
                 <Link href="/categories">
                   <span className="relative z-10">
                     Shop Military Apparel
@@ -201,19 +201,19 @@ export default function Home() {
               Browse our complete collection of premium military-themed apparel
             </p>
             <div className="flex flex-col sm:flex-row gap-3 md:gap-6 justify-center items-center">
-              <Button 
+              <Button
                 size="xl"
-                className="font-bold uppercase tracking-wide px-8 min-h-[48px]"
+                className="font-bold uppercase tracking-wide px-8 min-h-[56px] min-w-[180px]"
                 asChild
               >
                 <Link href="/products">
                   Shop All Products
                 </Link>
               </Button>
-              <Button 
+              <Button
                 variant="outline"
                 size="xl"
-                className="border-2 font-bold uppercase tracking-wide px-8 min-h-[48px]"
+                className="border-2 font-bold uppercase tracking-wide px-8 min-h-[56px] min-w-[180px]"
                 asChild
               >
                 <Link href="/custom">
